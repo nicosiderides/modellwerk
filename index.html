@@ -3,826 +3,889 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MODELLWERK | Arquitectura Modular & BIM</title>
-    <meta name="description" content="Estudio de arquitectura modular, modelado BIM y gestión técnica de proyectos en Córdoba, Argentina.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fuentes Premium: Archivo (Titulares), Inter (Cuerpo), JetBrains Mono (Datos Técnicos) -->
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;700&family=Inter:wght@300;400&family=JetBrains+Mono:wght==400;500&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>MODELLWERK | Estructura & Sistemas</title>
+    <meta name="description" content="Arquitectura Modular, Prefabricación y Consultoría BIM.">
     
+    <!-- TAILWIND CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- CAMBIO: Manrope para el cuerpo (Técnica/Moderna) + Space Grotesk (Display) + JetBrains Mono (Datos) -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- CONFIGURACIÓN DE SISTEMA (WHITE & LIGHT GREY) -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'void': '#050505',      /* Negro Profundo */
-                        'carbon': '#111111',    /* Gris Carbón */
-                        'concrete': '#888888',  /* Gris Hormigón */
-                        'steel': '#E5E5E5',     /* Blanco Acero */
-                        'accent': '#f59e0b',    /* AMARILLO INDUSTRIAL (Amber-500) */
+                        'paper': '#FAFAFA',     /* Blanco Roto (Fondo) */
+                        'ink': '#0A0A0A',       /* Negro Tinta Profundo */
+                        'graphite': '#555555',  /* Gris Grafito Técnico */
+                        'line': '#E0E0E0',      /* Gris Línea Técnica */
+                        'mist': '#F5F5F7',      /* Gris Niebla Apple-like */
+                        'tech-blue': '#0044FF', /* Azul Klein Vibrante (Interacción) */
                     },
                     fontFamily: {
-                        'sans': ['Inter', 'sans-serif'],
-                        'display': ['Archivo', 'sans-serif'],
+                        'sans': ['Manrope', 'sans-serif'], /* NUEVA FUENTE DE CUERPO */
+                        'display': ['Space Grotesk', 'sans-serif'],
                         'mono': ['JetBrains Mono', 'monospace'],
                     },
                     spacing: {
                         '128': '32rem',
                     },
-                    letterSpacing: {
-                        'tightest': '-0.05em',
-                        'widest': '0.2em',
+                    animation: {
+                        'scan': 'scan 3s linear infinite',
+                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(200%)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
                     }
                 }
             }
         }
     </script>
+
     <style>
-        /* --- ESTÉTICA BASE --- */
+        /* --- VISUAL CORE --- */
         body {
-            background-color: #050505;
-            color: #E5E5E5;
+            background-color: #FAFAFA;
+            color: #0A0A0A;
             overflow-x: hidden;
+            cursor: none; /* Cursor personalizado */
+            font-feature-settings: "ss01", "ss02"; /* OpenType features */
         }
 
-        /* Retícula de Ingeniería de Fondo */
-        .engineering-grid {
-            background-size: 40px 40px;
+        /* CUSTOM CURSOR */
+        #cursor {
+            position: fixed; top: 0; left: 0;
+            width: 12px; height: 12px;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease;
+            background-color: white;
+            border-radius: 50%;
+        }
+        #cursor.hovered {
+            width: 60px; height: 60px;
+            border: 1px solid white;
+            background-color: transparent;
+            backdrop-filter: blur(2px);
+        }
+
+        /* GRID BACKGROUND */
+        .bg-grid {
+            background-size: 60px 60px;
             background-image:
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: -1;
+                linear-gradient(to right, #E0E0E0 1px, transparent 1px),
+                linear-gradient(to bottom, #E0E0E0 1px, transparent 1px);
+            position: fixed; inset: 0; z-index: -1;
+            opacity: 0.4;
         }
 
-        /* --- UTILIDADES DE DISEÑO --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        /* --- UTILS --- */
+        .text-outline {
+            -webkit-text-stroke: 1.5px #0A0A0A;
+            color: transparent;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        .text-outline:hover {
+            -webkit-text-stroke: 1.5px #0044FF;
+            color: transparent;
+            letter-spacing: 0.02em;
         }
 
-        .blend-technical {
-            filter: grayscale(100%) contrast(110%);
-            transition: all 0.4s ease; 
+        .technical-filter {
+            filter: grayscale(100%) contrast(105%) brightness(1.05);
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        
-        .group:hover .blend-technical {
+        .group:hover .technical-filter {
             filter: grayscale(0%) contrast(100%);
             transform: scale(1.03);
         }
-        
-        .tech-render-blend {
-            mix-blend-mode: lighten;
-        }
 
-        /* Scrollbar minimalista */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+        .reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .cursor-technical { cursor: crosshair; }
-
-        /* --- EFECTO DE BOTÓN NEUMÁTICO --- */
-        .button-pneumatic {
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-            transform: translate(0, 0);
+        /* Card Services Effect */
+        .service-card {
+            position: relative;
+            overflow: hidden;
         }
-        .button-pneumatic:hover {
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 68, 255, 0.03), transparent);
+            transform: translateY(-100%);
+            transition: none;
         }
-        .button-pneumatic:active {
-            transform: translate(0, 1px);
-            box-shadow: 0 0 5px rgba(245, 158, 11, 0.2);
-        }
-
-        /* --- ANIMACIÓN DE LÍNEA EN EXPERTISE --- */
-        @keyframes sweep {
-            0%, 100% { height: 0; transform: translateY(0); }
-            50% { height: 100%; transform: translateY(0); }
-        }
-        .animated-divider {
-            animation: sweep 8s infinite cubic-bezier(0.8, 0, 0.2, 1);
-        }
-
-        /* --- SISTEMA FLIP CARD --- */
-        .perspective-container { perspective: 2000px; }
-        #flipper {
-            position: relative; width: 100%; height: 100%;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        #flipper.is-flipped { transform: rotateY(180deg); }
-        .face {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
-            border-radius: 0.125rem;
-        }
-        .face-front { transform: translateZ(1px); background-color: #050505; }
-        .face-back { transform: rotateY(180deg) translateZ(1px); }
-        .industrial-glow { box-shadow: inset 0 0 40px rgba(245, 158, 11, 0.08); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* --- GRID DE PROYECTOS TÉCNICOS --- */
-        .project-card-tech {
-            transition: border-color 0.3s ease;
-        }
-        .project-card-tech:hover {
-            border-color: rgba(245, 158, 11, 0.5); /* Accent color */
-        }
-        .tag-technical {
-            font-size: 9px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-family: 'JetBrains Mono', monospace;
-            padding: 2px 6px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #888;
+        .service-card:hover::after {
+            animation: scan 1.5s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="cursor-technical">
+<body class="antialiased font-sans selection:bg-tech-blue selection:text-white">
 
-    <!-- Fondo de Retícula -->
-    <div class="engineering-grid"></div>
+    <!-- ASSETS -->
+    <div id="cursor"></div>
+    <div class="bg-grid"></div>
 
-    <!-- NAVEGACIÓN FIJA -->
-    <nav class="fixed top-0 w-full z-50 bg-void border-b border-white/10 shadow-lg px-6 py-6 lg:px-12 flex justify-between items-center transition-all duration-300 backdrop-blur-md bg-void/90">
-        <a href="#" class="group flex items-center gap-2">
-            <div class="w-3 h-3 bg-white group-hover:bg-accent transition-colors duration-300"></div>
-            <span class="font-display font-bold text-lg tracking-tightest text-white">MODELLWERK</span>
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 w-full z-50 px-6 lg:px-12 py-6 flex justify-between items-center bg-paper/90 backdrop-blur-xl border-b border-line transition-all duration-300">
+        <!-- LOGO (Cuadrado 1:1) -->
+        <a href="#" class="group flex items-center gap-5 interactive">
+            <!-- Contenedor cuadrado -->
+            <div class="h-16 w-16 relative flex items-center justify-center">
+                 <!-- LOGO ACTUALIZADO -->
+                 <img src="assets/optimizadas/LOGOMW01.webp" alt="Logo MODELLWERK" class="w-full h-full object-contain"> 
+            </div>
+            
+            <div class="flex flex-col border-l border-line pl-5">
+                <span class="font-display font-bold text-xl tracking-tight leading-none text-ink group-hover:text-tech-blue transition-colors">MODELLWERK</span>
+                <span class="font-mono text-[9px] text-graphite tracking-[0.2em] uppercase mt-1">Systems Architecture</span>
+            </div>
         </a>
         
-        <div class="hidden md:flex gap-8">
-            <a href="#project-index" class="font-mono text-xs uppercase tracking-widest text-concrete hover:text-accent transition-colors">[ Proyectos ]</a>
-            <a href="#expertise" class="font-mono text-xs uppercase tracking-widest text-concrete hover:text-accent transition-colors">[ Especialidades ]</a>
-            <a href="#contact" class="font-mono text-xs uppercase tracking-widest text-concrete hover:text-accent transition-colors">[ Contacto ]</a>
+        <!-- Navigation -->
+        <div class="hidden md:flex gap-16 font-mono text-[10px] uppercase tracking-widest text-graphite">
+            <a href="#about" class="hover:text-tech-blue transition-colors interactive relative group">
+                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Estudio
+            </a>
+            <a href="#services" class="hover:text-tech-blue transition-colors interactive relative group">
+                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Capacidades
+            </a>
+            <a href="#projects" class="hover:text-tech-blue transition-colors interactive relative group">
+                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Índice [20]
+            </a>
+            <a href="#contact" class="hover:text-tech-blue transition-colors interactive relative group">
+                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Contacto
+            </a>
         </div>
-
-        <a href="#contact" class="md:hidden text-white"><i class="fas fa-bars"></i></a>
+        
+        <div class="md:hidden text-ink"><i class="fas fa-bars"></i></div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <header class="relative h-screen flex flex-col justify-center px-6 lg:px-12 pt-40"> 
-        <div class="z-10 max-w-7xl reveal active">
-            <p class="font-mono text-accent text-xs mb-4 tracking-widest flex items-center gap-2">
-                <span class="w-8 h-[1px] bg-accent"></span>
-                SISTEMATIZACIÓN Y PREFABRICACIÓN
-            </p>
-            <h1 class="font-display text-4xl md:text-6xl lg:text-8xl font-medium leading-[0.9] tracking-tighter text-white mb-10">
-                PRECISIÓN<br>
-                <span class="text-concrete block mt-4">MODULAR.</span>
+    <!-- HERO SECTION (Cinemático y Estructural) -->
+    <header class="relative min-h-screen w-full flex flex-col justify-center px-6 lg:px-24 pt-32 pb-20 overflow-hidden">
+        
+        <!-- FONDO DE PORTADA (Detrás del texto) -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <!-- IMAGEN DE PORTADA ACTUALIZADA -->
+            <img src="assets/optimizadas/PORTADAMW01.webp" class="w-full h-full object-cover grayscale opacity-25 blur-[3px] scale-105" alt="Background Structure">
+            
+            <!-- Degradados para integración visual (Sistemas) -->
+            <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/60 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 w-full reveal active max-w-[1600px] mx-0">
+            <!-- Meta Header -->
+            <div class="flex items-center gap-4 mb-10">
+                <span class="font-mono text-[10px] bg-ink text-white px-3 py-1 uppercase tracking-widest">Est. 2020</span>
+                <div class="h-[1px] w-16 bg-ink/30"></div>
+                <span class="font-mono text-[10px] text-graphite uppercase tracking-widest">Ingeniería Digital & Prefabricación</span>
+            </div>
+
+            <!-- Título Principal (Alineado a la izquierda) -->
+            <h1 class="font-display text-6xl md:text-8xl lg:text-[11rem] font-semibold leading-[0.85] tracking-tighter text-ink mb-16 mix-blend-darken">
+                MODELOS<br>
+                <span class="text-outline backdrop-blur-sm">SISTEMAS</span><br>
+                CLARIDAD.
             </h1>
-            <div class="flex flex-col md:flex-row gap-8 items-start md:items-center max-w-2xl">
-                <p class="text-concrete font-sans text-sm md:text-base leading-relaxed text-justify">
-                    Transformamos la complejidad arquitectónica en sistemas constructivos optimizados. 
-                    Especialistas en <strong>BIM Avanzado</strong>, coordinación MEP y gestión de fabricación para arquitectura modular de gran escala.
-                </p>
-            </div>
-        </div>
 
-        <div class="absolute bottom-12 left-6 lg:left-12 right-6 lg:right-12 flex justify-between items-end border-t border-white/10 pt-6 reveal">
-            <div class="hidden md:block">
-                <p class="font-mono text-[10px] text-concrete uppercase">Ubicación</p>
-                <p class="font-sans text-xs text-white">Córdoba, ARG</p>
+            <!-- Texto Introductorio -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-16 border-t border-ink pt-10">
+                <div class="md:col-span-6">
+                    <p class="font-sans text-xl md:text-2xl text-ink font-light leading-relaxed text-justify md:text-left">
+                        En MODELLWERK, redefinimos el proceso constructivo integrando la <strong class="font-medium">precisión digital</strong> con la lógica industrial. Transformamos la complejidad arquitectónica en sistemas eficientes mediante la gestión avanzada de datos BIM (LOD 400), la coordinación interdisciplinaria y estrategias DfMA. Nuestro enfoque garantiza la trazabilidad total del activo, desde el gemelo digital hasta su materialización física, optimizando costos, plazos y sostenibilidad en proyectos de alta envergadura.
+                    </p>
+                </div>
+                <div class="md:col-span-6 flex flex-col justify-between items-end">
+                    <div class="hidden md:block text-right font-mono text-[10px] text-graphite space-y-2 uppercase tracking-widest mb-8">
+                        <p>Modelado Paramétrico</p>
+                        <p>Coordinación 4D/5D</p>
+                        <p>Industrialización</p>
+                    </div>
+                    <a href="#projects" class="interactive group flex items-center gap-4 bg-white border border-line px-6 py-4 hover:border-tech-blue hover:shadow-lg transition-all duration-300">
+                        <span class="font-mono text-xs uppercase tracking-widest group-hover:text-tech-blue">Explorar Archivo</span>
+                        <div class="w-8 h-8 flex items-center justify-center group-hover:text-tech-blue transition-colors">
+                            <i class="fas fa-arrow-down animate-bounce"></i>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="w-1/3 md:w-auto text-right md:text-left">
-                <p class="font-mono text-[10px] text-concrete uppercase">Disciplina</p>
-                <p class="font-sans text-[10px] md:text-xs text-white">Arquitectura / Ingeniería / BIM</p>
-            </div>
-            <div class="hidden md:block text-right">
-                <p class="font-mono text-[10px] text-concrete uppercase">Scroll</p>
-                <i class="fas fa-arrow-down text-accent animate-bounce mt-2 text-xs"></i>
-            </div>
-        </div>
-
-        <div class="absolute top-0 right-0 w-full md:w-1/2 h-full opacity-20 z-0 pointer-events-none mix-blend-lighten">
-            <img src="https://imgur.com/acc2Tnk.jpg" class="w-full h-full object-cover grayscale" alt="Fondo Estructural">
-            <div class="absolute inset-0 bg-gradient-to-l from-void via-void/50 to-void"></div>
         </div>
     </header>
 
-    <!-- ESPECIALIDADES (FLIP CARD) -->
-    <section id="expertise" class="py-24 px-6 lg:px-12 border-t border-white/5 bg-carbon/30 backdrop-blur-sm">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <!-- COLUMNA IZQUIERDA: FLIP -->
-            <div class="reveal relative h-[480px] md:h-full perspective-container">
-                <div id="flipper">
-                    <!-- FRENTE -->
-                    <div class="face face-front border border-accent/20 p-8">
-                        <div class="h-full flex flex-col justify-start">
-                            <h2 class="font-display text-3xl text-white mb-6 uppercase tracking-tighter">Expertise <span class="text-concrete text-lg align-top">01</span></h2>
-                            <p class="text-concrete font-sans text-sm leading-relaxed max-w-xs mb-8">
-                                Nuestro enfoque combina la disciplina de la ingeniería con la sensibilidad arquitectónica. Utilizamos datos para construir mejor.
-                            </p>
-                            <div class="mt-auto hidden md:block border-t border-white/10 pt-4">
-                                <p class="font-mono text-[10px] text-accent/50 uppercase tracking-widest">Estado del Sistema</p>
-                                <p class="font-mono text-[10px] text-concrete animate-pulse">A la espera de selección...</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- DORSO -->
-                    <div class="face face-back bg-carbon border border-accent/40 p-6 md:p-8 industrial-glow overflow-hidden">
-                        <div class="h-full flex flex-col justify-between no-scrollbar overflow-y-auto">
-                            <div>
-                                <p id="back-tag" class="font-mono text-[9px] text-accent uppercase tracking-widest mb-2 border-b border-accent/20 inline-block pb-1"></p>
-                                <h3 id="back-title" class="font-display text-xl md:text-2xl text-white mb-4 uppercase leading-tight"></h3>
-                                <p id="back-desc" class="text-concrete font-sans text-[13px] md:text-sm leading-relaxed text-justify italic"></p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-white/10">
-                                <p class="font-mono text-[9px] text-white/30 uppercase tracking-widest">Valor Agregado</p>
-                                <p id="back-value" class="font-sans text-[11px] text-accent mt-2 leading-tight uppercase font-medium tracking-tight"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hidden md:block absolute top-0 -right-6 h-full w-[1px] bg-white/10 overflow-hidden">
-                    <div class="animated-divider w-full bg-accent/50"></div>
-                </div>
+    <!-- SECTION: CAPACIDADES TÉCNICAS -->
+    <section id="services" class="py-32 px-6 lg:px-24 border-t border-line bg-white">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-24 reveal">
+            <div>
+                <span class="font-mono text-[10px] text-tech-blue uppercase tracking-widest block mb-4">/// Metodología</span>
+                <h2 class="font-display text-4xl md:text-6xl text-ink leading-tight tracking-tight">Capacidades<br>Técnicas</h2>
             </div>
-            <!-- COLUMNA DERECHA: SERVICIOS -->
-            <div id="service-grid" class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="service-card border border-white/10 p-8 hover:bg-white/5 transition-all group reveal cursor-pointer"
-                     data-tag="Ingeniería Digital" data-title="Modelado BIM LOD 400" data-desc="Construimos virtualmente antes de fabricar físicamente. Extracción de cómputos sin margen de error." data-value="Precisión absoluta.">
-                    <i class="fas fa-cube text-concrete group-hover:text-accent mb-4 text-2xl transition-all"></i>
-                    <h3 class="font-mono text-sm text-white uppercase mb-2">Modelado BIM</h3>
-                    <p class="text-xs text-concrete">Revit ARQ & MEP. Parametrización avanzada.</p>
-                </div>
-                <div class="service-card border border-white/10 p-8 hover:bg-white/5 transition-all group reveal delay-100 cursor-pointer"
-                     data-tag="Gestión de Conflictos" data-title="Virtual Coordination" data-desc="Detectamos interferencias entre disciplinas en la fase de diseño mediante Navisworks." data-value="Cero retrocesos.">
-                    <i class="fas fa-layer-group text-concrete group-hover:text-accent mb-4 text-2xl transition-all"></i>
-                    <h3 class="font-mono text-sm text-white uppercase mb-2">Detección de Interferencias</h3>
-                    <p class="text-xs text-concrete">Auditoría de modelos y resolución de colisiones.</p>
-                </div>
-                <div class="service-card border border-white/10 p-8 hover:bg-white/5 transition-all group reveal delay-200 cursor-pointer"
-                     data-tag="Producción Industrial" data-title="Metodología DfMA" data-desc="Diseñamos para la Manufactura y el Ensamblaje. Optimizamos la lógica de los paneles." data-value="Optimización del 30% en tiempos.">
-                    <i class="fas fa-industry text-concrete group-hover:text-accent mb-4 text-2xl transition-all"></i>
-                    <h3 class="font-mono text-sm text-white uppercase mb-2">DfMA / Prefabricación</h3>
-                    <p class="text-xs text-concrete">Estandarización de componentes.</p>
-                </div>
-                <div class="service-card border border-white/10 p-8 hover:bg-white/5 transition-all group reveal delay-300 cursor-pointer"
-                     data-tag="Aseguramiento Técnico" data-title="Technical Management" data-desc="Coordinamos la trazabilidad de la información desde la oficina técnica hasta la entrega final." data-value="Trazabilidad total.">
-                    <i class="fas fa-ruler-combined text-concrete group-hover:text-accent mb-4 text-2xl transition-all"></i>
-                    <h3 class="font-mono text-sm text-white uppercase mb-2">Gestión Técnica</h3>
-                    <p class="text-xs text-concrete">Dirección técnica especializada.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ÍNDICE DE PROYECTOS (ESTILO CATALOGO TÉCNICO) -->
-    <section id="project-index" class="py-32 px-6 lg:px-12">
-        <div class="flex flex-col md:flex-row items-baseline justify-between mb-24 reveal border-b border-white/10 pb-8">
-            <h2 class="font-display text-4xl md:text-5xl text-white tracking-tighter">Índice de Proyectos</h2>
-            <div class="mt-4 md:mt-0 text-right">
-                <span class="font-mono text-xs text-accent uppercase tracking-widest block">Periodo 2020-2024</span>
-                <span class="font-mono text-[10px] text-concrete uppercase tracking-widest">Base de Datos: 20 Items</span>
-            </div>
+            <p class="font-sans text-sm text-graphite max-w-sm text-right mt-6 md:mt-0 font-light border-l border-line pl-6">
+                Un ecosistema de servicios técnicos diseñado para eliminar la incertidumbre en la construcción moderna.
+            </p>
         </div>
 
-        <!-- GRILLA DENSA (4 COLUMNAS) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- GRILLA DE 4 SERVICIOS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line shadow-sm">
+            
+            <!-- Servicio 1 -->
+            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal">
+                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">01. DIGITALIZACIÓN</span>
+                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-cube text-4xl"></i></div>
+                <h3 class="font-display text-2xl text-ink mb-4">Modelado BIM</h3>
+                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
+                    Construcción virtual de alta fidelidad. Desarrollamos gemelos digitales hasta LOD 400, estructurando la información para cómputos precisos, documentación ejecutiva y mantenimiento operativo.
+                </p>
+            </div>
 
-            <!-- 01: HOSPITALES TURÍSTICOS -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">01</div>
-                    <img src="assets/optimizadas/Turistico.webp" alt="Hospitales Turísticos" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SALUD</span>
-                        <span class="tag-technical text-concrete">TURISMO</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Hospitales Turísticos</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> UNOPS</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Córdoba (Punilla)</p>
-                    </div>
-                </div>
-            </article>
+            <!-- Servicio 2 -->
+            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-75">
+                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">02. COORDINACIÓN</span>
+                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-layer-group text-4xl"></i></div>
+                <h3 class="font-display text-2xl text-ink mb-4">Clash Detection</h3>
+                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
+                    Auditoría federada de modelos. Utilizamos Navisworks y algoritmos de detección para resolver conflictos geométricos entre estructura, arquitectura y MEP antes de la fase de obra.
+                </p>
+            </div>
 
-            <!-- 02: CENTROS SANITARIOS -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-75">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">02</div>
-                    <img src="assets/optimizadas/Centro sanitario modular.webp" alt="Centros Sanitarios" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qwBrLI" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SALUD</span>
-                        <span class="tag-technical text-concrete">MODULAR</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Centros Sanitarios</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> UNOPS</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Ciudad de Córdoba</p>
-                    </div>
-                </div>
-            </article>
+            <!-- Servicio 3 -->
+            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-100">
+                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">03. INDUSTRIALIZACIÓN</span>
+                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-industry text-4xl"></i></div>
+                <h3 class="font-display text-2xl text-ink mb-4">DfMA & Prefabricación</h3>
+                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
+                    Design for Manufacture and Assembly. Racionalizamos el diseño arquitectónico en componentes modulares optimizados para la producción en planta y el ensamblaje rápido en sitio.
+                </p>
+            </div>
 
-            <!-- 03: HOSPITAL PENITENCIARIO -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-100">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">03</div>
-                    <img src="assets/optimizadas/Penitenciario.webp" alt="Hospital Penitenciario" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4omEKmx" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SEGURIDAD</span>
-                        <span class="tag-technical text-concrete">SALUD</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Hospital Penitenciario</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> UNOPS</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Salta</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 04: MÓDULOS GALAXY -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-150">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">04</div>
-                    <img src="assets/optimizadas/Galaxy.webp" alt="Módulos Galaxy" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/479NwNK" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">MINERIA</span>
-                        <span class="tag-technical text-concrete">110 U.</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Módulos Galaxy</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Galaxy Lithium</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Córdoba</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 05: HOSPITAL TAFI VIEJO -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">05</div>
-                    <img src="assets/optimizadas/Tafi.webp" alt="Hospital Tafi Viejo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/47x9Ke5" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SALUD</span>
-                        <span class="tag-technical text-concrete">MEP</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Hospital Tafí Viejo</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> UNOPS</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Tucumán</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 06: MÓDULOS SHELTER -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-75">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">06</div>
-                    <img src="assets/optimizadas/Shelter.webp" alt="Módulos Shelter" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">TELECOM</span>
-                        <span class="tag-technical text-concrete">IND.</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Módulos Shelter</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Telecomunicaciones</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Varias Prov.</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 07: PROTOTIPO MANFIELD -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-100">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">07</div>
-                    <img src="assets/optimizadas/Manfield.webp" alt="Prototipo Manfield" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/43yj92R" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">PROTOTIPO</span>
-                        <span class="tag-technical text-concrete">VIVIENDA</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Prototipo Manfield</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> ECOSAN</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Buenos Aires</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 08: CAMPAMENTO TECHINT I -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-150">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">08</div>
-                    <img src="assets/optimizadas/Campamento 1.webp" alt="Campamento Techint I" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/3JcQWHP" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">INDUSTRIAL</span>
-                        <span class="tag-technical text-concrete">MASIVO</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Campamento Techint I</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Techint</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Santa Cruz</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 09: PREDIO SYNGENTA -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">09</div>
-                    <img src="assets/optimizadas/Syngenta.webp" alt="Predio Syngenta" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4rkhPuL" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">AGRO</span>
-                        <span class="tag-technical text-concrete">ANTEPROY.</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Predio Syngenta</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Syngenta</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Córdoba</p>
-                    </div>
-                </div>
-            </article>
-
-             <!-- 10: MÓDULO CELDA -->
-             <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-75">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">10</div>
-                    <img src="assets/optimizadas/Celda.webp" alt="Módulo Celda" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SEGURIDAD</span>
-                        <span class="tag-technical text-concrete">MODULAR</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Módulo Celda</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Servicio Penitenciario</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Varias Prov.</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 11: MÓDULOS SISU -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-100">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">11</div>
-                    <img src="assets/optimizadas/SISU.webp" alt="Módulos SISU" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SANITARIO</span>
-                        <span class="tag-technical text-concrete">URBANO</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Módulos Sanitarios SISU</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> SISU</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> AMBA</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 12: CUARZO I DEPTO TIPO -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-150">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">12</div>
-                    <img src="assets/optimizadas/Cuarzo Depto.webp" alt="Cuarzo Depto Tipo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4rkhRCT" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">RESIDENCIAL</span>
-                        <span class="tag-technical text-concrete">DETALLE</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Cuarzo I - Depto Tipo</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Everhouse</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Neuquén</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 13: COMEDOR TECHINT II -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">13</div>
-                    <img src="assets/optimizadas/Comedor.webp" alt="Comedor Techint II" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/44aENu8" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">INDUSTRIAL</span>
-                        <span class="tag-technical text-concrete">COMEDOR</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Comedor Techint II</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Techint SACDE</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Ciudad de Córdoba</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 14: CAMPAMENTO TECHINT II - OFICINAS -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-75">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">14</div>
-                    <img src="assets/optimizadas/Oficina.webp" alt="Campamento Techint II Oficinas" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/3LXuV0t" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">INDUSTRIAL</span>
-                        <span class="tag-technical text-concrete">OFICINAS</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Techint II – Oficinas</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Techint SACDE</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Ciudad de Córdoba</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 15: CAMPAMENTO TECHINT II - RECREACIÓN -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-100">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">15</div>
-                    <img src="assets/optimizadas/Recreacion.webp" alt="Campamento Techint II Recreación" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4o68P9m" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">INDUSTRIAL</span>
-                        <span class="tag-technical text-concrete">RECREACION</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Techint II – Recreación</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Techint SACDE</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Ciudad de Córdoba</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 16: AMPLIACIÓN HOSPITAL RAWSON -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-150">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">16</div>
-                    <img src="assets/optimizadas/Rawson.webp" alt="Ampliación Hospital Rawson" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4oSNOAx" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SALUD</span>
-                        <span class="tag-technical text-concrete">AMPLIACION</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Ampliación Hospital Rawson</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Muni. Córdoba</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Ciudad de Córdoba</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 17: DESTACAMENTO ESCOBAR -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">17</div>
-                    <img src="assets/optimizadas/Destacamento escobar.webp" alt="Destacamento Escobar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">SEGURIDAD</span>
-                        <span class="tag-technical text-concrete">MODULAR</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Destacamento Escobar</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Muni. Escobar</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Buenos Aires</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 18: CUARZO I - COMPLEJO -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-75">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">18</div>
-                    <img src="assets/optimizadas/Cuarzo complejo.webp" alt="Cuarzo I Complejo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4o7lOro" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">RESIDENCIAL</span>
-                        <span class="tag-technical text-concrete">COMPLEJO</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Cuarzo I – Complejo</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Everhouse</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Añelo, Neuquén</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 19: PROTOTIPO SHOP SHELL -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-100">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">19</div>
-                    <img src="assets/optimizadas/Shop shell.webp" alt="Prototipo Shop Shell" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">COMERCIAL</span>
-                        <span class="tag-technical text-concrete">MODULAR</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Prototipo Shop Shell</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Shell</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Prototipo</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 20: STAND DE EXPOSICIÓN (PROYECTO FINAL) -->
-            <article class="group relative bg-carbon border border-white/5 hover:border-accent/40 transition-all duration-300 project-card-tech reveal delay-150">
-                <div class="relative aspect-[4/3] bg-void overflow-hidden border-b border-white/5">
-                    <div class="absolute top-2 right-2 z-10 tag-technical bg-black/80 text-accent border-accent/20">20</div>
-                    <img src="assets/optimizadas/Stand.webp" alt="Stand Exposición" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" loading="lazy">
-                    <a href="https://autode.sk/4qtRnOu" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="border border-accent text-accent px-3 py-1 text-[10px] font-mono uppercase tracking-widest hover:bg-accent hover:text-void transition-colors">Ver Modelo 3D</span>
-                    </a>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="tag-technical text-concrete">EVENTOS</span>
-                        <span class="tag-technical text-concrete">EFÍMERO</span>
-                    </div>
-                    <h3 class="font-display text-sm text-white mb-2 leading-tight group-hover:text-accent transition-colors">Stand Modular</h3>
-                    <div class="space-y-1">
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Cli:</span> Expo Constr.</p>
-                        <p class="font-mono text-[9px] text-concrete uppercase truncate"><span class="text-white/30">Loc:</span> Buenos Aires</p>
-                    </div>
-                </div>
-            </article>
+            <!-- Servicio 4 -->
+            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-150">
+                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">04. SUPERVISIÓN</span>
+                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-ruler-combined text-4xl"></i></div>
+                <h3 class="font-display text-2xl text-ink mb-4">Gestión Técnica</h3>
+                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
+                    Control de calidad y dirección técnica. Aseguramos la trazabilidad del proyecto, verificando que la ejecución en obra respete milimétricamente las especificaciones del modelo digital.
+                </p>
+            </div>
 
         </div>
     </section>
 
-    <!-- CONTACTO DE ALTO NIVEL -->
-    <footer id="contact" class="bg-void border-t border-white/10 pt-24 pb-12 px-6 lg:px-12 relative overflow-hidden">
-        <div class="absolute inset-0 engineering-grid opacity-50 pointer-events-none"></div>
-        <div class="relative z-10 max-w-full mx-auto">
+    <!-- SECTION: ARCHIVO DE PROYECTOS -->
+    <section id="projects" class="py-32 bg-mist/50 relative">
+        <div class="px-6 lg:px-24 mb-20 flex items-end justify-between reveal">
+            <div>
+                <span class="font-mono text-[10px] text-tech-blue mb-4 block tracking-widest">/// DATABASE</span>
+                <h2 class="font-display text-5xl md:text-7xl text-ink tracking-tight">Archivo 20-24</h2>
+            </div>
+            <div class="text-right hidden md:block font-mono text-[10px] text-graphite uppercase border-l border-line pl-6">
+                <p>Proyectos Indexados: 20</p>
+                <p>Estatus: Completado / En Curso</p>
+            </div>
+        </div>
+
+        <!-- GRILLA DE PROYECTOS -->
+        <div class="px-6 lg:px-24">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- 01: Hospitales Turísticos -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Turistico.webp" class="w-full h-full object-cover technical-filter" alt="Hospitales Turísticos" loading="lazy">
+                        <!-- OVERLAY 3D BUTTON -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
+                        <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Turismo</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospitales Turísticos</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Desarrollo integral de infraestructura sanitaria modular en zonas turísticas clave (Punilla, Calamuchita). Implementación de metodologías BIM.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 02: Centros Sanitarios -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Centro sanitario modular.webp" class="w-full h-full object-cover technical-filter" alt="Centros Sanitarios" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qwBrLI" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Modular</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Centros Sanitarios</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Despliegue estratégico de unidades sanitarias modulares de emergencia en la Ciudad de Córdoba.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 03: Hospital Penitenciario -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Penitenciario.webp" class="w-full h-full object-cover technical-filter" alt="Hospital Penitenciario" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4omEKmx" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Seguridad</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospital Penitenciario</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Ejecución de infraestructura de salud de alta seguridad en Gral. Güemes.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Salta</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Sobrestante</div>
+                    </div>
+                </article>
+
+                <!-- 04: Módulos Galaxy -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Galaxy.webp" class="w-full h-full object-cover technical-filter" alt="Módulos Galaxy" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/479NwNK" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Minería</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">110u</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos Galaxy</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Desarrollo y gestión de obra para campamento minero a gran escala.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Galaxy Lithium</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Jefe de Obra</div>
+                    </div>
+                </article>
+
+                <!-- 05: Hospital Tafí Viejo -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Tafi.webp" class="w-full h-full object-cover technical-filter" alt="Tafi Viejo" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/47x9Ke5" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">MEP</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospital Tafí Viejo</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Modelado BIM y coordinación técnica para centro de atención sanitaria modular.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Tucumán</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 06: Módulos Shelter -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Shelter.webp" class="w-full h-full object-cover technical-filter" alt="Shelter" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Telecom</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Tech</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos Shelter</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Ingeniería de detalle para cabinas técnicas de telecomunicaciones (Shelters).
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Confidencial</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 07: Campamento Techint I -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Campamento 1.webp" class="w-full h-full object-cover technical-filter" alt="Techint 1" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/3JcQWHP" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Masivo</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Campamento Techint I</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Ejecución masiva de 346 módulos habitacionales en Santa Cruz.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Santa Cruz</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Jefe de Obra</div>
+                    </div>
+                </article>
+
+                 <!-- 08: Módulos SISU -->
+                 <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/SISU.webp" class="w-full h-full object-cover technical-filter" alt="SISU" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Urbano</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Sanitario</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos SISU</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Unidades sanitarias urbanas para proyectos de Integración Socio-Urbana (SISU).
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Secretaría ISU</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 09: Cuarzo I Depto -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Cuarzo Depto.webp" class="w-full h-full object-cover technical-filter" alt="Cuarzo" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4rkhRCT" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Residencial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Vaca Muerta</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Cuarzo I – Depto</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Modelado BIM detallado de tipología habitacional para complejo en Vaca Muerta.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Everhouse</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Neuquén</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 10: Predio Syngenta -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Syngenta.webp" class="w-full h-full object-cover technical-filter" alt="Syngenta" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4rkhPuL" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Corporativo</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Agro</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Predio Syngenta</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Anteproyecto comercial y desarrollo técnico para planta agroindustrial.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Syngenta</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Jesús María</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador Com.</div>
+                    </div>
+                </article>
+
+                <!-- 11: Prototipo Manfield -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Manfield.webp" class="w-full h-full object-cover technical-filter" alt="Manfield" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/43yj92R" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Vivienda</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Manfield</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Desarrollo integral de un prototipo industrial modular para ECOSAN.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>ECOSAN</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 12: Prototipo Celda -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Celda.webp" class="w-full h-full object-cover technical-filter" alt="Celda" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Seguridad</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Modular</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Celda</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Estandarización de módulo de seguridad de alta resistencia.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>ECOSAN</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 13: Comedor Techint II -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Comedor.webp" class="w-full h-full object-cover technical-filter" alt="Comedor" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/44aENu8" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Servicios</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Comedor Techint II</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Módulo de servicios a gran escala para personal en sitio.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 14: Oficinas Techint II -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Oficina.webp" class="w-full h-full object-cover technical-filter" alt="Oficinas" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/3LXuV0t" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Administrativo</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Oficinas Techint II</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Espacios administrativos modulares de alto estándar para obra.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 15: Recreación Techint II -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Recreacion.webp" class="w-full h-full object-cover technical-filter" alt="Recreación" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4o68P9m" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Ocio</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Recreación Techint II</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Áreas de esparcimiento modularizadas para campamento.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 16: Ampliación Rawson -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Rawson.webp" class="w-full h-full object-cover technical-filter" alt="Rawson" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4oSNOAx" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Pública</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Ampliación Rawson</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Ampliación estratégica de infraestructura hospitalaria existente.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Muni Cba</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 17: Destacamento Escobar -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Destacamento escobar.webp" class="w-full h-full object-cover technical-filter" alt="Escobar" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Seguridad</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Pública</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Destacamento Escobar</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Puesto de seguridad modular para despliegue rápido en Buenos Aires.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Muni Escobar</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Bs. As.</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
+                    </div>
+                </article>
+
+                <!-- 18: Cuarzo I Complejo -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Cuarzo complejo.webp" class="w-full h-full object-cover technical-filter" alt="Cuarzo Complejo" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4o7lOro" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Residencial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Masterplan</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Cuarzo I – Complejo</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Masterplan y coordinación BIM para complejo habitacional en zona industrial.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Everhouse</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Neuquén</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 19: CAP San Jerónimo -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/San Jeronimo.webp" class="w-full h-full object-cover technical-filter" alt="San Jerónimo" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">CAPS</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">CAP San Jerónimo</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Centro de Atención Primaria de la Salud (CAPS). Modelado integral y documentación técnica.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Gov. Santa Fe</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Santa Fe</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
+                    </div>
+                </article>
+
+                <!-- 20: Shop Shell -->
+                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
+                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
+                        <img src="assets/optimizadas/Shell.webp" class="w-full h-full object-cover technical-filter" alt="Shell" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
+                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
+                                Ver Modelo 3D
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Comercial</span>
+                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Retail</span>
+                    </div>
+                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Shop Shell</h3>
+                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
+                        Tienda modular estandarizada para estaciones de servicio. Desarrollo de imagen corporativa.
+                    </p>
+                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
+                        <div><span class="text-gray-400 block mb-1">Cliente</span>Shell</div>
+                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
+                        <div class="col-span-2 text-ink font-medium">Rol: Modelador Com.</div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (Architecture Style) -->
+    <footer id="contact" class="bg-paper border-t border-line pt-24 pb-12 relative overflow-hidden">
+        <div class="px-6 lg:px-24 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
-                <div class="reveal">
-                    <p class="font-mono text-accent text-xs mb-6 tracking-widest flex items-center gap-2">
-                        <span class="w-4 h-[1px] bg-accent"></span> CONTACTO
-                    </p>
-                    <h2 class="font-display text-5xl md:text-7xl text-white leading-[0.9] tracking-tighter mb-8">
-                        ESCALEMOS<br>SU VISIÓN.
-                    </h2>
-                    <p class="text-concrete text-sm max-w-md leading-relaxed font-sans">
-                        Buscamos colaboraciones con estudios y desarrolladores que valoren la precisión técnica y la eficiencia modular.
-                    </p>
-                </div>
-                <div class="flex flex-col justify-end items-start lg:items-end reveal delay-100">
-                    <a href="mailto:info@modellwerk.com" class="group relative inline-block">
-                        <span class="font-display text-3xl md:text-5xl text-white group-hover:text-accent transition-colors duration-300">
-                            info@modellwerk.com
-                        </span>
-                        <span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-accent group-hover:w-full transition-all duration-500 ease-out"></span>
+                <div>
+                    <span class="font-mono text-xs text-tech-blue uppercase tracking-widest block mb-6">/// Iniciación</span>
+                    <a href="mailto:info@modellwerk.com" class="font-display text-5xl md:text-7xl lg:text-8xl text-ink font-bold tracking-tighter leading-none hover:text-tech-blue transition-colors interactive">
+                        INFO@<br>MODELL<br>WERK.COM
                     </a>
-                    <p class="font-mono text-xs text-concrete mt-4 text-right">
-                        Respuesta estimada: 24h
-                    </p>
+                </div>
+                <div class="flex flex-col justify-end items-start md:items-end">
+                    <div class="grid grid-cols-2 gap-12 font-mono text-xs uppercase text-graphite">
+                        <div>
+                            <span class="block text-ink font-bold mb-2">Oficina</span>
+                            <p>Córdoba, Argentina</p>
+                            <p>Servicios Globales</p>
+                        </div>
+                        <div>
+                            <span class="block text-ink font-bold mb-2">Conectar</span>
+                            <a href="#" class="block hover:text-tech-blue">LinkedIn</a>
+                            <a href="#" class="block hover:text-tech-blue">Instagram</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="border-t border-white/10 pt-12 grid grid-cols-1 md:grid-cols-4 gap-12 reveal delay-200">
-                <div>
-                    <h4 class="font-mono text-[10px] uppercase text-white/40 tracking-widest mb-4">Base Operativa</h4>
-                    <p class="text-white text-sm font-sans leading-relaxed">Córdoba, Argentina<br>Servicios Globales</p>
-                </div>
-                <div>
-                    <h4 class="font-mono text-[10px] uppercase text-white/40 tracking-widest mb-4">Conexión</h4>
-                    <ul class="space-y-2 font-sans">
-                        <li><a href="#" class="text-white text-sm hover:text-accent transition-colors flex items-center gap-2"><i class="fab fa-linkedin text-xs"></i> LinkedIn</a></li>
-                        <li><a href="#" class="text-white text-sm hover:text-accent transition-colors flex items-center gap-2"><i class="fab fa-instagram text-xs"></i> Instagram</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-mono text-[10px] uppercase text-white/40 tracking-widest mb-4">Sitemap</h4>
-                    <ul class="space-y-2 font-mono text-xs">
-                        <li><a href="#project-index" class="text-concrete hover:text-white transition-colors">/ Proyectos</a></li>
-                        <li><a href="#expertise" class="text-concrete hover:text-white transition-colors">/ Expertise</a></li>
-                        <li><a href="#contact" class="text-concrete hover:text-white transition-colors">/ Contacto</a></li>
-                    </ul>
-                </div>
-                <div class="md:text-right flex flex-col justify-between">
-                    <div class="hidden md:flex justify-end"><i class="fas fa-cube text-accent text-2xl mb-4 opacity-80"></i></div>
-                    <div>
-                        <p class="text-concrete text-[10px] font-mono uppercase tracking-widest">&copy; 2024 MODELLWERK</p>
-                        <p class="text-white/20 text-[10px] font-mono mt-1">INGENIERÍA DE PRECISIÓN</p>
-                    </div>
+            
+            <div class="border-t border-line pt-8 flex justify-between items-center text-[10px] font-mono uppercase text-graphite">
+                <p>&copy; 2024 MODELLWERK.</p>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-tech-blue rounded-full animate-pulse"></span>
+                    <span>Sistema Activo</span>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const reveals = document.querySelectorAll('.reveal');
-            function checkScroll() {
-                const windowHeight = window.innerHeight;
-                reveals.forEach(el => {
-                    const elementTop = el.getBoundingClientRect().top;
-                    if (elementTop < windowHeight - 100) el.classList.add('active');
-                });
-            }
-            const flipper = document.getElementById('flipper');
-            const backTag = document.getElementById('back-tag');
-            const backTitle = document.getElementById('back-title');
-            const backDesc = document.getElementById('back-desc');
-            const backValue = document.getElementById('back-value');
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    backTag.innerText = card.getAttribute('data-tag');
-                    backTitle.innerText = card.getAttribute('data-title');
-                    backDesc.innerText = card.getAttribute('data-desc');
-                    backValue.innerText = card.getAttribute('data-value');
-                    flipper.classList.add('is-flipped');
-                });
-                card.addEventListener('mouseleave', () => {
-                    flipper.classList.remove('is-flipped');
-                });
+            // --- CUSTOM CURSOR ---
+            const cursor = document.getElementById('cursor');
+            const interactives = document.querySelectorAll('.interactive, a, button');
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
             });
-            checkScroll(); 
-            window.addEventListener('scroll', checkScroll);
+
+            interactives.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            // --- HERO SLIDER (Crossfade) ---
+            const slides = document.querySelectorAll('.slide-wrapper');
+            let currentSlide = 0;
+            const slideInterval = 5000;
+
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, slideInterval);
+
+            // --- SCROLL REVEAL ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
     </script>
 </body>
