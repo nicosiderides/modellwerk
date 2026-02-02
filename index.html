@@ -148,14 +148,15 @@
     <!-- NAVBAR -->
     <nav class="fixed top-0 w-full z-50 px-6 lg:px-12 py-6 flex justify-between items-center bg-paper/90 backdrop-blur-xl border-b border-line transition-all duration-300">
         <!-- LOGO (Cuadrado 1:1) -->
-        <a href="#" class="group flex items-center gap-5 interactive">
+        <a href="#" class="group flex items-center gap-4 interactive">
             <!-- Contenedor cuadrado -->
             <div class="h-16 w-16 relative flex items-center justify-center">
                  <!-- LOGO ACTUALIZADO -->
                  <img src="assets/optimizadas/LOGOMW01.webp" alt="Logo MODELLWERK" class="w-full h-full object-contain"> 
             </div>
             
-            <div class="flex flex-col border-l border-line pl-5">
+            <!-- ELIMINADA LÍNEA DIVISORIA Y PADDING -->
+            <div class="flex flex-col">
                 <span class="font-display font-bold text-xl tracking-tight leading-none text-ink group-hover:text-tech-blue transition-colors">MODELLWERK</span>
                 <span class="font-mono text-[9px] text-graphite tracking-[0.2em] uppercase mt-1">Systems Architecture</span>
             </div>
@@ -185,8 +186,8 @@
         
         <!-- FONDO DE PORTADA (Detrás del texto) -->
         <div class="absolute inset-0 z-0 pointer-events-none">
-            <!-- IMAGEN DE PORTADA ACTUALIZADA -->
-            <img src="assets/optimizadas/PORTADAMW01.webp" class="w-full h-full object-cover grayscale opacity-25 blur-[3px] scale-105" alt="Background Structure">
+            <!-- IMAGEN DE PORTADA ACTUALIZADA: blur reducido a 1px -->
+            <img src="assets/optimizadas/PORTADAMW01.webp" class="w-full h-full object-cover grayscale opacity-25 blur-[1px] scale-105" alt="Background Structure">
             
             <!-- Degradados para integración visual (Sistemas) -->
             <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/60 to-transparent"></div>
