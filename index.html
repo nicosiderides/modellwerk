@@ -12,25 +12,24 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- CAMBIO: Manrope para el cuerpo (Técnica/Moderna) + Space Grotesk (Display) + JetBrains Mono (Datos) -->
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- CONFIGURACIÓN DE SISTEMA (WHITE & LIGHT GREY) -->
+    <!-- CONFIGURACIÓN DE SISTEMA -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'paper': '#FAFAFA',     /* Blanco Roto (Fondo) */
-                        'ink': '#0A0A0A',       /* Negro Tinta Profundo */
-                        'graphite': '#555555',  /* Gris Grafito Técnico */
-                        'line': '#E0E0E0',      /* Gris Línea Técnica */
-                        'mist': '#F5F5F7',      /* Gris Niebla Apple-like */
-                        'tech-blue': '#0044FF', /* Azul Klein Vibrante (Interacción) */
+                        'paper': '#FAFAFA',
+                        'ink': '#0A0A0A',
+                        'graphite': '#555555',
+                        'line': '#E0E0E0',
+                        'mist': '#F5F5F7',
+                        'tech-blue': '#0044FF',
                     },
                     fontFamily: {
-                        'sans': ['Manrope', 'sans-serif'], /* NUEVA FUENTE DE CUERPO */
+                        'sans': ['Manrope', 'sans-serif'],
                         'display': ['Space Grotesk', 'sans-serif'],
                         'mono': ['JetBrains Mono', 'monospace'],
                     },
@@ -57,16 +56,13 @@
     </script>
 
     <style>
-        /* --- VISUAL CORE --- */
         body {
             background-color: #FAFAFA;
             color: #0A0A0A;
             overflow-x: hidden;
-            cursor: none; /* Cursor personalizado */
-            font-feature-settings: "ss01", "ss02"; /* OpenType features */
+            cursor: none;
+            font-feature-settings: "ss01", "ss02";
         }
-
-        /* CUSTOM CURSOR */
         #cursor {
             position: fixed; top: 0; left: 0;
             width: 12px; height: 12px;
@@ -83,8 +79,6 @@
             background-color: transparent;
             backdrop-filter: blur(2px);
         }
-
-        /* GRID BACKGROUND */
         .bg-grid {
             background-size: 60px 60px;
             background-image:
@@ -93,8 +87,6 @@
             position: fixed; inset: 0; z-index: -1;
             opacity: 0.4;
         }
-
-        /* --- UTILS --- */
         .text-outline {
             -webkit-text-stroke: 1.5px #0A0A0A;
             color: transparent;
@@ -105,7 +97,6 @@
             color: transparent;
             letter-spacing: 0.02em;
         }
-
         .technical-filter {
             filter: grayscale(100%) contrast(105%) brightness(1.05);
             transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
@@ -114,18 +105,12 @@
             filter: grayscale(0%) contrast(100%);
             transform: scale(1.03);
         }
-
         .reveal {
             opacity: 0; transform: translateY(40px);
             transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Card Services Effect */
-        .service-card {
-            position: relative;
-            overflow: hidden;
-        }
+        .service-card { position: relative; overflow: hidden; }
         .service-card::after {
             content: '';
             position: absolute;
@@ -134,35 +119,27 @@
             transform: translateY(-100%);
             transition: none;
         }
-        .service-card:hover::after {
-            animation: scan 1.5s ease-in-out infinite;
-        }
+        .service-card:hover::after { animation: scan 1.5s ease-in-out infinite; }
     </style>
 </head>
 <body class="antialiased font-sans selection:bg-tech-blue selection:text-white">
 
-    <!-- ASSETS -->
     <div id="cursor"></div>
     <div class="bg-grid"></div>
 
     <!-- NAVBAR -->
     <nav class="fixed top-0 w-full z-50 px-6 lg:px-12 py-6 flex justify-between items-center bg-paper/90 backdrop-blur-xl border-b border-line transition-all duration-300">
-        <!-- LOGO (Cuadrado 1:1) -->
+        <!-- CAMBIO LOGO: h-20 w-20 (Más grande) -->
         <a href="#" class="group flex items-center gap-4 interactive">
-            <!-- Contenedor cuadrado -->
-            <div class="h-16 w-16 relative flex items-center justify-center">
-                 <!-- LOGO ACTUALIZADO -->
+            <div class="h-20 w-20 relative flex items-center justify-center">
                  <img src="assets/optimizadas/LOGOMW01.webp" alt="Logo MODELLWERK" class="w-full h-full object-contain"> 
             </div>
-            
-            <!-- ELIMINADA LÍNEA DIVISORIA Y PADDING -->
-            <div class="flex flex-col">
-                <span class="font-display font-bold text-xl tracking-tight leading-none text-ink group-hover:text-tech-blue transition-colors">MODELLWERK</span>
-                <span class="font-mono text-[9px] text-graphite tracking-[0.2em] uppercase mt-1">Systems Architecture</span>
+            <div class="flex flex-col justify-center h-20">
+                <span class="font-display font-bold text-2xl tracking-tight leading-none text-ink group-hover:text-tech-blue transition-colors">MODELLWERK</span>
+                <span class="font-mono text-[10px] text-graphite tracking-[0.25em] uppercase mt-1">Systems Architecture</span>
             </div>
         </a>
         
-        <!-- Navigation -->
         <div class="hidden md:flex gap-16 font-mono text-[10px] uppercase tracking-widest text-graphite">
             <a href="#about" class="hover:text-tech-blue transition-colors interactive relative group">
                 <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Estudio
@@ -181,35 +158,29 @@
         <div class="md:hidden text-ink"><i class="fas fa-bars"></i></div>
     </nav>
 
-    <!-- HERO SECTION (Cinemático y Estructural) -->
+    <!-- HERO SECTION -->
     <header class="relative min-h-screen w-full flex flex-col justify-center px-6 lg:px-24 pt-32 pb-20 overflow-hidden">
-        
-        <!-- FONDO DE PORTADA (Detrás del texto) -->
         <div class="absolute inset-0 z-0 pointer-events-none">
-            <!-- IMAGEN DE PORTADA ACTUALIZADA: blur reducido a 1px -->
-            <img src="assets/optimizadas/PORTADAMW01.webp" class="w-full h-full object-cover grayscale opacity-25 blur-[1px] scale-105" alt="Background Structure">
+            <!-- CAMBIO PORTADA: Efecto "Technical" (Grayscale + Contrast) similar a tarjetas -->
+            <img src="assets/optimizadas/PORTADAMW01.webp" class="w-full h-full object-cover grayscale contrast-125 brightness-90 opacity-20 blur-[1px] scale-105" alt="Background Structure">
             
-            <!-- Degradados para integración visual (Sistemas) -->
             <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/60 to-transparent"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
         </div>
 
         <div class="relative z-10 w-full reveal active max-w-[1600px] mx-0">
-            <!-- Meta Header -->
             <div class="flex items-center gap-4 mb-10">
                 <span class="font-mono text-[10px] bg-ink text-white px-3 py-1 uppercase tracking-widest">Est. 2020</span>
                 <div class="h-[1px] w-16 bg-ink/30"></div>
                 <span class="font-mono text-[10px] text-graphite uppercase tracking-widest">Ingeniería Digital & Prefabricación</span>
             </div>
 
-            <!-- Título Principal (Alineado a la izquierda) -->
             <h1 class="font-display text-6xl md:text-8xl lg:text-[11rem] font-semibold leading-[0.85] tracking-tighter text-ink mb-16 mix-blend-darken">
                 MODELOS<br>
                 <span class="text-outline backdrop-blur-sm">SISTEMAS</span><br>
                 CLARIDAD.
             </h1>
 
-            <!-- Texto Introductorio -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-16 border-t border-ink pt-10">
                 <div class="md:col-span-6">
                     <p class="font-sans text-xl md:text-2xl text-ink font-light leading-relaxed text-justify md:text-left">
@@ -245,9 +216,7 @@
             </p>
         </div>
 
-        <!-- GRILLA DE 4 SERVICIOS -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line shadow-sm">
-            
             <!-- Servicio 1 -->
             <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal">
                 <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">01. DIGITALIZACIÓN</span>
@@ -257,7 +226,6 @@
                     Construcción virtual de alta fidelidad. Desarrollamos gemelos digitales hasta LOD 400, estructurando la información para cómputos precisos, documentación ejecutiva y mantenimiento operativo.
                 </p>
             </div>
-
             <!-- Servicio 2 -->
             <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-75">
                 <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">02. COORDINACIÓN</span>
@@ -267,7 +235,6 @@
                     Auditoría federada de modelos. Utilizamos Navisworks y algoritmos de detección para resolver conflictos geométricos entre estructura, arquitectura y MEP antes de la fase de obra.
                 </p>
             </div>
-
             <!-- Servicio 3 -->
             <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-100">
                 <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">03. INDUSTRIALIZACIÓN</span>
@@ -277,7 +244,6 @@
                     Design for Manufacture and Assembly. Racionalizamos el diseño arquitectónico en componentes modulares optimizados para la producción en planta y el ensamblaje rápido en sitio.
                 </p>
             </div>
-
             <!-- Servicio 4 -->
             <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-150">
                 <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">04. SUPERVISIÓN</span>
@@ -287,7 +253,6 @@
                     Control de calidad y dirección técnica. Aseguramos la trazabilidad del proyecto, verificando que la ejecución en obra respete milimétricamente las especificaciones del modelo digital.
                 </p>
             </div>
-
         </div>
     </section>
 
@@ -312,7 +277,6 @@
                 <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
                     <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
                         <img src="assets/optimizadas/Turistico.webp" class="w-full h-full object-cover technical-filter" alt="Hospitales Turísticos" loading="lazy">
-                        <!-- OVERLAY 3D BUTTON -->
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
                             <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
                                 Ver Modelo 3D
@@ -325,7 +289,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospitales Turísticos</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Desarrollo integral de infraestructura sanitaria modular en zonas turísticas clave (Punilla, Calamuchita). Implementación de metodologías BIM.
+                        Despliegue de infraestructura sanitaria modular en zonas turísticas de Córdoba (Punilla, Calamuchita). Implementación de sistemas constructivos en seco para minimizar el impacto ambiental y acelerar los tiempos de ejecución en temporadas críticas.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
@@ -350,7 +314,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Centros Sanitarios</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Despliegue estratégico de unidades sanitarias modulares de emergencia en la Ciudad de Córdoba.
+                        Respuesta de emergencia sanitaria urbana. Desarrollo de tipologías modulares flexibles para atención primaria, priorizando la estandarización de componentes para una logística eficiente y montaje inmediato en tejido urbano consolidado.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
@@ -375,7 +339,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospital Penitenciario</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Ejecución de infraestructura de salud de alta seguridad en Gral. Güemes.
+                        Complejo de salud de alta seguridad en Gral. Güemes. Integración de elementos de hormigón prefabricado y sistemas antivandálicos, garantizando la durabilidad y cumpliendo con estrictos protocolos de seguridad penitenciaria.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
@@ -400,7 +364,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos Galaxy</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Desarrollo y gestión de obra para campamento minero a gran escala.
+                        Logística compleja para campamento minero remoto. Fabricación y montaje de 110 módulos habitacionales diseñados para soportar condiciones climáticas extremas, priorizando la eficiencia térmica y el confort del personal.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Galaxy Lithium</div>
@@ -425,7 +389,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospital Tafí Viejo</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Modelado BIM y coordinación técnica para centro de atención sanitaria modular.
+                        Coordinación BIM integral para centro de salud. Resolución de interferencias en sistemas MEP de alta densidad (gases medicinales, climatización) en espacios técnicos reducidos para asegurar mantenibilidad futura.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
@@ -450,7 +414,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos Shelter</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Ingeniería de detalle para cabinas técnicas de telecomunicaciones (Shelters).
+                        Cabinas técnicas de alta prestación para telecomunicaciones. Diseño enfocado en la estanqueidad total, control climático pasivo/activo y seguridad física para proteger equipamiento electrónico sensible.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Confidencial</div>
@@ -462,7 +426,7 @@
                 <!-- 07: Campamento Techint I -->
                 <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
                     <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Techint 1.webp" class="w-full h-full object-cover technical-filter" alt="Techint 1" loading="lazy">
+                        <img src="assets/optimizadas/Campamento 1.webp" class="w-full h-full object-cover technical-filter" alt="Techint 1" loading="lazy">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
                             <a href="https://autode.sk/3JcQWHP" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
                                 Ver Modelo 3D
@@ -475,7 +439,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Campamento Techint I</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Ejecución masiva de 346 módulos habitacionales en Santa Cruz.
+                        Despliegue masivo en Santa Cruz. Gestión de producción y montaje de 346 módulos habitacionales, aplicando procesos industriales para asegurar calidad uniforme y cumplimiento de cronogramas exigentes en oil & gas.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
@@ -500,7 +464,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos SISU</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Unidades sanitarias urbanas para proyectos de Integración Socio-Urbana (SISU).
+                        Integración Socio-Urbana mediante módulos sanitarios "húmedos". Solución "plug-and-play" robusta para dotar de infraestructura básica a asentamientos informales, con foco en la durabilidad y conexión simple a redes.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Secretaría ISU</div>
@@ -512,7 +476,7 @@
                 <!-- 09: Cuarzo I Depto -->
                 <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
                     <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Cuarzo depto.webp" class="w-full h-full object-cover technical-filter" alt="Cuarzo" loading="lazy">
+                        <img src="assets/optimizadas/Cuarzo Depto.webp" class="w-full h-full object-cover technical-filter" alt="Cuarzo" loading="lazy">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
                             <a href="https://autode.sk/4rkhRCT" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
                                 Ver Modelo 3D
@@ -525,7 +489,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Cuarzo I – Depto</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Modelado BIM detallado de tipología habitacional para complejo en Vaca Muerta.
+                        Vivienda industrializada en Vaca Muerta. Modelado de tipologías residenciales optimizadas para el transporte y montaje en zona petrolera, garantizando calidad de terminación y habitabilidad superior.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Everhouse</div>
@@ -550,7 +514,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Predio Syngenta</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Anteproyecto comercial y desarrollo técnico para planta agroindustrial.
+                        Arquitectura corporativa para el agro. Desarrollo de anteproyecto técnico que integra laboratorios, oficinas y áreas logísticas, reflejando la identidad de marca a través de sistemas constructivos modernos y eficientes.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Syngenta</div>
@@ -575,7 +539,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Manfield</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Desarrollo integral de un prototipo industrial modular para ECOSAN.
+                        I+D para vivienda modular industrializada. Optimización de envolventes térmicas multicapa y detalles constructivos para maximizar la eficiencia energética y la velocidad de producción en línea de montaje.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>ECOSAN</div>
@@ -600,7 +564,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Celda</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Estandarización de módulo de seguridad de alta resistencia.
+                        Micro-arquitectura de seguridad. Diseño de unidad penitenciaria autónoma transportable, integrando estructura reforzada y sanitarios antivandálicos en un módulo "plug-and-play" de alta resistencia.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>ECOSAN</div>
@@ -625,7 +589,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Comedor Techint II</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Módulo de servicios a gran escala para personal en sitio.
+                        Infraestructura de servicios a gran escala. Resolución de grandes luces mediante módulos acoplables para crear espacios diáfanos de alta capacidad, integrando cocinas industriales y sistemas HVAC centralizados.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
@@ -650,7 +614,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Oficinas Techint II</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Espacios administrativos modulares de alto estándar para obra.
+                        Espacios de trabajo técnico en obra. Diseño modular enfocado en la ergonomía, conectividad y confort acústico para equipos de ingeniería, elevando el estándar de las instalaciones temporales de obra.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
@@ -675,7 +639,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Recreación Techint II</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Áreas de esparcimiento modularizadas para campamento.
+                        Bienestar en campamentos remotos. Creación de espacios comunes flexibles (SUM, gimnasios) mediante sistemas industrializados, esenciales para la calidad de vida del personal en locaciones aisladas.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
@@ -700,7 +664,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Ampliación Rawson</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Ampliación estratégica de infraestructura hospitalaria existente.
+                        Intervención quirúrgica en patrimonio hospitalario. Uso de escaneo láser y BIM para proyectar ampliaciones modulares precisas que se integran al edificio histórico sin interrumpir su funcionamiento crítico.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Muni Cba</div>
@@ -725,7 +689,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Destacamento Escobar</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Puesto de seguridad modular para despliegue rápido en Buenos Aires.
+                        Infraestructura de seguridad ciudadana de despliegue rápido. Diseño de puesto de vigilancia blindado y autosuficiente, permitiendo una implantación táctica inmediata en puntos estratégicos del municipio.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Muni Escobar</div>
@@ -750,7 +714,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Cuarzo I – Complejo</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Masterplan y coordinación BIM para complejo habitacional en zona industrial.
+                        Masterplan urbano en entorno industrial. Planificación y modelado de redes de infraestructura y espacios comunes para un complejo habitacional a gran escala, optimizando la ocupación del suelo y los servicios.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Everhouse</div>
@@ -775,7 +739,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">CAP San Jerónimo</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Centro de Atención Primaria de la Salud (CAPS). Modelado integral y documentación técnica.
+                        Documentación técnica para licitación pública. Desarrollo de modelo BIM integral para Centro de Atención Primaria, generando cómputos métricos exactos y planos de detalle para asegurar transparencia en la obra pública.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Gov. Santa Fe</div>
@@ -800,7 +764,7 @@
                     </div>
                     <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Shop Shell</h3>
                     <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Tienda modular estandarizada para estaciones de servicio. Desarrollo de imagen corporativa.
+                        Estandarización de retail modular. Desarrollo de sistema constructivo replicable para tiendas de conveniencia, garantizando la consistencia de la imagen de marca Shell y reduciendo drásticamente los tiempos de apertura.
                     </p>
                     <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
                         <div><span class="text-gray-400 block mb-1">Cliente</span>Shell</div>
@@ -891,5 +855,3 @@
     </script>
 </body>
 </html>
-
-
