@@ -1,0 +1,14 @@
+# Splats (experimentos pesados, no van a producción)
+visor/assets/splat/
+
+# Config local de Claude Code (rutas absolutas, no portable)
+.claude/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Blender backups
+*.blend1
+*.blend2

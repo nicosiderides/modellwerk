@@ -1,0 +1,209 @@
+/* ─── Sidebar izquierda ───────────────────────────────────────────────────── */
+
+#pl {
+  width: 252px;
+  flex-shrink: 0;
+  background: var(--sidebar);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+/* Label de sección estilo /// */
+.sll {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--tech-blue);
+  padding: 0 18px 8px;
+}
+.sll::before { content: '/// '; }
+
+.mc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  cursor: none;
+  transition: background .15s;
+  border-left: 2px solid transparent;
+}
+.mc:hover:not(.soon) { background: rgba(255,255,255,.04); }
+.mc.active           { background: rgba(0,68,255,.08); border-left-color: var(--tech-blue); }
+.mc.soon             { cursor: default; }
+
+.mth {
+  width: 38px;
+  height: 26px;
+  background: #111;
+  border-radius: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #222;
+}
+
+.mi  { flex: 1; min-width: 0; }
+
+.mn {
+  font-family: var(--ff-s);
+  font-size: 11px;
+  font-weight: 600;
+  color: #e8e8e8;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.mc.soon .mn { color: #2a2a2a; }
+
+.md { font-family: var(--ff-m); font-size: 9px; color: var(--s-muted); margin-top: 3px; letter-spacing: .05em; }
+.mc.soon .md { color: #222; }
+
+.mb {
+  font-family: var(--ff-m);
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--tech-blue);
+  background: rgba(0,68,255,.1);
+  padding: 2px 5px;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+.mc.soon .mb { color: #222; background: rgba(255,255,255,.03); }
+
+.sld { height: 1px; background: var(--s-brd); margin: 14px 18px; }
+
+/* ─── Sidebar derecha ────────────────────────────────────────────────────── */
+
+#pr {
+  width: 288px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 24px 22px;
+  gap: 20px;
+}
+
+.prt {
+  font-family: var(--ff-s);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.prs {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.sb  { border-top: 1px solid var(--border); padding-top: 14px; }
+
+/* Label de sección estilo /// */
+.sbl {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--tech-blue);
+  margin-bottom: 10px;
+}
+.sbl::before { content: '/// '; }
+
+.sr {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.sr:last-child { border-bottom: none; }
+
+.sk { font-family: var(--ff-u); font-size: 11px; color: var(--muted); }
+
+.sv {
+  font-family: var(--ff-m);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  transition: color .55s ease-out;
+}
+
+/* Flash dorado en acabados */
+.sr.flash .sv {
+  color: var(--accent);
+  transition: color .15s ease-out;
+}
+
+.pb  { border-top: 1px solid var(--border); padding-top: 18px; }
+
+.pl2 {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--tech-blue);
+  margin-bottom: 6px;
+}
+.pl2::before { content: '/// '; }
+
+.pa {
+  font-family: var(--ff-s);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  line-height: 1;
+}
+.pc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  font-family: var(--ff-u);
+  vertical-align: super;
+}
+.pn { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+.btnp {
+  width: 100%;
+  padding: 13px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--ff-m);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0;
+  cursor: none;
+  transition: background .2s;
+}
+.btnp:hover { background: var(--tech-blue); }
+
+.btns {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--ff-m);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: none;
+  transition: border-color .2s, color .2s;
+}
+.btns:hover { border-color: var(--ink); color: var(--ink); }

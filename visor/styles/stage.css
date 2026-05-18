@@ -1,0 +1,151 @@
+/* ─── Filtros de visualización ───────────────────────────────────────────── */
+
+#filters {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 50px;
+  z-index: 10;
+  display: flex;
+  gap: 2px;
+  background: rgba(10,10,10,.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 0;
+  padding: 3px;
+}
+
+.fbtn {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  background: none;
+  border: none;
+  padding: 5px 12px;
+  cursor: none;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.fbtn:hover  { color: rgba(255,255,255,.75); }
+.fbtn.active { background: rgba(0,68,255,.25); color: #6699ff; }
+
+/* ─── Viewport ────────────────────────────────────────────────────────────── */
+
+#vw {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+#vw canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+#vw canvas:active { cursor: grabbing; }
+
+/* Canvas del Gaussian Splat: queda detrás del canvas de Three.js, mismo tamaño. */
+#splat-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+/* El canvas de Three.js (insertado dinámicamente) va encima del splat */
+#vw > canvas:not(#splat-canvas) {
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 1;
+}
+
+/* ─── Mode toggle (Órbita / Recorrer) ────────────────────────────────────── */
+
+#mt {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  background: rgba(10,10,10,.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 0;
+  padding: 3px;
+  gap: 2px;
+}
+
+.mdb {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+  background: none;
+  border: none;
+  padding: 6px 14px;
+  cursor: none;
+  transition: all .15s;
+}
+.mdb.active { background: var(--accent); color: var(--ink); }
+.mdb:hover:not(.active):not(:disabled) { color: rgba(255,255,255,.85); }
+.mdb:disabled { opacity: .35; cursor: not-allowed; }
+
+/* ─── Acciones de modelo (ensamblaje, etc.) ───────────────────────────────── */
+
+#mta {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  z-index: 10;
+  display: flex;
+  background: rgba(10,10,10,.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.07);
+  padding: 3px;
+}
+
+/* ─── FPS hint ────────────────────────────────────────────────────────────── */
+
+#fh {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+  background: rgba(10,10,10,.85);
+  backdrop-filter: blur(8px);
+  padding: 7px 16px;
+  border-radius: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s;
+}
+#fh.visible { opacity: 1; }
+
+/* ─── Crosshair ───────────────────────────────────────────────────────────── */
+
+#ch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+#ch.active { opacity: 1; }
+
+#ch::before,
+#ch::after {
+  content: '';
+  position: absolute;
+  background: rgba(255,255,255,.85);
+}
+#ch::before { width: 1px;  height: 14px; top: -7px; left: 0; }
+#ch::after  { width: 14px; height: 1px;  top: 0;    left: -7px; }

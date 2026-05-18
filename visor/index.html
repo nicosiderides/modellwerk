@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -6,126 +6,17 @@
   <title>Modellwerk — Configurador MW40</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:      #fafaf7; --ink:    #16161a; --muted:  #8a8680;
-      --border:  #e2ddd8; --accent: #c4a572; --accent2:#9a7d4f;
-      --sidebar: #16161a; --s-muted:#5a5a5a; --s-brd:  #262626;
-      --ff-s:'Fraunces',serif; --ff-u:'Inter',sans-serif; --ff-m:'DM Mono',monospace;
-    }
-    html,body{ height:100%; background:var(--bg); color:var(--ink); font-family:var(--ff-u); overflow:hidden; }
-
-    /* HEADER */
-    #header{ position:fixed; top:0; left:0; right:0; height:56px; z-index:100;
-      background:var(--bg); border-bottom:1px solid var(--border);
-      display:flex; align-items:center; padding:0 24px; gap:36px; }
-    .logo{ font-family:var(--ff-s); font-size:19px; font-weight:700; letter-spacing:-.01em; flex-shrink:0; }
-    .logo em{ font-style:normal; color:var(--accent); }
-    #hnav{ display:flex; gap:24px; flex:1; }
-    .nl{ font-size:13px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
-    .nl:hover,.nl.active{ color:var(--ink); }
-    .btn-cta{ background:var(--ink); color:var(--bg); font-family:var(--ff-u); font-size:11px; font-weight:600;
-      letter-spacing:.07em; text-transform:uppercase; padding:8px 18px; border:none; border-radius:2px; cursor:pointer; transition:background .2s; }
-    .btn-cta:hover{ background:var(--accent2); }
-
-    /* LAYOUT */
-    #app{ display:flex; height:100vh; padding-top:56px; }
-
-    /* LEFT */
-    #pl{ width:252px; flex-shrink:0; background:var(--sidebar); display:flex; flex-direction:column; overflow-y:auto; padding:20px 0; }
-    .sll{ font-family:var(--ff-m); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:#3a3a3a; padding:0 18px 8px; }
-    .mc{ display:flex; align-items:center; gap:10px; padding:10px 18px; cursor:pointer; transition:background .15s; border-left:2px solid transparent; }
-    .mc:hover:not(.soon){ background:rgba(255,255,255,.04); }
-    .mc.active{ background:rgba(196,165,114,.08); border-left-color:var(--accent); }
-    .mc.soon{ cursor:default; }
-    .mth{ width:38px; height:26px; background:#222; border-radius:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-    .mi{ flex:1; min-width:0; }
-    .mn{ font-family:var(--ff-m); font-size:11px; font-weight:500; color:#e8e8e8; letter-spacing:.04em; }
-    .mc.soon .mn{ color:#3a3a3a; }
-    .md{ font-size:10px; color:var(--s-muted); margin-top:2px; }
-    .mc.soon .md{ color:#2a2a2a; }
-    .mb{ font-family:var(--ff-m); font-size:8px; letter-spacing:.1em; text-transform:uppercase;
-      color:var(--accent); background:rgba(196,165,114,.12); padding:2px 5px; border-radius:2px; flex-shrink:0; }
-    .mc.soon .mb{ color:#333; background:rgba(255,255,255,.03); }
-    .sld{ height:1px; background:var(--s-brd); margin:14px 18px; }
-
-    /* VIEWER */
-    #vw{ flex:1; position:relative; min-width:0; overflow:hidden; }
-    #vw canvas{ display:block; width:100%; height:100%; }
-    #mt{ position:absolute; top:14px; left:50%; transform:translateX(-50%); z-index:10;
-      display:flex; background:rgba(20,20,24,.82); backdrop-filter:blur(10px);
-      border:1px solid rgba(255,255,255,.07); border-radius:4px; padding:3px; gap:2px; }
-    .mdb{ font-family:var(--ff-m); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-      color:rgba(255,255,255,.35); background:none; border:none; padding:6px 14px; border-radius:2px; cursor:pointer; transition:all .15s; }
-    .mdb.active{ background:var(--accent); color:var(--ink); }
-    #fh{ position:absolute; bottom:110px; left:50%; transform:translateX(-50%); z-index:10;
-      font-family:var(--ff-m); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-      color:rgba(255,255,255,.55); background:rgba(20,20,24,.75); backdrop-filter:blur(6px);
-      padding:7px 16px; border-radius:3px; pointer-events:none; opacity:0; transition:opacity .3s; }
-    #fh.visible{ opacity:1; }
-    #ch{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; opacity:0; transition:opacity .2s; }
-    #ch.active{ opacity:1; }
-    #ch::before,#ch::after{ content:''; position:absolute; background:rgba(255,255,255,.85); }
-    #ch::before{ width:1px; height:14px; top:-7px; left:0; }
-    #ch::after{ width:14px; height:1px; top:0; left:-7px; }
-
-    /* CUSTOMIZER */
-    #cust{ position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:10;
-      background:rgba(18,18,22,.9); backdrop-filter:blur(18px);
-      border:1px solid rgba(255,255,255,.07); border-radius:6px;
-      min-width:460px; max-width:640px; transition:opacity .3s; }
-    #cust.hidden{ opacity:0; pointer-events:none; }
-    .ctabs{ display:flex; border-bottom:1px solid rgba(255,255,255,.06); padding:0 4px; }
-    .ctab{ font-family:var(--ff-m); font-size:9px; letter-spacing:.12em; text-transform:uppercase;
-      color:rgba(255,255,255,.3); background:none; border:none; border-bottom:2px solid transparent;
-      padding:10px 12px; cursor:pointer; transition:all .15s; white-space:nowrap; }
-    .ctab.active{ color:var(--accent); border-bottom-color:var(--accent); }
-    .ctab:hover{ color:rgba(255,255,255,.65); }
-    .copts{ display:flex; gap:10px; padding:12px 16px; align-items:flex-start; flex-wrap:wrap; }
-    .sww{ display:flex; flex-direction:column; align-items:center; gap:4px; }
-    .sw{ width:34px; height:34px; border-radius:3px; cursor:pointer; border:2px solid transparent; transition:all .15s; flex-shrink:0; }
-    .sw:hover{ transform:scale(1.1); }
-    .sw.active{ border-color:#fff; box-shadow:0 0 0 1px rgba(0,0,0,.4); }
-    .swn{ font-family:var(--ff-m); font-size:8px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.35); text-align:center; white-space:nowrap; }
-
-    /* RIGHT */
-    #pr{ width:288px; flex-shrink:0; background:var(--bg); border-left:1px solid var(--border);
-      display:flex; flex-direction:column; overflow-y:auto; padding:24px 22px; gap:20px; }
-    .prt{ font-family:var(--ff-s); font-size:22px; font-weight:300; letter-spacing:-.02em; line-height:1.2; }
-    .prs{ font-size:11px; color:var(--muted); margin-top:3px; }
-    .sb{ border-top:1px solid var(--border); padding-top:14px; }
-    .sbl{ font-family:var(--ff-m); font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-    .sr{ display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; border-bottom:1px solid var(--border); }
-    .sr:last-child{ border-bottom:none; }
-    .sk{ font-size:12px; color:var(--muted); }
-    .sv{ font-family:var(--ff-m); font-size:12px; font-weight:500; color:var(--ink); }
-    .pb{ border-top:1px solid var(--border); padding-top:18px; }
-    .pl2{ font-family:var(--ff-m); font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-    .pa{ font-family:var(--ff-s); font-size:34px; font-weight:300; letter-spacing:-.03em; color:var(--ink); line-height:1; }
-    .pc{ font-size:15px; font-weight:400; color:var(--muted); font-family:var(--ff-u); vertical-align:super; }
-    .pn{ font-size:11px; color:var(--muted); margin-top:6px; line-height:1.5; }
-    .btnp{ width:100%; padding:13px; background:var(--ink); color:var(--bg); font-family:var(--ff-u);
-      font-size:13px; font-weight:600; letter-spacing:.03em; border:none; border-radius:3px; cursor:pointer; transition:background .2s; }
-    .btnp:hover{ background:var(--accent2); }
-    .btns{ width:100%; padding:10px; background:transparent; color:var(--ink); font-family:var(--ff-u);
-      font-size:12px; font-weight:500; border:1px solid var(--border); border-radius:3px; cursor:pointer; transition:border-color .2s; }
-    .btns:hover{ border-color:var(--ink); }
-
-    /* LOADING */
-    #lo{ position:fixed; inset:0; z-index:200; background:var(--bg);
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; transition:opacity .6s; }
-    #lo.out{ opacity:0; pointer-events:none; }
-    .lol{ font-family:var(--ff-s); font-size:26px; font-weight:300; letter-spacing:-.02em; }
-    .lol em{ font-style:normal; color:var(--accent); }
-    .lob{ width:180px; height:1px; background:var(--border); }
-    .lof{ height:100%; background:var(--accent); width:0%; transition:width .3s; }
-    .lolb{ font-family:var(--ff-m); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/sidebar.css">
+  <link rel="stylesheet" href="styles/stage.css">
+  <link rel="stylesheet" href="styles/customizer.css">
 </head>
 <body>
 
+<div id="cursor"></div>
+
+<!-- Loading screen -->
 <div id="lo">
   <div class="lol">Modell<em>werk</em></div>
   <div class="lolb" id="lolb">Cargando entorno...</div>
@@ -144,339 +35,125 @@
 </header>
 
 <div id="app">
+
+  <!-- Sidebar izquierda: selector de módulos + resumen -->
   <aside id="pl">
     <div class="sll">Módulos</div>
-    <div class="mc active" onclick="selectMod(this)">
-      <div class="mth"><svg width="22" height="14" viewBox="0 0 22 14" fill="none"><rect x="1" y="2" width="20" height="11" rx="1" stroke="#c4a572" stroke-width="1.2"/><line x1="1" y1="2" x2="3.5" y2="0" stroke="#c4a572" stroke-width="1"/><line x1="21" y1="2" x2="18.5" y2="0" stroke="#c4a572" stroke-width="1"/><line x1="3.5" y1="0" x2="18.5" y2="0" stroke="#c4a572" stroke-width="1"/></svg></div>
+
+    <div class="mc active" data-glb="modulo_v01.glb" onclick="selectMod(this)">
+      <div class="mth">
+        <svg width="22" height="14" viewBox="0 0 22 14" fill="none">
+          <rect x="1" y="2" width="20" height="11" rx="1" stroke="#c4a572" stroke-width="1.2"/>
+          <line x1="1"  y1="2" x2="3.5"  y2="0" stroke="#c4a572" stroke-width="1"/>
+          <line x1="21" y1="2" x2="18.5" y2="0" stroke="#c4a572" stroke-width="1"/>
+          <line x1="3.5" y1="0" x2="18.5" y2="0" stroke="#c4a572" stroke-width="1"/>
+        </svg>
+      </div>
       <div class="mi"><div class="mn">MW40</div><div class="md">9.00 × 3.00 × 2.80 m</div></div>
       <div class="mb">Activo</div>
     </div>
-    <div class="mc soon">
-      <div class="mth"><svg width="22" height="14" viewBox="0 0 22 14" fill="none"><rect x="1" y="2" width="20" height="11" rx="1" stroke="#333" stroke-width="1.2"/><line x1="1" y1="2" x2="3.5" y2="0" stroke="#333" stroke-width="1"/><line x1="21" y1="2" x2="18.5" y2="0" stroke="#333" stroke-width="1"/><line x1="3.5" y1="0" x2="18.5" y2="0" stroke="#333" stroke-width="1"/></svg></div>
-      <div class="mi"><div class="mn">MW60</div><div class="md">12.00 × 3.00 × 2.80 m</div></div>
-      <div class="mb">Pronto</div>
-    </div>
-    <div class="mc soon">
-      <div class="mth"><svg width="22" height="14" viewBox="0 0 22 14" fill="none"><rect x="1" y="2" width="20" height="11" rx="1" stroke="#333" stroke-width="1.2"/><line x1="1" y1="2" x2="3.5" y2="0" stroke="#333" stroke-width="1"/><line x1="21" y1="2" x2="18.5" y2="0" stroke="#333" stroke-width="1"/><line x1="3.5" y1="0" x2="18.5" y2="0" stroke="#333" stroke-width="1"/></svg></div>
-      <div class="mi"><div class="mn">MW80</div><div class="md">15.00 × 3.00 × 2.80 m</div></div>
-      <div class="mb">Pronto</div>
-    </div>
+
     <div class="sld"></div>
     <div class="sll">Configuración</div>
-    <div style="padding:0 18px"><div id="cfgsum" style="font-size:11px;color:#4a4a4a;line-height:1.9;font-family:var(--ff-m)"></div></div>
+    <div style="padding:0 18px">
+      <!-- legacy fallback; ui.js también puebla #pr-specs en la sidebar derecha -->
+      <div id="cfgsum" style="font-size:11px;color:#4a4a4a;line-height:1.9;font-family:'DM Mono',monospace"></div>
+    </div>
   </aside>
 
+  <!-- Viewport 3D central -->
   <div id="vw">
+    <!-- Toggle orbital / FPS -->
     <div id="mt">
       <button class="mdb active" id="bOrb" onclick="setMode('orbit')">Órbita</button>
-      <button class="mdb" id="bFps" onclick="setMode('fps')">Recorrer</button>
+      <button class="mdb"        id="bFps" onclick="setMode('fps')">Recorrer</button>
     </div>
+
+    <!-- Acciones de modelo (ensamblaje, etc.) -->
+    <div id="mta">
+      <button class="mdb" id="bAssem" onclick="toggleStructure()" disabled>Bajar estructura</button>
+    </div>
+
+    <!-- Filtros de visualización -->
+    <div id="filters"></div>
+
+    <!-- Hint FPS -->
     <div id="fh">Click para activar · WASD mover · ESC salir</div>
+
+    <!-- Crosshair FPS -->
     <div id="ch"></div>
+
+    <!-- Customizer flotante -->
     <div id="cust">
       <div class="ctabs" id="ctabs"></div>
       <div class="copts" id="copts"></div>
     </div>
   </div>
 
+  <!-- Sidebar derecha: especificaciones + precio -->
   <aside id="pr">
     <div>
       <div class="prt">Módulo MW40</div>
       <div class="prs">Módulo habitable estándar · Serie 2025</div>
     </div>
+
     <div class="sb">
       <div class="sbl">Dimensiones</div>
-      <div class="sr"><span class="sk">Largo</span><span class="sv">9.00 m</span></div>
-      <div class="sr"><span class="sk">Ancho</span><span class="sv">3.00 m</span></div>
-      <div class="sr"><span class="sk">Altura libre</span><span class="sv">2.80 m</span></div>
-      <div class="sr"><span class="sk">Superficie</span><span class="sv">27 m²</span></div>
+      <div class="sr"><span class="sk">Largo</span>        <span class="sv">9.00 m</span></div>
+      <div class="sr"><span class="sk">Ancho</span>        <span class="sv">3.00 m</span></div>
+      <div class="sr"><span class="sk">Altura libre</span> <span class="sv">2.80 m</span></div>
+      <div class="sr"><span class="sk">Superficie</span>   <span class="sv">27 m²</span></div>
     </div>
+
     <div class="sb">
       <div class="sbl">Sistema constructivo</div>
-      <div class="sr"><span class="sk">Estructura</span><span class="sv">Acero galvanizado</span></div>
-      <div class="sr"><span class="sk">Cerramiento</span><span class="sv">Panel PIR 80 mm</span></div>
-      <div class="sr"><span class="sk">Aislación</span><span class="sv">λ = 0.022 W/m·K</span></div>
-      <div class="sr"><span class="sk">Plazo de obra</span><span class="sv">4–6 semanas</span></div>
+      <div class="sr"><span class="sk">Estructura</span>    <span class="sv">Acero galvanizado</span></div>
+      <div class="sr"><span class="sk">Cerramiento</span>   <span class="sv">Panel PIR 80 mm</span></div>
+      <div class="sr"><span class="sk">Aislación</span>     <span class="sv">λ = 0.022 W/m·K</span></div>
+      <div class="sr"><span class="sk">Plazo de obra</span> <span class="sv">4–6 semanas</span></div>
     </div>
+
+    <!-- Acabados: poblado dinámicamente por ui.js -->
+    <div class="sb">
+      <div class="sbl">Acabados</div>
+      <div id="pr-specs"></div>
+    </div>
+
     <div class="pb">
       <div class="pl2">Precio base estimado</div>
       <div class="pa"><span class="pc">USD</span> 42.000</div>
       <div class="pn">Precio orientativo. Incluye estructura, cerramiento y carpintería estándar.</div>
     </div>
+
     <div style="display:flex;flex-direction:column;gap:8px">
       <button class="btnp" onclick="openCotizar()">Solicitar cotización formal</button>
       <button class="btns">Descargar ficha técnica</button>
     </div>
   </aside>
-</div>
+
+</div><!-- #app -->
 
 <script type="importmap">
-{"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.158.0/examples/jsm/"}}
+{"imports":{
+  "three":"https://unpkg.com/three@0.165.0/build/three.module.js",
+  "three/addons/":"https://unpkg.com/three@0.165.0/examples/jsm/"
+}}
 </script>
-<script type="module">
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { RGBELoader  } from 'three/addons/loaders/RGBELoader.js';
-
-function norm(s){ return s.toLowerCase().replace(/[_\-\.]/g,' '); }
-function setLoad(p,t){ document.getElementById('lof').style.width=p+'%'; if(t) document.getElementById('lolb').textContent=t; }
-
-const tl=new THREE.TextureLoader(), _tc={};
-function getTex(url,srgb){
-  if(!_tc[url]){ const t=tl.load(url); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.colorSpace=srgb?THREE.SRGBColorSpace:THREE.LinearSRGBColorSpace; _tc[url]=t; }
-  return _tc[url];
-}
-function cloneTex(url,srgb){ const t=getTex(url,srgb).clone(); t.needsUpdate=true; return t; }
-
-const T='assets/textures/';
-const TEX={
-  ext_panel:    {d:T+'ext_panel/rust_coarse_01_diff_2k.jpg',             a:T+'ext_panel/rust_coarse_01_arm_2k.jpg',             n:T+'ext_panel/rust_coarse_01_nor_dx_2k.jpg',             ws:2.0},
-  pared_madera: {d:T+'pared_madera/raw_plank_wall_diff_2k.jpg',          a:T+'pared_madera/raw_plank_wall_arm_2k.jpg',          n:T+'pared_madera/raw_plank_wall_nor_dx_2k.jpg',          ws:2.4},
-  piso_cemento: {d:T+'piso_cemento/concrete_floor_worn_001_diff_2k.jpg', a:T+'piso_cemento/concrete_floor_worn_001_arm_2k.jpg', n:T+'piso_cemento/concrete_floor_worn_001_nor_dx_2k.jpg', ws:1.5},
-  piso_madera:  {d:T+'piso_madera/wood_shutter_diff_2k.jpg',             a:T+'piso_madera/wood_shutter_arm_2k.jpg',             n:T+'piso_madera/wood_shutter_nor_dx_2k.jpg',             ws:1.8},
-};
-
-const CATS=[
-  {key:'EXT_REV',  label:'Revestimiento',mode:'tint',         texSet:'ext_panel',
-   match:n=>(n.includes('muro panel pir')||n.includes('basic wall')||n.includes('ext pared')||n.includes('mw ext'))&&!n.includes('cielorraso'),
-   opts:[{c:'#cfc4ae',name:'Arena'},{c:'#8a7a6a',name:'Tabaco'},{c:'#3d3d3d',name:'Antracita'},{c:'#e8e4dc',name:'Polar'},{c:'#7a4a28',name:'Corten'}]},
-  {key:'EXT_TECHO',label:'Techo',        mode:'color-only',
-   match:n=>n.includes('chapa')||n.includes('ext techo')||n.includes('techo'),
-   opts:[{c:'#252525',name:'Negro'},{c:'#686868',name:'Gris'},{c:'#8b7355',name:'Bronce'},{c:'#b8b8b8',name:'Zinc'}]},
-  {key:'INT_PARED',label:'Pared int.',    mode:'tint',         texSet:'pared_madera',
-   match:n=>n.includes('zocalo')||(n.includes('madera')&&!n.includes('puerta')),
-   opts:[{c:'#f0e8d8',name:'Natural'},{c:'#d4bc90',name:'Miel'},{c:'#8a6a4a',name:'Nogal'},{c:'#3a2a1a',name:'Wengué'}]},
-  {key:'INT_CIEL',  label:'Cielorraso',   mode:'color-only',
-   match:n=>n.includes('cielorraso'),
-   opts:[{c:'#f5f5f0',name:'Blanco'},{c:'#e8e0d0',name:'Crema'},{c:'#d0d0cc',name:'Gris'}]},
-  {key:'PISO',      label:'Piso',         mode:'texture-swap',
-   match:n=>n.includes('floor')||n.includes('vinilico')||n.includes('piso'),
-   opts:[{texSet:'piso_cemento',c:'#ffffff',name:'Cemento'},{texSet:'piso_madera',c:'#ffffff',name:'Madera natural'},{texSet:'piso_madera',c:'#5a3a20',name:'Madera oscura'},{texSet:'piso_cemento',c:'#3a3a3a',name:'Cemento oscuro'}]},
-  {key:'CARP',      label:'Carpintería',  mode:'color-only',
-   match:n=>n.includes('ventana')||n.includes('aluminio')||n.includes('puerta'),
-   opts:[{c:'#1a1a1a',name:'Negro'},{c:'#a8a8a8',name:'Aluminio'},{c:'#7a5a38',name:'Madera'},{c:'#f0f0ee',name:'Blanco'}]},
-];
-const catState={}, catMeshes={};
-CATS.forEach(c=>{catState[c.key]=0; catMeshes[c.key]=[];});
-
-function fixedMat(n){
-  if(n.includes('vidrio')||n.includes('glass')||n.includes('cristal'))
-    return new THREE.MeshPhysicalMaterial({color:0xd0e8f8,transmission:.88,roughness:.04,metalness:.05,thickness:.01,transparent:true,opacity:.22,side:THREE.DoubleSide});
-  if(n.includes('tubo')||n.includes('viga')||n.includes('ipn')||n.includes('columna')||n.includes('estructura')||n.includes('perfil')||n.includes('correa')||n.includes('cano'))
-    return new THREE.MeshStandardMaterial({color:0x2c2c2c,roughness:.78,metalness:.35});
-  if(n.includes('eps')||n.includes('compriband')||n.includes('aislacion'))
-    return new THREE.MeshStandardMaterial({color:0xe0dbd0,roughness:.92,metalness:0});
-  if(n.includes('sanitario')||n.includes('inodoro')||n.includes('lavabo'))
-    return new THREE.MeshStandardMaterial({color:0xf8f8f8,roughness:.08,metalness:0});
-  if(n.includes('led')||n.includes('luminaria'))
-    return new THREE.MeshStandardMaterial({color:0xfff8e8,emissive:new THREE.Color(0xfff8e8),emissiveIntensity:.9,roughness:.4});
-  return null;
-}
-
-function buildPBR(mesh,setKey,tintHex){
-  const s=TEX[setKey]; if(!s) return null;
-  mesh.geometry.computeBoundingBox();
-  const sz=new THREE.Vector3(); mesh.geometry.boundingBox.getSize(sz);
-  const ws=new THREE.Vector3(); mesh.getWorldScale(ws);
-  const sX=sz.x*Math.abs(ws.x), sY=sz.y*Math.abs(ws.y), sZ=sz.z*Math.abs(ws.z);
-  const W=Math.max(sX,sZ), H=sY>0.05?sY:W;
-  const rX=Math.max(0.4,W/s.ws), rY=Math.max(0.4,H/s.ws);
-  const d=cloneTex(s.d,true), a=cloneTex(s.a,false), nr=cloneTex(s.n,false);
-  d.repeat.set(rX,rY); a.repeat.set(rX,rY); nr.repeat.set(rX,rY);
-  const mat=new THREE.MeshStandardMaterial({map:d,roughnessMap:a,metalnessMap:a,normalMap:nr,normalScale:new THREE.Vector2(1,-1)});
-  if(tintHex&&tintHex!=='#ffffff') mat.color.set(tintHex);
-  return mat;
-}
-
-function applyOption(catKey,idx){
-  catState[catKey]=idx;
-  const cat=CATS.find(c=>c.key===catKey), opt=cat.opts[idx];
-  catMeshes[catKey].forEach(mesh=>{
-    if(cat.mode==='color-only'){
-      mesh.material=new THREE.MeshStandardMaterial({color:opt.c,roughness:.55,metalness:.05});
-    } else if(cat.mode==='tint'){
-      mesh.material=buildPBR(mesh,cat.texSet,opt.c)||new THREE.MeshStandardMaterial({color:opt.c,roughness:.65});
-    } else {
-      mesh.material=buildPBR(mesh,opt.texSet,opt.c)||new THREE.MeshStandardMaterial({color:opt.c,roughness:.65});
-    }
+<script type="module" src="scripts/viewer.js"></script>
+<script>
+  // Cursor personalizado — desactivado sobre el canvas 3D
+  const cur = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cur.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
   });
-  updateSwatches(catKey); updateSummary();
-}
-
-// THREE
-const vw=document.getElementById('vw');
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.setSize(vw.clientWidth,vw.clientHeight);
-renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.1;
-vw.appendChild(renderer.domElement);
-
-const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(65,vw.clientWidth/vw.clientHeight,0.05,300);
-camera.position.set(10,5,10);
-
-// HDRI
-setLoad(10,'Cargando entorno...');
-const pmrem=new THREE.PMREMGenerator(renderer); pmrem.compileEquirectangularShader();
-new RGBELoader().load('assets/hdri/kloofendal_43d_clear_puresky_2k.hdr',tex=>{
-  const env=pmrem.fromEquirectangular(tex).texture;
-  scene.background=env; scene.environment=env; tex.dispose(); pmrem.dispose();
-  setLoad(25,'Cargando modelo...');
-});
-
-// Lights
-scene.add(new THREE.AmbientLight(0xffffff,0.15));
-const sun=new THREE.DirectionalLight(0xfff5e0,2.0);
-sun.position.set(8,18,6); sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048); sun.shadow.bias=-0.0003; sun.shadow.radius=3;
-sun.shadow.camera.near=0.5; sun.shadow.camera.far=80;
-sun.shadow.camera.left=-15; sun.shadow.camera.right=15;
-sun.shadow.camera.top=15; sun.shadow.camera.bottom=-15;
-scene.add(sun);
-const fill=new THREE.DirectionalLight(0xc8d8f0,0.35); fill.position.set(-6,8,-6); scene.add(fill);
-
-// Grass floor
-const gd=tl.load('assets/suelo_pasto/aerial_grass_rock_diff_2k.jpg');
-const ga=tl.load('assets/suelo_pasto/aerial_grass_rock_arm_2k.jpg');
-const gn=tl.load('assets/suelo_pasto/aerial_grass_rock_nor_dx_2k.jpg');
-[gd,ga,gn].forEach(t=>{ t.wrapS=t.wrapT=THREE.RepeatWrapping; });
-gd.colorSpace=THREE.SRGBColorSpace;
-const GR=15; gd.repeat.set(GR,GR); ga.repeat.set(GR,GR); gn.repeat.set(GR,GR);
-const flr=new THREE.Mesh(new THREE.CircleGeometry(60,96),
-  new THREE.MeshStandardMaterial({map:gd,roughnessMap:ga,metalnessMap:ga,normalMap:gn,normalScale:new THREE.Vector2(1,-1),roughness:1,metalness:0}));
-flr.rotation.x=-Math.PI/2; flr.receiveShadow=true; scene.add(flr);
-
-// contact shadow
-const sdw=new THREE.Mesh(new THREE.CircleGeometry(5,64),
-  new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.15,depthWrite:false}));
-sdw.rotation.x=-Math.PI/2; sdw.position.y=0.005; scene.add(sdw);
-
-// Load model
-new GLTFLoader().load('Modulo03.glb', gltf=>{
-  setLoad(75,'Procesando materiales...');
-  const model=gltf.scene;
-  const b0=new THREE.Box3().setFromObject(model), s0=new THREE.Vector3(); b0.getSize(s0);
-  const maxD=Math.max(s0.x,s0.y,s0.z);
-  const sf=maxD>100 ? 9/(maxD*0.001)*0.001 : maxD<1 ? 9/maxD : 9/maxD;
-  model.scale.setScalar(sf);
-  const b1=new THREE.Box3().setFromObject(model), c1=b1.getCenter(new THREE.Vector3());
-  model.position.set(-c1.x,-b1.min.y,-c1.z);
-  const b2=new THREE.Box3().setFromObject(model), s2=new THREE.Vector3(); b2.getSize(s2);
-  sdw.scale.set(Math.max(s2.x,s2.z)*.6/5,1,Math.max(s2.x,s2.z)*.6/5);
-  scene.add(model); model.updateWorldMatrix(true,true);
-
-  model.traverse(child=>{
-    if(!child.isMesh) return;
-    child.castShadow=true; child.receiveShadow=true;
-    const n=norm(child.name);
-    const fm=fixedMat(n); if(fm){child.material=fm; return;}
-    let hit=false;
-    for(const cat of CATS){ if(cat.match(n)){catMeshes[cat.key].push(child); hit=true; break;} }
-    if(!hit){ console.log('[sin categoria]',child.name); child.material=new THREE.MeshStandardMaterial({color:0xd4cfc8,roughness:.7,metalness:.02}); }
+  document.querySelectorAll('a, button, .mc, .sw, .fbtn, .mdb').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hovered'));
   });
-
-  CATS.forEach(cat=>{ if(catMeshes[cat.key].length>0) applyOption(cat.key,0); });
-
-  const b3=new THREE.Box3().setFromObject(model), s3=new THREE.Vector3(); b3.getSize(s3);
-  orbitTarget.set(0,s3.y*.4,0);
-  orbitRadius=Math.max(s3.length()*1.35,10);
-  setLoad(100,'Listo');
-  setTimeout(()=>document.getElementById('lo').classList.add('out'),400);
-},
-xhr=>{ if(xhr.total) setLoad(25+(xhr.loaded/xhr.total)*50); },
-err=>{ console.error(err); document.getElementById('lolb').textContent='Error al cargar modelo'; });
-
-// Customizer UI
-let activeTab=CATS[0].key;
-function buildUI(){
-  const te=document.getElementById('ctabs');
-  CATS.forEach(cat=>{
-    const b=document.createElement('button');
-    b.className='ctab'+(cat.key===activeTab?' active':'');
-    b.textContent=cat.label; b.dataset.key=cat.key;
-    b.onclick=()=>{activeTab=cat.key; renderOpts(); updateTabs();};
-    te.appendChild(b);
-  });
-  renderOpts();
-}
-function updateTabs(){ document.querySelectorAll('.ctab').forEach(b=>b.classList.toggle('active',b.dataset.key===activeTab)); }
-function renderOpts(){
-  const el=document.getElementById('copts'); el.innerHTML='';
-  const cat=CATS.find(c=>c.key===activeTab);
-  cat.opts.forEach((opt,i)=>{
-    const wrap=document.createElement('div'); wrap.className='sww';
-    const sw=document.createElement('div');
-    sw.className='sw'+(catState[cat.key]===i?' active':'');
-    sw.style.background=opt.c; sw.onclick=()=>applyOption(cat.key,i);
-    const lbl=document.createElement('div'); lbl.className='swn'; lbl.textContent=opt.name;
-    wrap.appendChild(sw); wrap.appendChild(lbl); el.appendChild(wrap);
-  });
-}
-function updateSwatches(catKey){ if(catKey!==activeTab) return; document.querySelectorAll('.sw').forEach((sw,i)=>sw.classList.toggle('active',catState[catKey]===i)); }
-function updateSummary(){
-  document.getElementById('cfgsum').innerHTML=CATS.map(cat=>`${cat.label}: <span style="color:#c4a572">${cat.opts[catState[cat.key]].name}</span>`).join('<br>');
-}
-buildUI();
-
-// Camera
-let mode='orbit', fpsLocked=false, yaw=0, pitch=0;
-const keys={};
-let orbitTheta=Math.PI/5, orbitPhi=Math.PI/3.5, orbitRadius=14;
-let oDrag=false, oLast={x:0,y:0};
-const orbitTarget=new THREE.Vector3(0,1.2,0);
-
-window.setMode=function(m){
-  mode=m;
-  document.getElementById('bOrb').classList.toggle('active',m==='orbit');
-  document.getElementById('bFps').classList.toggle('active',m==='fps');
-  document.getElementById('cust').classList.toggle('hidden',m==='fps');
-  const fh=document.getElementById('fh');
-  if(m==='fps'){ fh.classList.add('visible'); setTimeout(()=>fh.classList.remove('visible'),3500); renderer.domElement.requestPointerLock(); }
-  else{ fpsLocked=false; document.exitPointerLock(); document.getElementById('ch').classList.remove('active'); }
-};
-renderer.domElement.addEventListener('mousedown',e=>{if(mode==='orbit'){oDrag=true;oLast={x:e.clientX,y:e.clientY};}});
-window.addEventListener('mousemove',e=>{
-  if(!oDrag||mode!=='orbit') return;
-  orbitTheta-=(e.clientX-oLast.x)*.005;
-  orbitPhi=Math.max(.08,Math.min(Math.PI*.46,orbitPhi+(e.clientY-oLast.y)*.005));
-  oLast={x:e.clientX,y:e.clientY};
-});
-window.addEventListener('mouseup',()=>oDrag=false);
-renderer.domElement.addEventListener('wheel',e=>{if(mode==='orbit') orbitRadius=Math.max(2,Math.min(40,orbitRadius+e.deltaY*.014));},{passive:true});
-renderer.domElement.addEventListener('click',()=>{if(mode==='fps'&&!fpsLocked) renderer.domElement.requestPointerLock();});
-document.addEventListener('pointerlockchange',()=>{ fpsLocked=!!document.pointerLockElement; document.getElementById('ch').classList.toggle('active',fpsLocked&&mode==='fps'); });
-document.addEventListener('mousemove',e=>{if(!fpsLocked||mode!=='fps') return; yaw-=e.movementX*.002; pitch=Math.max(-.75,Math.min(.75,pitch-e.movementY*.002));});
-document.addEventListener('keydown',e=>keys[e.code]=true);
-document.addEventListener('keyup',e=>keys[e.code]=false);
-window.addEventListener('resize',()=>{ const w=vw.clientWidth,h=vw.clientHeight; camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); });
-
-const _f=new THREE.Vector3(), _r=new THREE.Vector3(), _e=new THREE.Euler(0,0,0,'YXZ');
-(function loop(){
-  requestAnimationFrame(loop);
-  if(mode==='orbit'){
-    const x=orbitTarget.x+orbitRadius*Math.sin(orbitPhi)*Math.sin(orbitTheta);
-    const y=orbitTarget.y+orbitRadius*Math.cos(orbitPhi);
-    const z=orbitTarget.z+orbitRadius*Math.sin(orbitPhi)*Math.cos(orbitTheta);
-    camera.position.set(x,y,z); camera.lookAt(orbitTarget);
-  } else {
-    _e.set(pitch,yaw,0,'YXZ'); camera.quaternion.setFromEuler(_e);
-    if(fpsLocked){
-      _f.set(0,0,-1).applyQuaternion(camera.quaternion); _f.y=0; _f.normalize();
-      _r.set(1,0,0).applyQuaternion(camera.quaternion);  _r.y=0; _r.normalize();
-      if(keys['KeyW']||keys['ArrowUp'])    camera.position.addScaledVector(_f,.07);
-      if(keys['KeyS']||keys['ArrowDown'])  camera.position.addScaledVector(_f,-.07);
-      if(keys['KeyA']||keys['ArrowLeft'])  camera.position.addScaledVector(_r,-.07);
-      if(keys['KeyD']||keys['ArrowRight']) camera.position.addScaledVector(_r,.07);
-      camera.position.y=1.65;
-    }
-  }
-  renderer.render(scene,camera);
-})();
-
-window.selectMod=function(el){ document.querySelectorAll('.mc').forEach(c=>c.classList.remove('active')); el.classList.add('active'); };
-window.openCotizar=function(){ alert('Cotización — próximamente.\nContacto: contacto@modellwerk.com.ar'); };
+  // Sobre el canvas 3D el cursor nativo es necesario para la interacción
+  document.getElementById('vw').addEventListener('mouseenter', () => cur.style.opacity = '0');
+  document.getElementById('vw').addEventListener('mouseleave', () => cur.style.opacity = '1');
 </script>
+
 </body>
 </html>

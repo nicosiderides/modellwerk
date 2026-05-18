@@ -1,0 +1,180 @@
+/* ─── Reset ───────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Variables ───────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:        #FAFAFA;
+  --ink:       #0A0A0A;
+  --muted:     #555555;
+  --border:    #E0E0E0;
+  --mist:      #F5F5F7;
+  --tech-blue: #0044FF;
+  --accent:    #c4a572;
+  --accent2:   #9a7d4f;
+  --sidebar:   #0A0A0A;
+  --s-muted:   #555555;
+  --s-brd:     #1a1a1a;
+
+  --ff-s: 'Space Grotesk', sans-serif;
+  --ff-u: 'Manrope', sans-serif;
+  --ff-m: 'JetBrains Mono', monospace;
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--ff-u);
+  overflow: hidden;
+  cursor: none;
+  font-feature-settings: "ss01", "ss02";
+}
+
+/* ─── Cursor personalizado ────────────────────────────────────────────────── */
+
+#cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 8px; height: 8px;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  background-color: var(--ink, #111);
+  border: 1.5px solid rgba(255,255,255,.6);
+  border-radius: 50%;
+  transition: width .2s ease, height .2s ease, opacity .2s ease, background-color .2s ease;
+}
+#cursor.hovered {
+  width: 40px; height: 40px;
+  background-color: transparent;
+  border: 1px solid var(--ink, #111);
+}
+
+/* ─── Header ──────────────────────────────────────────────────────────────── */
+
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  z-index: 100;
+  background: rgba(250,250,250,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 36px;
+}
+
+.logo {
+  font-family: var(--ff-s);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  color: var(--ink);
+}
+.logo em { font-style: normal; color: var(--tech-blue); }
+
+#hnav { display: flex; gap: 24px; flex: 1; }
+
+.nl {
+  font-family: var(--ff-m);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+  position: relative;
+}
+.nl::before {
+  content: '/';
+  position: absolute;
+  left: -10px;
+  opacity: 0;
+  color: var(--tech-blue);
+  transition: opacity .2s;
+}
+.nl:hover, .nl.active { color: var(--ink); }
+.nl:hover::before, .nl.active::before { opacity: 1; }
+
+.btn-cta {
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--ff-m);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 0;
+  cursor: none;
+  transition: background .2s;
+}
+.btn-cta:hover { background: var(--tech-blue); }
+
+/* ─── Layout ──────────────────────────────────────────────────────────────── */
+
+#app {
+  display: flex;
+  height: 100vh;
+  padding-top: 56px;
+}
+
+/* ─── Keyframes ───────────────────────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ─── Loading screen ──────────────────────────────────────────────────────── */
+
+#lo {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity .6s;
+}
+#lo.out { opacity: 0; pointer-events: none; }
+
+.lol {
+  font-family: var(--ff-s);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  animation: fadeInUp .8s ease-out forwards;
+}
+.lol em { font-style: normal; color: var(--tech-blue); }
+
+.lob {
+  width: 180px;
+  height: 1px;
+  background: var(--border);
+  animation: fadeInUp .8s .1s ease-out both;
+}
+.lof { height: 100%; background: var(--ink); width: 0%; transition: width .3s; }
+
+.lolb {
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  animation: fadeInUp .8s .2s ease-out both;
+}
