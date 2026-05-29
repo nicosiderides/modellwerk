@@ -3,52 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MODELLWERK | Estructura & Sistemas</title>
-    <meta name="description" content="Arquitectura Modular, Prefabricación y Consultoría BIM.">
-    
-    <!-- TAILWIND CSS -->
+    <title>MODELLWERK | Estudio BIM y Sistemas Modulares</title>
+    <meta name="description" content="Estudio BIM premium para arquitectura, construcción industrializada y configuradores online de sistemas modulares.">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FONTS -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- CONFIGURACIÓN DE SISTEMA -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'paper': '#FAFAFA',
-                        'ink': '#0A0A0A',
-                        'graphite': '#555555',
-                        'line': '#E0E0E0',
-                        'mist': '#F5F5F7',
-                        'tech-blue': '#0044FF',
+                        paper: '#F7F5EF',
+                        ink: '#16161A',
+                        graphite: '#4E514F',
+                        line: '#D8D4CA',
+                        clay: '#B2603B',
+                        moss: '#586B4B',
+                        steel: '#2F5D73',
+                        fog: '#ECE8DE',
+                        night: '#101114'
                     },
                     fontFamily: {
-                        'sans': ['Manrope', 'sans-serif'],
-                        'display': ['Space Grotesk', 'sans-serif'],
-                        'mono': ['JetBrains Mono', 'monospace'],
-                    },
-                    spacing: {
-                        '128': '32rem',
-                    },
-                    animation: {
-                        'scan': 'scan 3s linear infinite',
-                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
-                    },
-                    keyframes: {
-                        scan: {
-                            '0%': { transform: 'translateY(-100%)' },
-                            '100%': { transform: 'translateY(200%)' },
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
+                        sans: ['Manrope', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
                     }
                 }
             }
@@ -57,807 +40,405 @@
 
     <style>
         body {
-            background-color: #FAFAFA;
-            color: #0A0A0A;
+            background: #F7F5EF;
+            color: #16161A;
             overflow-x: hidden;
-            cursor: none;
             font-feature-settings: "ss01", "ss02";
         }
-        #cursor {
-            position: fixed; top: 0; left: 0;
-            width: 12px; height: 12px;
-            pointer-events: none; z-index: 9999;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-            transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease;
-            background-color: white;
-            border-radius: 50%;
-        }
-        #cursor.hovered {
-            width: 60px; height: 60px;
-            border: 1px solid white;
-            background-color: transparent;
-            backdrop-filter: blur(2px);
-        }
-        .bg-grid {
-            background-size: 60px 60px;
+
+        .grid-field {
             background-image:
-                linear-gradient(to right, #E0E0E0 1px, transparent 1px),
-                linear-gradient(to bottom, #E0E0E0 1px, transparent 1px);
-            position: fixed; inset: 0; z-index: -1;
-            opacity: 0.4;
+                linear-gradient(to right, rgba(22, 22, 26, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(22, 22, 26, 0.08) 1px, transparent 1px);
+            background-size: 56px 56px;
         }
-        .text-outline {
-            -webkit-text-stroke: 1.5px #0A0A0A;
-            color: transparent;
-            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+        .material-image {
+            filter: grayscale(0.8) contrast(1.05) saturate(0.75);
         }
-        .text-outline:hover {
-            -webkit-text-stroke: 1.5px #0044FF;
-            color: transparent;
-            letter-spacing: 0.02em;
-        }
-        .technical-filter {
-            filter: grayscale(100%) contrast(105%) brightness(1.05);
-            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        .group:hover .technical-filter {
-            filter: grayscale(0%) contrast(100%);
-            transform: scale(1.03);
-        }
+
         .reveal {
-            opacity: 0; transform: translateY(40px);
-            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 700ms ease, transform 700ms ease;
         }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .service-card { position: relative; overflow: hidden; }
-        .service-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(0, 68, 255, 0.03), transparent);
-            transform: translateY(-100%);
-            transition: none;
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .service-card:hover::after { animation: scan 1.5s ease-in-out infinite; }
+
+        .mw-button {
+            min-height: 48px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
     </style>
 </head>
-<body class="antialiased font-sans selection:bg-tech-blue selection:text-white">
 
-    <div id="cursor"></div>
-    <div class="bg-grid"></div>
+<body class="font-sans antialiased selection:bg-clay selection:text-white">
+    <nav class="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper/90 backdrop-blur-xl">
+        <div class="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-5 lg:px-10">
+            <a href="#top" class="flex items-center gap-4" aria-label="MODELLWERK inicio">
+                <img src="assets/mw-isotype.svg" alt="" class="h-12 w-12 object-contain">
+                <div class="leading-none">
+                    <div class="font-display text-xl font-bold text-ink">MODELLWERK</div>
+                    <div class="mt-1 font-mono text-[10px] uppercase text-graphite">BIM · Modular · Producto</div>
+                </div>
+            </a>
 
-    <!-- NAVBAR: Reducido a py-2 para ser más fina -->
-    <nav class="fixed top-0 w-full z-50 px-6 lg:px-12 py-2 flex justify-between items-center bg-paper/90 backdrop-blur-xl border-b border-line transition-all duration-300">
-        <a href="#" class="group flex items-center gap-4 interactive">
-            <div class="h-20 w-20 relative flex items-center justify-center">
-                 <img src="assets/optimizadas/LOGOMW01.webp" alt="Logo MODELLWERK" class="w-full h-full object-contain"> 
+            <div class="hidden items-center gap-8 font-mono text-xs uppercase text-graphite md:flex">
+                <a class="hover:text-clay" href="#studio">Estudio</a>
+                <a class="hover:text-clay" href="#systems">Sistemas</a>
+                <a class="hover:text-clay" href="#projects">Archivo</a>
+                <a class="hover:text-clay" href="#contact">Contacto</a>
             </div>
-            <div class="flex flex-col justify-center h-20">
-                <span class="font-display font-bold text-2xl tracking-tight leading-none text-ink group-hover:text-tech-blue transition-colors">MODELLWERK</span>
-                <span class="font-mono text-[10px] text-graphite tracking-[0.25em] uppercase mt-1">Systems Architecture</span>
+
+            <div class="hidden items-center gap-3 md:flex">
+                <a href="descargas/ficha-tecnica-mw40-demo.html" download class="mw-button inline-flex items-center gap-3 border border-line bg-white px-5 py-3 font-mono text-xs uppercase text-ink hover:border-clay">
+                    <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+                    Ficha técnica
+                </a>
+                <a href="visor/index.html" class="mw-button inline-flex items-center gap-3 bg-ink px-5 py-3 font-mono text-xs uppercase text-white hover:bg-clay">
+                    <i class="fa-solid fa-cube" aria-hidden="true"></i>
+                    Configurador
+                </a>
             </div>
-        </a>
-        
-        <div class="hidden md:flex gap-16 font-mono text-[10px] uppercase tracking-widest text-graphite">
-            <a href="#about" class="hover:text-tech-blue transition-colors interactive relative group">
-                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Estudio
-            </a>
-            <a href="#services" class="hover:text-tech-blue transition-colors interactive relative group">
-                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Capacidades
-            </a>
-            <a href="#projects" class="hover:text-tech-blue transition-colors interactive relative group">
-                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Índice [20]
-            </a>
-            <a href="#contact" class="hover:text-tech-blue transition-colors interactive relative group">
-                <span class="absolute -left-3 opacity-0 group-hover:opacity-100 transition-opacity text-tech-blue">/</span>Contacto
-            </a>
+
+            <button id="mobile-menu-button" class="flex h-11 w-11 items-center justify-center border border-line bg-white text-ink md:hidden" aria-label="Abrir menú" aria-expanded="false">
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
         </div>
-        
-        <div class="md:hidden text-ink"><i class="fas fa-bars"></i></div>
+        <div id="mobile-menu" class="hidden border-t border-line bg-paper px-5 py-5 md:hidden">
+            <div class="grid gap-4 font-mono text-xs uppercase text-graphite">
+                <a href="#studio">Estudio</a>
+                <a href="#systems">Sistemas</a>
+                <a href="#projects">Archivo</a>
+                <a href="#contact">Contacto</a>
+                <a href="visor/index.html" class="inline-flex items-center gap-3 bg-ink px-4 py-3 text-white">
+                    <i class="fa-solid fa-cube" aria-hidden="true"></i>
+                    Entrar al configurador
+                </a>
+            </div>
+        </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <header class="relative min-h-screen w-full flex flex-col justify-center px-6 lg:px-24 pt-32 pb-20 overflow-hidden">
-        <div class="absolute inset-0 z-0 pointer-events-none">
-            <!-- PORTADA: ID 'hero-image' agregado para JS. Grayscale inicial. Blur reducido a 0.5px. Transition agregada. -->
-            <img id="hero-image" src="assets/optimizadas/PORTADAMW01.webp" class="w-full h-full object-cover grayscale contrast-125 brightness-90 opacity-20 scale-105 transition-all duration-700 ease-out" style="filter: blur(0.5px);" alt="Background Structure">
-            
-            <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/60 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
-        </div>
-
-        <div class="relative z-10 w-full reveal active max-w-[1600px] mx-0">
-            <div class="flex items-center gap-4 mb-10">
-                <span class="font-mono text-[10px] bg-ink text-white px-3 py-1 uppercase tracking-widest">Est. 2020</span>
-                <div class="h-[1px] w-16 bg-ink/30"></div>
-                <span class="font-mono text-[10px] text-graphite uppercase tracking-widest">Ingeniería Digital & Prefabricación</span>
+    <main id="top">
+        <header class="relative min-h-[92vh] overflow-hidden pt-20">
+            <div class="absolute inset-0">
+                <img src="assets/optimizadas/PORTADAMW01.webp" alt="Sistema modular Modellwerk" class="h-full w-full object-cover material-image">
+                <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/78 to-paper/15"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
             </div>
 
-            <h1 class="font-display text-6xl md:text-8xl lg:text-[11rem] font-semibold leading-[0.85] tracking-tighter text-ink mb-16 mix-blend-darken">
-                MODELOS<br>
-                <!-- SISTEMAS: ID 'hero-sistemas' agregado para interacción -->
-                <span id="hero-sistemas" class="text-outline backdrop-blur-sm cursor-pointer relative z-20">SISTEMAS</span><br>
-                CLARIDAD.
-            </h1>
+            <div class="relative z-10 mx-auto grid min-h-[calc(92vh-5rem)] max-w-[1600px] grid-cols-1 content-center gap-10 px-5 pb-10 pt-12 lg:grid-cols-12 lg:px-10">
+                <div class="lg:col-span-8">
+                    <div class="mb-8 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase text-graphite">
+                        <span class="bg-ink px-3 py-2 text-white">Estudio BIM</span>
+                        <span class="h-px w-12 bg-ink/30"></span>
+                        <span>Arquitectura · Datos · Industrialización</span>
+                    </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-16 border-t border-ink pt-10">
-                <div class="md:col-span-6">
-                    <p class="font-sans text-xl md:text-2xl text-ink font-light leading-relaxed text-justify md:text-left">
-                        En MODELLWERK, redefinimos el proceso constructivo integrando la <strong class="font-medium">precisión digital</strong> con la lógica industrial. Transformamos la complejidad arquitectónica en sistemas eficientes mediante la gestión avanzada de datos BIM (LOD 400), la coordinación interdisciplinaria y estrategias DfMA. Nuestro enfoque garantiza la trazabilidad total del activo, desde el gemelo digital hasta su materialización física, optimizando costos, plazos y sostenibilidad en proyectos de alta envergadura.
+                    <h1 class="max-w-5xl font-display text-4xl font-semibold leading-none text-ink md:text-6xl lg:text-7xl">
+                        Modelos digitales para construir con menos incertidumbre.
+                    </h1>
+
+                    <p class="mt-7 max-w-3xl text-lg font-light leading-relaxed text-ink md:text-xl">
+                        MODELLWERK desarrolla modelos BIM LOD 400, documentación ejecutiva y configuradores online para estudios, constructoras y sistemas modulares que necesitan precisión antes de llegar a obra.
                     </p>
                 </div>
-                <div class="md:col-span-6 flex flex-col justify-between items-end">
-                    <div class="hidden md:block text-right font-mono text-[10px] text-graphite space-y-2 uppercase tracking-widest mb-8">
-                        <p>Modelado Paramétrico</p>
-                        <p>Coordinación 4D/5D</p>
-                        <p>Industrialización</p>
-                    </div>
-                    <a href="#projects" class="interactive group flex items-center gap-4 bg-white border border-line px-6 py-4 hover:border-tech-blue hover:shadow-lg transition-all duration-300">
-                        <span class="font-mono text-xs uppercase tracking-widest group-hover:text-tech-blue">Explorar Archivo</span>
-                        <div class="w-8 h-8 flex items-center justify-center group-hover:text-tech-blue transition-colors">
-                            <i class="fas fa-arrow-down animate-bounce"></i>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <!-- SECTION: CAPACIDADES TÉCNICAS -->
-    <section id="services" class="py-32 px-6 lg:px-24 border-t border-line bg-white">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-24 reveal">
-            <div>
-                <span class="font-mono text-[10px] text-tech-blue uppercase tracking-widest block mb-4">/// Metodología</span>
-                <h2 class="font-display text-4xl md:text-6xl text-ink leading-tight tracking-tight">Capacidades<br>Técnicas</h2>
-            </div>
-            <p class="font-sans text-sm text-graphite max-w-sm text-right mt-6 md:mt-0 font-light border-l border-line pl-6">
-                Un ecosistema de servicios técnicos diseñado para eliminar la incertidumbre en la construcción moderna.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line shadow-sm">
-            <!-- Servicio 1 -->
-            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal">
-                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">01. DIGITALIZACIÓN</span>
-                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-cube text-4xl"></i></div>
-                <h3 class="font-display text-2xl text-ink mb-4">Modelado BIM</h3>
-                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
-                    Construcción virtual de alta fidelidad. Desarrollamos gemelos digitales hasta LOD 400, estructurando la información para cómputos precisos, documentación ejecutiva y mantenimiento operativo.
-                </p>
-            </div>
-            <!-- Servicio 2 -->
-            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-75">
-                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">02. COORDINACIÓN</span>
-                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-layer-group text-4xl"></i></div>
-                <h3 class="font-display text-2xl text-ink mb-4">Clash Detection</h3>
-                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
-                    Auditoría federada de modelos. Utilizamos Navisworks y algoritmos de detección para resolver conflictos geométricos entre estructura, arquitectura y MEP antes de la fase de obra.
-                </p>
-            </div>
-            <!-- Servicio 3 -->
-            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-100">
-                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">03. INDUSTRIALIZACIÓN</span>
-                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-industry text-4xl"></i></div>
-                <h3 class="font-display text-2xl text-ink mb-4">DfMA & Prefabricación</h3>
-                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
-                    Design for Manufacture and Assembly. Racionalizamos el diseño arquitectónico en componentes modulares optimizados para la producción en planta y el ensamblaje rápido en sitio.
-                </p>
-            </div>
-            <!-- Servicio 4 -->
-            <div class="service-card bg-paper p-12 hover:bg-white transition-all duration-500 group interactive reveal delay-150">
-                <span class="font-mono text-xs text-graphite mb-10 block group-hover:text-tech-blue transition-colors">04. SUPERVISIÓN</span>
-                <div class="h-12 w-12 text-ink mb-8 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-ruler-combined text-4xl"></i></div>
-                <h3 class="font-display text-2xl text-ink mb-4">Gestión Técnica</h3>
-                <p class="font-sans text-sm text-graphite leading-relaxed font-light">
-                    Control de calidad y dirección técnica. Aseguramos la trazabilidad del proyecto, verificando que la ejecución en obra respete milimétricamente las especificaciones del modelo digital.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECTION: ARCHIVO DE PROYECTOS -->
-    <section id="projects" class="py-32 bg-mist/50 relative">
-        <div class="px-6 lg:px-24 mb-20 flex items-end justify-between reveal">
-            <div>
-                <span class="font-mono text-[10px] text-tech-blue mb-4 block tracking-widest">/// DATABASE</span>
-                <h2 class="font-display text-5xl md:text-7xl text-ink tracking-tight">Archivo 20-24</h2>
-            </div>
-            <div class="text-right hidden md:block font-mono text-[10px] text-graphite uppercase border-l border-line pl-6">
-                <p>Proyectos Indexados: 20</p>
-                <p>Estatus: Completado / En Curso</p>
-            </div>
-        </div>
-
-        <!-- GRILLA DE PROYECTOS -->
-        <div class="px-6 lg:px-24">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- 01: Hospitales Turísticos -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Turistico.webp" class="w-full h-full object-cover technical-filter" alt="Hospitales Turísticos" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
+                <div class="lg:col-span-4 lg:self-end">
+                    <div class="border-l border-ink/30 pl-6">
+                        <p class="font-mono text-xs uppercase text-graphite">Próximo paso comercial</p>
+                        <div class="mt-5 grid gap-3">
+                            <a href="descargas/ficha-tecnica-mw40-demo.html" download class="mw-button inline-flex items-center justify-between gap-4 border border-ink bg-white px-5 py-4 font-mono text-xs uppercase text-ink hover:bg-fog">
+                                Descargar ficha técnica
+                                <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
                             </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
-                        <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Turismo</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospitales Turísticos</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Despliegue de infraestructura sanitaria modular en zonas turísticas de Córdoba (Punilla, Calamuchita). Implementación de sistemas constructivos en seco para minimizar el impacto ambiental y acelerar los tiempos de ejecución en temporadas críticas.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 02: Centros Sanitarios -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Centro sanitario modular.webp" class="w-full h-full object-cover technical-filter" alt="Centros Sanitarios" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qwBrLI" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
+                            <a href="visor/index.html" class="mw-button inline-flex items-center justify-between gap-4 bg-ink px-5 py-4 font-mono text-xs uppercase text-white hover:bg-clay">
+                                Entrar al configurador
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                             </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Modular</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Centros Sanitarios</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Respuesta de emergencia sanitaria urbana. Desarrollo de tipologías modulares flexibles para atención primaria, priorizando la estandarización de componentes para una logística eficiente y montaje inmediato en tejido urbano consolidado.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 03: Hospital Penitenciario -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Penitenciario.webp" class="w-full h-full object-cover technical-filter" alt="Hospital Penitenciario" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4omEKmx" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
+                            <a href="#quote" class="mw-button inline-flex items-center justify-between gap-4 border border-line bg-paper px-5 py-4 font-mono text-xs uppercase text-ink hover:border-clay">
+                                Presupuesto con selección
+                                <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>
                             </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Seguridad</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospital Penitenciario</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Complejo de salud de alta seguridad en Gral. Güemes. Integración de elementos de hormigón prefabricado y sistemas antivandálicos, garantizando la durabilidad y cumpliendo con estrictos protocolos de seguridad penitenciaria.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Salta</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Sobrestante</div>
-                    </div>
-                </article>
-
-                <!-- 04: Módulos Galaxy -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Galaxy.webp" class="w-full h-full object-cover technical-filter" alt="Módulos Galaxy" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/479NwNK" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Minería</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">110u</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos Galaxy</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Logística compleja para campamento minero remoto. Fabricación y montaje de 110 módulos habitacionales diseñados para soportar condiciones climáticas extremas, priorizando la eficiencia térmica y el confort del personal.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Galaxy Lithium</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Jefe de Obra</div>
-                    </div>
-                </article>
-
-                <!-- 05: Hospital Tafí Viejo -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Tafi.webp" class="w-full h-full object-cover technical-filter" alt="Tafi Viejo" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/47x9Ke5" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">MEP</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Hospital Tafí Viejo</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Coordinación BIM integral para centro de salud. Resolución de interferencias en sistemas MEP de alta densidad (gases medicinales, climatización) en espacios técnicos reducidos para asegurar mantenibilidad futura.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>UNOPS</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Tucumán</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 06: Módulos Shelter -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Shelter.webp" class="w-full h-full object-cover technical-filter" alt="Shelter" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Telecom</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Tech</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos Shelter</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Cabinas técnicas de alta prestación para telecomunicaciones. Diseño enfocado en la estanqueidad total, control climático pasivo/activo y seguridad física para proteger equipamiento electrónico sensible.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Confidencial</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 07: Campamento Techint I -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Techint 1.webp" class="w-full h-full object-cover technical-filter" alt="Techint 1" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/3JcQWHP" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Masivo</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Campamento Techint I</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Despliegue masivo en Santa Cruz. Gestión de producción y montaje de 346 módulos habitacionales, aplicando procesos industriales para asegurar calidad uniforme y cumplimiento de cronogramas exigentes en oil & gas.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Santa Cruz</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Jefe de Obra</div>
-                    </div>
-                </article>
-
-                 <!-- 08: Módulos SISU -->
-                 <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/SISU.webp" class="w-full h-full object-cover technical-filter" alt="SISU" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Urbano</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Sanitario</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Módulos SISU</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Integración Socio-Urbana mediante módulos sanitarios "húmedos". Solución "plug-and-play" robusta para dotar de infraestructura básica a asentamientos informales, con foco en la durabilidad y conexión simple a redes.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Secretaría ISU</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 09: Cuarzo I Depto -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Cuarzo depto.webp" class="w-full h-full object-cover technical-filter" alt="Cuarzo" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4rkhRCT" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Residencial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Vaca Muerta</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Cuarzo I – Depto</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Vivienda industrializada en Vaca Muerta. Modelado de tipologías residenciales optimizadas para el transporte y montaje en zona petrolera, garantizando calidad de terminación y habitabilidad superior.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Everhouse</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Neuquén</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 10: Predio Syngenta -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Syngenta.webp" class="w-full h-full object-cover technical-filter" alt="Syngenta" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4rkhPuL" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Corporativo</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Agro</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Predio Syngenta</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Arquitectura corporativa para el agro. Desarrollo de anteproyecto técnico que integra laboratorios, oficinas y áreas logísticas, reflejando la identidad de marca a través de sistemas constructivos modernos y eficientes.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Syngenta</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Jesús María</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador Com.</div>
-                    </div>
-                </article>
-
-                <!-- 11: Prototipo Manfield -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Manfield.webp" class="w-full h-full object-cover technical-filter" alt="Manfield" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/43yj92R" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Vivienda</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Manfield</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        I+D para vivienda modular industrializada. Optimización de envolventes térmicas multicapa y detalles constructivos para maximizar la eficiencia energética y la velocidad de producción en línea de montaje.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>ECOSAN</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 12: Prototipo Celda -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Celda.webp" class="w-full h-full object-cover technical-filter" alt="Celda" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Seguridad</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Modular</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Celda</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Micro-arquitectura de seguridad. Diseño de unidad penitenciaria autónoma transportable, integrando estructura reforzada y sanitarios antivandálicos en un módulo "plug-and-play" de alta resistencia.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>ECOSAN</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 13: Comedor Techint II -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Comedor.webp" class="w-full h-full object-cover technical-filter" alt="Comedor" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/44aENu8" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Servicios</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Comedor Techint II</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Infraestructura de servicios a gran escala. Resolución de grandes luces mediante módulos acoplables para crear espacios diáfanos de alta capacidad, integrando cocinas industriales y sistemas HVAC centralizados.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 14: Oficinas Techint II -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Oficina.webp" class="w-full h-full object-cover technical-filter" alt="Oficinas" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/3LXuV0t" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Administrativo</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Oficinas Techint II</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Espacios de trabajo técnico en obra. Diseño modular enfocado en la ergonomía, conectividad y confort acústico para equipos de ingeniería, elevando el estándar de las instalaciones temporales de obra.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 15: Recreación Techint II -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Recreacion.webp" class="w-full h-full object-cover technical-filter" alt="Recreación" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4o68P9m" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Industrial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Ocio</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Recreación Techint II</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Bienestar en campamentos remotos. Creación de espacios comunes flexibles (SUM, gimnasios) mediante sistemas industrializados, esenciales para la calidad de vida del personal en locaciones aisladas.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Techint</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 16: Ampliación Rawson -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Rawson.webp" class="w-full h-full object-cover technical-filter" alt="Rawson" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4oSNOAx" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Pública</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Ampliación Rawson</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Intervención quirúrgica en patrimonio hospitalario. Uso de escaneo láser y BIM para proyectar ampliaciones modulares precisas que se integran al edificio histórico sin interrumpir su funcionamiento crítico.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Muni Cba</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 17: Destacamento Escobar -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Destacamento escobar.webp" class="w-full h-full object-cover technical-filter" alt="Escobar" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Seguridad</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Pública</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Destacamento Escobar</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Infraestructura de seguridad ciudadana de despliegue rápido. Diseño de puesto de vigilancia blindado y autosuficiente, permitiendo una implantación táctica inmediata en puntos estratégicos del municipio.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Muni Escobar</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Bs. As.</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Resp. Técnico</div>
-                    </div>
-                </article>
-
-                <!-- 18: Cuarzo I Complejo -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-100">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Cuarzo complejo.webp" class="w-full h-full object-cover technical-filter" alt="Cuarzo Complejo" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4o7lOro" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Residencial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Masterplan</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Cuarzo I – Complejo</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Masterplan urbano en entorno industrial. Planificación y modelado de redes de infraestructura y espacios comunes para un complejo habitacional a gran escala, optimizando la ocupación del suelo y los servicios.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Everhouse</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Neuquén</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 19: CAP San Jerónimo -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/San Jeronimo.webp" class="w-full h-full object-cover technical-filter" alt="San Jerónimo" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Salud</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">CAPS</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">CAP San Jerónimo</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Documentación técnica para licitación pública. Desarrollo de modelo BIM integral para Centro de Atención Primaria, generando cómputos métricos exactos y planos de detalle para asegurar transparencia en la obra pública.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Gov. Santa Fe</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Santa Fe</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador BIM</div>
-                    </div>
-                </article>
-
-                <!-- 20: Shop Shell -->
-                <article class="group bg-white p-6 border border-line hover:border-tech-blue transition-all duration-300 interactive reveal hover:shadow-xl hover:-translate-y-1 delay-75">
-                    <div class="aspect-[16/10] overflow-hidden mb-6 border border-line bg-mist relative">
-                        <img src="assets/optimizadas/Shell.webp" class="w-full h-full object-cover technical-filter" alt="Shell" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/20 backdrop-blur-[2px]">
-                            <a href="https://autode.sk/4qtRnOu" target="_blank" class="bg-white/10 border border-white/50 text-white font-mono text-[10px] uppercase tracking-widest px-6 py-3 hover:bg-tech-blue hover:border-tech-blue transition-colors backdrop-blur-md">
-                                Ver Modelo 3D
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Comercial</span>
-                         <span class="text-[9px] font-mono border border-line px-2 py-1 text-graphite uppercase bg-mist">Retail</span>
-                    </div>
-                    <h3 class="font-display text-lg text-ink mb-3 group-hover:text-tech-blue transition-colors">Prototipo Shop Shell</h3>
-                    <p class="font-sans text-xs text-graphite mb-6 leading-relaxed line-clamp-3">
-                        Estandarización de retail modular. Desarrollo de sistema constructivo replicable para tiendas de conveniencia, garantizando la consistencia de la imagen de marca Shell y reduciendo drásticamente los tiempos de apertura.
-                    </p>
-                    <div class="border-t border-line pt-4 grid grid-cols-2 gap-y-2 text-[10px] font-mono text-graphite uppercase">
-                        <div><span class="text-gray-400 block mb-1">Cliente</span>Shell</div>
-                        <div><span class="text-gray-400 block mb-1">Ubicación</span>Córdoba</div>
-                        <div class="col-span-2 text-ink font-medium">Rol: Modelador Com.</div>
-                    </div>
-                </article>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER: Email y texto actualizados -->
-    <footer id="contact" class="bg-paper border-t border-line pt-24 pb-12 relative overflow-hidden">
-        <div class="px-6 lg:px-24 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
-                <div>
-                    <span class="font-mono text-xs text-tech-blue uppercase tracking-widest block mb-6">/// Contacto</span>
-                    <a href="mailto:modellwerkar@gmail.com" class="font-display text-3xl md:text-5xl text-ink font-bold tracking-tighter leading-none hover:text-tech-blue transition-colors interactive break-words">
-                        modellwerkar@gmail.com
-                    </a>
-                </div>
-                <div class="flex flex-col justify-end items-start md:items-end">
-                    <div class="grid grid-cols-2 gap-12 font-mono text-xs uppercase text-graphite">
-                        <div>
-                            <span class="block text-ink font-bold mb-2">Oficina</span>
-                            <p>Córdoba, Argentina</p>
-                            <p>Servicios Globales</p>
-                        </div>
-                        <div>
-                            <span class="block text-ink font-bold mb-2">Conectar</span>
-                            <a href="#" class="block hover:text-tech-blue">LinkedIn</a>
-                            <a href="https://www.instagram.com/modellwerk_" target="_blank" class="block hover:text-tech-blue">Instagram</a>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="border-t border-line pt-8 flex justify-between items-center text-[10px] font-mono uppercase text-graphite">
-                <p>&copy; 2024 MODELLWERK.</p>
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 bg-tech-blue rounded-full animate-pulse"></span>
-                    <span>Sistema Activo</span>
+        </header>
+
+        <section class="border-y border-line bg-night text-white">
+            <div class="mx-auto grid max-w-[1600px] grid-cols-2 divide-x divide-white/10 px-5 lg:grid-cols-4 lg:px-10">
+                <div class="py-8">
+                    <div class="font-display text-4xl font-semibold">120k</div>
+                    <div class="mt-2 max-w-40 font-mono text-xs uppercase text-white/55">m² modelados y coordinados</div>
+                </div>
+                <div class="py-8 pl-5 lg:pl-8">
+                    <div class="font-display text-4xl font-semibold">LOD 400</div>
+                    <div class="mt-2 max-w-40 font-mono text-xs uppercase text-white/55">modelos listos para fabricar y medir</div>
+                </div>
+                <div class="py-8 pl-5 lg:pl-8">
+                    <div class="font-display text-4xl font-semibold">3</div>
+                    <div class="mt-2 max-w-40 font-mono text-xs uppercase text-white/55">familias modulares en desarrollo</div>
+                </div>
+                <div class="py-8 pl-5 lg:pl-8">
+                    <div class="font-display text-4xl font-semibold">4D/5D</div>
+                    <div class="mt-2 max-w-40 font-mono text-xs uppercase text-white/55">tiempo, costo y trazabilidad</div>
                 </div>
             </div>
+        </section>
+
+        <section id="studio" class="grid-field border-b border-line bg-paper py-24 lg:py-32">
+            <div class="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-5 lg:grid-cols-12 lg:px-10">
+                <div class="reveal lg:col-span-5">
+                    <p class="font-mono text-xs uppercase text-clay">01 · Estudio</p>
+                    <h2 class="mt-5 font-display text-4xl font-semibold leading-tight md:text-6xl">
+                        BIM como sistema de decisión, no como render caro.
+                    </h2>
+                </div>
+                <div class="reveal lg:col-span-7">
+                    <p class="text-xl font-light leading-relaxed text-ink">
+                        Para arquitectos y constructoras, el valor no está solamente en ver el edificio antes: está en detectar interferencias, ordenar cantidades, cerrar criterios constructivos y documentar con la suficiente profundidad para que la obra deje de improvisar.
+                    </p>
+
+                    <div class="mt-10 grid grid-cols-1 gap-px bg-line md:grid-cols-3">
+                        <article class="bg-white p-7">
+                            <i class="fa-solid fa-layer-group text-2xl text-steel" aria-hidden="true"></i>
+                            <h3 class="mt-6 font-display text-xl font-semibold">Modelos federados</h3>
+                            <p class="mt-3 text-sm leading-relaxed text-graphite">Arquitectura, estructura y MEP coordinadas con criterios de obra, fabricación y cómputo.</p>
+                        </article>
+                        <article class="bg-white p-7">
+                            <i class="fa-solid fa-ruler-combined text-2xl text-clay" aria-hidden="true"></i>
+                            <h3 class="mt-6 font-display text-xl font-semibold">Documentación ejecutiva</h3>
+                            <p class="mt-3 text-sm leading-relaxed text-graphite">Planos, detalles, planillas y entregables pensados para licitar, fabricar y construir.</p>
+                        </article>
+                        <article class="bg-white p-7">
+                            <i class="fa-solid fa-magnifying-glass-chart text-2xl text-moss" aria-hidden="true"></i>
+                            <h3 class="mt-6 font-display text-xl font-semibold">Auditoría técnica</h3>
+                            <p class="mt-3 text-sm leading-relaxed text-graphite">Revisión de interferencias, inconsistencias y riesgos antes de que pasen a costo real.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="systems" class="bg-white py-24 lg:py-32">
+            <div class="mx-auto max-w-[1600px] px-5 lg:px-10">
+                <div class="reveal flex flex-col justify-between gap-8 border-b border-line pb-12 lg:flex-row lg:items-end">
+                    <div>
+                        <p class="font-mono text-xs uppercase text-clay">02 · Sistemas configurables</p>
+                        <h2 class="mt-5 max-w-4xl font-display text-4xl font-semibold leading-tight md:text-6xl">
+                            Del servicio BIM al producto modular.
+                        </h2>
+                    </div>
+                    <p class="max-w-xl text-base leading-relaxed text-graphite">
+                        La web puede mostrar tres líneas: experiencia en modelos digitales, configurador de edificios modulares y un configurador liviano de Tiny Desk con planos de muestra como puerta de entrada.
+                    </p>
+                </div>
+
+                <div class="mt-12 grid grid-cols-1 gap-px bg-line lg:grid-cols-3">
+                    <article class="reveal bg-paper p-8">
+                        <div class="aspect-[4/3] overflow-hidden bg-fog">
+                            <img src="assets/optimizadas/Oficina.webp" alt="Modelo BIM para arquitectura y construcción" class="h-full w-full object-cover material-image">
+                        </div>
+                        <p class="mt-7 font-mono text-xs uppercase text-steel">Línea A</p>
+                        <h3 class="mt-3 font-display text-3xl font-semibold">BIM para terceros</h3>
+                        <p class="mt-4 text-sm leading-relaxed text-graphite">Servicios premium para estudios y constructoras: modelado, coordinación, documentación y cómputos confiables.</p>
+                    </article>
+
+                    <article class="reveal bg-paper p-8">
+                        <div class="aspect-[4/3] overflow-hidden bg-fog">
+                            <img src="assets/optimizadas/Shelter.webp" alt="Configurador online de edificios modulares" class="h-full w-full object-cover material-image">
+                        </div>
+                        <p class="mt-7 font-mono text-xs uppercase text-clay">Línea B</p>
+                        <h3 class="mt-3 font-display text-3xl font-semibold">Edificios modulares</h3>
+                        <p class="mt-4 text-sm leading-relaxed text-graphite">Tres familias de módulos para oficinas, vivienda compacta y equipamiento institucional, con selección de terminaciones y presupuesto guiado.</p>
+                    </article>
+
+                    <article class="reveal bg-paper p-8">
+                        <div class="aspect-[4/3] overflow-hidden bg-fog">
+                            <img src="assets/optimizadas/Comedor.webp" alt="Configurador Tiny Desk con planos de muestra" class="h-full w-full object-cover material-image">
+                        </div>
+                        <p class="mt-7 font-mono text-xs uppercase text-moss">Línea C</p>
+                        <h3 class="mt-3 font-display text-3xl font-semibold">Tiny Desk</h3>
+                        <p class="mt-4 text-sm leading-relaxed text-graphite">Una herramienta accesible para customizar un escritorio compacto, descargar planos de muestra y captar leads de arquitectura digital.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="technical-sheet" class="border-y border-line bg-fog py-24 lg:py-32">
+            <div class="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-5 lg:grid-cols-12 lg:px-10">
+                <div class="reveal lg:col-span-5">
+                    <p class="font-mono text-xs uppercase text-clay">03 · Producto piloto</p>
+                    <h2 class="mt-5 font-display text-4xl font-semibold leading-tight md:text-6xl">MW40 como demostrador comercial.</h2>
+                    <p class="mt-6 text-base leading-relaxed text-graphite">
+                        Datos provisorios para reemplazar por información real. La intención es que el visitante perciba un sistema serio, medible y cotizable.
+                    </p>
+                </div>
+
+                <div class="reveal lg:col-span-7">
+                    <div class="grid grid-cols-1 gap-px bg-line md:grid-cols-3">
+                        <article class="bg-white p-7">
+                            <p class="font-mono text-xs uppercase text-graphite">MW40</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Studio</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">27 m² · 9.00 x 3.00 m · oficina, aula, showroom o vivienda mínima.</p>
+                        </article>
+                        <article class="bg-white p-7">
+                            <p class="font-mono text-xs uppercase text-graphite">MW60</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Workplace</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">54 m² · dos módulos combinados · planta libre, sanitarios y expansión lateral.</p>
+                        </article>
+                        <article class="bg-white p-7">
+                            <p class="font-mono text-xs uppercase text-graphite">MW90</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Basebuild</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">81 m² · sistema para equipos, escuelas compactas o unidades comerciales.</p>
+                        </article>
+                    </div>
+
+                    <div class="mt-px grid grid-cols-1 gap-px bg-line md:grid-cols-2">
+                        <div class="bg-white p-7">
+                            <p class="font-mono text-xs uppercase text-graphite">Sistema constructivo</p>
+                            <dl class="mt-5 grid gap-4 text-sm">
+                                <div class="flex justify-between gap-4 border-b border-line pb-3"><dt>Base</dt><dd class="text-right text-graphite">Chasis metálico galvanizado</dd></div>
+                                <div class="flex justify-between gap-4 border-b border-line pb-3"><dt>Envolvente</dt><dd class="text-right text-graphite">Panel PIR + fachada ventilada</dd></div>
+                                <div class="flex justify-between gap-4 border-b border-line pb-3"><dt>Documentación</dt><dd class="text-right text-graphite">LOD 400 + ficha técnica</dd></div>
+                                <div class="flex justify-between gap-4"><dt>Entrega estimada</dt><dd class="text-right text-graphite">4 a 8 semanas</dd></div>
+                            </dl>
+                        </div>
+                        <div id="quote" class="bg-night p-7 text-white">
+                            <p class="font-mono text-xs uppercase text-white/60">Flujo comercial</p>
+                            <h3 class="mt-4 font-display text-3xl font-semibold">Configurar, guardar y cotizar.</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-white/65">El pedido ideal: el usuario elige módulo, terminaciones y uso; luego envía la configuración para recibir presupuesto formal.</p>
+                            <a href="visor/index.html" class="mw-button mt-7 inline-flex items-center gap-3 bg-white px-5 py-3 font-mono text-xs uppercase text-ink hover:bg-fog">
+                                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                                Abrir configurador MW40
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="bg-paper py-24 lg:py-32">
+            <div class="mx-auto max-w-[1600px] px-5 lg:px-10">
+                <div class="reveal flex flex-col justify-between gap-8 border-b border-line pb-12 lg:flex-row lg:items-end">
+                    <div>
+                        <p class="font-mono text-xs uppercase text-clay">04 · Archivo técnico</p>
+                        <h2 class="mt-5 max-w-4xl font-display text-4xl font-semibold leading-tight md:text-6xl">Mostrar bagaje sin exponer lo confidencial.</h2>
+                    </div>
+                    <p class="max-w-xl text-base leading-relaxed text-graphite">
+                        Propongo reemplazar parte de la grilla larga por casos agrupados: salud, retail, industria y residencial. Cada caso puede hablar del rol técnico, no necesariamente de propiedad comercial.
+                    </p>
+                </div>
+
+                <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+                    <article class="reveal border border-line bg-white">
+                        <img src="assets/optimizadas/Centro sanitario modular.webp" alt="Infraestructura sanitaria modular" class="aspect-[16/11] w-full object-cover material-image">
+                        <div class="p-6">
+                            <p class="font-mono text-xs uppercase text-clay">Salud · Modular</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Infraestructura sanitaria</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">Modelado y documentación para edificios de despliegue rápido, con foco en coordinación técnica y ejecución limpia.</p>
+                        </div>
+                    </article>
+                    <article class="reveal border border-line bg-white">
+                        <img src="assets/optimizadas/Shell.webp" alt="Retail modular y prototipos comerciales" class="aspect-[16/11] w-full object-cover material-image">
+                        <div class="p-6">
+                            <p class="font-mono text-xs uppercase text-steel">Retail · Prototipo</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Sistemas replicables</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">Prototipos comerciales documentados para repetir, medir y adaptar sin perder consistencia de marca.</p>
+                        </div>
+                    </article>
+                    <article class="reveal border border-line bg-white">
+                        <img src="assets/optimizadas/Techint 1.webp" alt="Equipamiento industrial modelado en BIM" class="aspect-[16/11] w-full object-cover material-image">
+                        <div class="p-6">
+                            <p class="font-mono text-xs uppercase text-moss">Industrial · Campamento</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Operación remota</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">Coordinación de espacios técnicos y habitables para entornos exigentes, con prioridad en montaje y mantenimiento.</p>
+                        </div>
+                    </article>
+                    <article class="reveal border border-line bg-white">
+                        <img src="assets/optimizadas/Cuarzo complejo.webp" alt="Masterplan residencial modelado en BIM" class="aspect-[16/11] w-full object-cover material-image">
+                        <div class="p-6">
+                            <p class="font-mono text-xs uppercase text-clay">Residencial · Masterplan</p>
+                            <h3 class="mt-3 font-display text-2xl font-semibold">Modelos urbanos</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-graphite">Digitalización de complejos, redes y etapas para que arquitectura, costos y obra trabajen sobre la misma base.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="bg-night py-20 text-white lg:py-28">
+            <div class="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-5 lg:grid-cols-12 lg:px-10">
+                <div class="reveal lg:col-span-8">
+                    <p class="font-mono text-xs uppercase text-white/50">Contacto</p>
+                    <h2 class="mt-5 max-w-4xl font-display text-4xl font-semibold leading-tight md:text-6xl">Construyamos una base digital antes de mover materiales.</h2>
+                    <a href="mailto:modellwerkar@gmail.com" class="mt-8 inline-flex break-all font-display text-2xl font-semibold text-white hover:text-clay md:text-4xl">modellwerkar@gmail.com</a>
+                </div>
+
+                <div class="reveal lg:col-span-4 lg:self-end">
+                    <div class="grid gap-3">
+                        <a href="descargas/ficha-tecnica-mw40-demo.html" download class="mw-button inline-flex items-center justify-between gap-4 bg-white px-5 py-4 font-mono text-xs uppercase text-ink hover:bg-fog">
+                            Ficha técnica MW40
+                            <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+                        </a>
+                        <a href="visor/index.html" class="mw-button inline-flex items-center justify-between gap-4 border border-white/25 px-5 py-4 font-mono text-xs uppercase text-white hover:border-clay">
+                            Configurador online
+                            <i class="fa-solid fa-cube" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.instagram.com/modellwerk_" target="_blank" rel="noreferrer" class="mw-button inline-flex items-center justify-between gap-4 border border-white/25 px-5 py-4 font-mono text-xs uppercase text-white hover:border-clay">
+                            Instagram
+                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/10 bg-night px-5 py-6 text-white lg:px-10">
+        <div class="mx-auto flex max-w-[1600px] flex-col gap-4 font-mono text-xs uppercase text-white/45 md:flex-row md:items-center md:justify-between">
+            <div class="flex items-center gap-3">
+                <img src="assets/mw-isotype-light.svg" alt="" class="h-5 w-auto opacity-60">
+                <span>© 2026 MODELLWERK</span>
+            </div>
+            <span>Córdoba, Argentina · Servicios BIM y sistemas modulares</span>
         </div>
     </footer>
 
-    <!-- LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CUSTOM CURSOR ---
-            const cursor = document.getElementById('cursor');
-            const interactives = document.querySelectorAll('.interactive, a, button');
+            const mobileButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+            mobileButton?.addEventListener('click', () => {
+                const isOpen = !mobileMenu.classList.contains('hidden');
+                mobileMenu.classList.toggle('hidden');
+                mobileButton.setAttribute('aria-expanded', String(!isOpen));
             });
 
-            interactives.forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            mobileMenu?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileButton?.setAttribute('aria-expanded', 'false');
+                });
             });
 
-            // --- HERO INTERACTION: SISTEMAS <-> PORTADA ---
-            const sistemasTrigger = document.getElementById('hero-sistemas');
-            const heroImage = document.getElementById('hero-image');
-
-            if(sistemasTrigger && heroImage) {
-                sistemasTrigger.addEventListener('mouseenter', () => {
-                    // Quitamos grayscale para que se vea a color
-                    heroImage.classList.remove('grayscale');
-                    heroImage.classList.remove('opacity-20');
-                    heroImage.classList.add('opacity-80');
-                });
-
-                sistemasTrigger.addEventListener('mouseleave', () => {
-                    // Vuelve a estado original
-                    heroImage.classList.add('grayscale');
-                    heroImage.classList.remove('opacity-80');
-                    heroImage.classList.add('opacity-20');
-                });
-            }
-
-            // --- SCROLL REVEAL ---
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('active');
                 });
-            }, { threshold: 0.1 });
+            }, { threshold: 0.12 });
 
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });

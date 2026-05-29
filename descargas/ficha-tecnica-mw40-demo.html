@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha técnica MW40 · MODELLWERK</title>
+    <style>
+        :root {
+            --paper: #f7f5ef;
+            --ink: #16161a;
+            --line: #d8d4ca;
+            --clay: #b2603b;
+            --graphite: #4e514f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.45;
+        }
+
+        main {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 48px 28px;
+        }
+
+        header {
+            border-bottom: 2px solid var(--ink);
+            padding-bottom: 28px;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        h2 {
+            margin: 36px 0 14px;
+            font-size: 22px;
+        }
+
+        p {
+            color: var(--graphite);
+        }
+
+        .kicker {
+            color: var(--clay);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            border: 1px solid var(--line);
+        }
+
+        .cell {
+            min-height: 92px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 18px;
+        }
+
+        .cell:nth-child(2n) {
+            border-right: 0;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--graphite);
+            margin-bottom: 8px;
+        }
+
+        .value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--line);
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            width: 34%;
+            background: #ffffff;
+        }
+
+        footer {
+            margin-top: 42px;
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+            color: var(--graphite);
+            font-size: 12px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            main {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="kicker">MODELLWERK · Ficha técnica de muestra</div>
+            <h1>MW40 Studio</h1>
+            <p>Módulo habitable industrializado para oficina compacta, aula, showroom, puesto de atención o vivienda mínima. Datos provisorios para reemplazar por especificaciones reales.</p>
+        </header>
+
+        <section class="grid" aria-label="Resumen técnico">
+            <div class="cell"><div class="label">Superficie</div><div class="value">27 m²</div></div>
+            <div class="cell"><div class="label">Dimensiones</div><div class="value">9.00 x 3.00 m</div></div>
+            <div class="cell"><div class="label">Altura libre</div><div class="value">2.80 m</div></div>
+            <div class="cell"><div class="label">Entrega estimada</div><div class="value">4 a 8 semanas</div></div>
+        </section>
+
+        <h2>Sistema Constructivo</h2>
+        <table>
+            <tr><th>Estructura</th><td>Chasis metálico galvanizado con puntos de izaje y apoyo regulables.</td></tr>
+            <tr><th>Envolvente</th><td>Panel PIR 80 mm con fachada ventilada configurable en chapa vertical o madera técnica.</td></tr>
+            <tr><th>Aberturas</th><td>Carpintería de aluminio con DVH. Terminación negra o aluminio natural.</td></tr>
+            <tr><th>Interior</th><td>Pintura lavable, panelería de madera opcional, piso vinílico, madera técnica o microcemento.</td></tr>
+            <tr><th>Instalaciones</th><td>Preinstalación eléctrica, sanitaria y climatización según programa elegido.</td></tr>
+            <tr><th>Modelo BIM</th><td>Entregable LOD 400 con documentación ejecutiva, cómputos y variantes configurables.</td></tr>
+        </table>
+
+        <h2>Usos Recomendados</h2>
+        <table>
+            <tr><th>Oficina</th><td>2 a 6 puestos de trabajo con área de reunión compacta.</td></tr>
+            <tr><th>Educación</th><td>Aula, laboratorio seco o sala de apoyo institucional.</td></tr>
+            <tr><th>Retail</th><td>Showroom, punto de venta, atención al público o pop-up permanente.</td></tr>
+            <tr><th>Residencial</th><td>Unidad mínima, estudio de trabajo, ampliación o módulo complementario.</td></tr>
+        </table>
+
+        <footer>
+            MODELLWERK · Córdoba, Argentina · modellwerkar@gmail.com · Documento preliminar para validación comercial.
+        </footer>
+    </main>
+</body>
+</html>
