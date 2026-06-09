@@ -22,29 +22,34 @@ function cloneTex(url, srgb) {
 
 export function getFixedKey(n) {
   if (n.includes('vidrio')    || n.includes('glass')      || n.includes('cristal'))   return 'vidrio';
+  if ((n.includes('estructura') || n.includes('bastidor') || n.includes('perfil')) && (n.includes('piso') || n.includes('floor'))) return 'pisoEstructural';
+  if ((n.includes('estructura') || n.includes('bastidor') || n.includes('perfil')) && (n.includes('techo') || n.includes('roof'))) return 'techoEstructural';
   if (n.includes('tubo')      || n.includes('viga')       || n.includes('ipn')        ||
       n.includes('columna')   || n.includes('estructura') || n.includes('perfil')     ||
       n.includes('correa')    || n.includes('cano'))                                   return 'estructura';
   if (n.includes('eps')       || n.includes('compriband') || n.includes('aislacion')) return 'eps';
   if (n.includes('sanitario') || n.includes('inodoro')    || n.includes('lavabo'))    return 'sanitario';
   if (n.includes('led')       || n.includes('luminaria'))                              return 'led';
+  if (n.includes('mobiliario') || n.includes('furniture') || n.includes('mesa') || n.includes('silla')) return 'mobiliario';
   return null;
 }
 
 export function fixedMat(n) {
   if (n.includes('vidrio') || n.includes('glass') || n.includes('cristal'))
     return new THREE.MeshPhysicalMaterial({
-      color:             0xffffff,
-      transmission:      1.0,    // 100% claro
-      roughness:         0.03,   // casi liso, micro-difusión natural
+      color:             0x243238,
+      transmission:      0.06,
+      transparent:       true,
+      opacity:           0.74,
+      roughness:         0.045,
       metalness:         0,
       ior:               1.52,
-      // thickness=0 → SIN distorsión refractiva. La geometría del vidrio
-      // ya tiene ambos lados (12 caras/pane) así que no necesitamos SSR.
-      thickness:         0,
-      envMapIntensity:   1.2,    // mantiene reflejos del HDRI
-      // FrontSide: cada cara de la geometría se rendea una sola vez.
-      // DoubleSide acá hace que rendee la misma superficie 2 veces = fantasma.
+      thickness:         0.025,
+      reflectivity:      0.9,
+      clearcoat:         1.0,
+      clearcoatRoughness: 0.02,
+      envMapIntensity:   3.0,
+      depthWrite:        false,
       side:              THREE.FrontSide,
     });
   if (n.includes('tubo') || n.includes('viga') || n.includes('ipn') || n.includes('columna') || n.includes('estructura') || n.includes('perfil') || n.includes('correa') || n.includes('cano'))
@@ -133,6 +138,25 @@ function _buildMatForOpt(mesh, cat, opt) {
       || new THREE.MeshStandardMaterial({ color: opt.c, roughness: .65 });
 }
 
+function _assignMaterialSmooth(mesh, material) {
+  mesh.material = material;
+  if (!material || Array.isArray(material)) return;
+  material.transparent = true;
+  material.opacity = 0.18;
+  const t0 = performance.now();
+  const duration = 360;
+  (function step() {
+    const t = Math.min(1, (performance.now() - t0) / duration);
+    const e = 1 - Math.pow(1 - t, 3);
+    material.opacity = 0.18 + 0.82 * e;
+    if (t < 1) requestAnimationFrame(step);
+    else {
+      material.opacity = 1;
+      material.transparent = false;
+    }
+  })();
+}
+
 export function applyOption(catKey, idx) {
   const cat = CATS.find(c => c.key === catKey);
   if (!cat) return;
@@ -140,7 +164,7 @@ export function applyOption(catKey, idx) {
   catState[catKey] = idx;
 
   catMeshes[catKey].forEach(mesh => {
-    mesh.material = _buildMatForOpt(mesh, cat, opt);
+    _assignMaterialSmooth(mesh, _buildMatForOpt(mesh, cat, opt));
   });
 
   // Si la categoría es multi-pared, también sincronizamos el estado por-pared.
@@ -162,7 +186,7 @@ export function applyOptionToWall(catKey, wallId, idx) {
   // Encontrar la malla de esa pared (taggeada en viewer.js con userData.wallId)
   const mesh = catMeshes[catKey].find(m => m.userData.wallId === wallId);
   if (!mesh) return;
-  mesh.material = _buildMatForOpt(mesh, cat, opt);
+  _assignMaterialSmooth(mesh, _buildMatForOpt(mesh, cat, opt));
 
   wallState[catKey][wallId] = idx;
   document.dispatchEvent(new CustomEvent('wall-changed', {

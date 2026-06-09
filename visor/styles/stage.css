@@ -1,151 +1,217 @@
-/* ─── Filtros de visualización ───────────────────────────────────────────── */
-
-#filters {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 50px;
-  z-index: 10;
-  display: flex;
-  gap: 2px;
-  background: rgba(10,10,10,.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 0;
-  padding: 3px;
-}
-
-.fbtn {
-  font-family: var(--ff-m);
-  font-size: 9px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.3);
-  background: none;
-  border: none;
-  padding: 5px 12px;
-  cursor: none;
-  transition: all .15s;
-  white-space: nowrap;
-}
-.fbtn:hover  { color: rgba(255,255,255,.75); }
-.fbtn.active { background: rgba(0,68,255,.25); color: #6699ff; }
-
-/* ─── Viewport ────────────────────────────────────────────────────────────── */
-
 #vw {
-  flex: 1;
   position: relative;
   min-width: 0;
   overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 38%),
+    #171b1e;
 }
-#vw canvas { display: block; width: 100%; height: 100%; cursor: grab; }
-#vw canvas:active { cursor: grabbing; }
 
-/* Canvas del Gaussian Splat: queda detrás del canvas de Three.js, mismo tamaño. */
-#splat-canvas {
+#vw > canvas {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-}
-/* El canvas de Three.js (insertado dinámicamente) va encima del splat */
-#vw > canvas:not(#splat-canvas) {
-  position: absolute;
-  top: 0; left: 0;
+  inset: 0;
   z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
 }
 
-/* ─── Mode toggle (Órbita / Recorrer) ────────────────────────────────────── */
+#vw > canvas:active { cursor: grabbing; }
+
+.mode-stack,
+#mt,
+#lightModes,
+#mta,
+#cameraBar,
+#filters {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  background: rgba(9,11,13,.72);
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 18px 50px rgba(0,0,0,.18);
+  backdrop-filter: blur(16px);
+}
+
+.mode-stack {
+  left: 18px;
+  top: 18px;
+  width: 142px;
+  max-width: 142px;
+  flex-direction: column;
+  align-items: stretch;
+}
 
 #mt {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  background: rgba(10,10,10,.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 0;
-  padding: 3px;
-  gap: 2px;
+  top: 126px;
+  right: 18px;
 }
 
-.mdb {
-  font-family: var(--ff-m);
-  font-size: 9px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.35);
-  background: none;
-  border: none;
-  padding: 6px 14px;
-  cursor: none;
-  transition: all .15s;
+#lightModes {
+  top: 278px;
+  left: 18px;
 }
-.mdb.active { background: var(--accent); color: var(--ink); }
-.mdb:hover:not(.active):not(:disabled) { color: rgba(255,255,255,.85); }
-.mdb:disabled { opacity: .35; cursor: not-allowed; }
-
-/* ─── Acciones de modelo (ensamblaje, etc.) ───────────────────────────────── */
 
 #mta {
-  position: absolute;
-  top: 14px;
+  top: 18px;
   right: 18px;
-  z-index: 10;
-  display: flex;
-  background: rgba(10,10,10,.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,.07);
-  padding: 3px;
 }
 
-/* ─── FPS hint ────────────────────────────────────────────────────────────── */
+#cameraBar {
+  right: 18px;
+  top: 72px;
+}
+
+#filters {
+  left: 50%;
+  bottom: 178px;
+  transform: translateX(-50%);
+}
+
+.mdb,
+.fbtn,
+.cam-btn {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(245,242,234,.55);
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mode-stack .mdb {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.cam-btn {
+  width: 32px;
+  padding: 0;
+}
+
+.mdb:hover:not(:disabled),
+.fbtn:hover,
+.cam-btn:hover {
+  color: var(--paper);
+  border-color: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+}
+
+.mdb.active,
+.fbtn.active,
+.cam-btn.active {
+  color: var(--ink);
+  background: var(--gold);
+}
+
+.mdb:disabled {
+  opacity: .35;
+}
 
 #fh {
   position: absolute;
-  bottom: 110px;
   left: 50%;
+  bottom: 154px;
   transform: translateX(-50%);
   z-index: 10;
-  font-family: var(--ff-m);
-  font-size: 9px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.55);
-  background: rgba(10,10,10,.85);
-  backdrop-filter: blur(8px);
-  padding: 7px 16px;
-  border-radius: 0;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .3s;
+  padding: 8px 14px;
+  background: rgba(9,11,13,.78);
+  border: 1px solid rgba(255,255,255,.1);
+  color: rgba(245,242,234,.66);
+  font-family: var(--ff-m);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  transition: opacity .24s ease;
 }
-#fh.visible { opacity: 1; }
 
-/* ─── Crosshair ───────────────────────────────────────────────────────────── */
+#fh.visible { opacity: 1; }
 
 #ch {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 10;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .2s;
+  transform: translate(-50%, -50%);
+  transition: opacity .18s ease;
 }
+
 #ch.active { opacity: 1; }
 
 #ch::before,
 #ch::after {
   content: '';
   position: absolute;
-  background: rgba(255,255,255,.85);
+  background: rgba(245,242,234,.9);
 }
-#ch::before { width: 1px;  height: 14px; top: -7px; left: 0; }
-#ch::after  { width: 14px; height: 1px;  top: 0;    left: -7px; }
+
+#ch::before { width: 1px; height: 16px; top: -8px; left: 0; }
+#ch::after { width: 16px; height: 1px; top: 0; left: -8px; }
+
+#component-info {
+  position: absolute;
+  left: 18px;
+  bottom: 178px;
+  z-index: 10;
+  width: min(310px, calc(100% - 36px));
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  padding: 14px;
+  background: rgba(245,242,234,.92);
+  color: var(--ink);
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+#component-info.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#component-info strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--ff-s);
+  font-size: 14px;
+}
+
+#component-info span {
+  display: block;
+  color: var(--muted-dark);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .mode-stack {
+    width: 132px;
+    max-width: 132px;
+    top: 104px;
+  }
+  #mt { top: 18px; }
+  #mta {
+    top: 58px;
+    left: 18px;
+    right: auto;
+  }
+  #lightModes { top: 356px; }
+  #cameraBar { top: 58px; }
+  #filters { display: none; }
+}

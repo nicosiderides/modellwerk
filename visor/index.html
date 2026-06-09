@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Modellwerk — Configurador MW40</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MODELLWERK - Configurador MW40</title>
+  <meta name="description" content="Configurador 3D premium de modulos habitables industrializados MODELLWERK." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/sidebar.css">
   <link rel="stylesheet" href="styles/stage.css">
@@ -15,123 +16,164 @@
 <body>
 
 <div id="cursor"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
-<!-- Loading screen -->
 <div id="lo">
-  <div class="lol">Modell<em>werk</em></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -8 203 176" role="img" aria-label="Modellwerk" class="lol">
+    <path fill="#9DA2A9" fill-opacity="0.45" d="M 0,0 L 26,0 L 55,64 L 84,0 L 110,0 L 110,130 L 0,130 Z M 110,0 L 195,0 L 195,130 L 169,130 L 140,66 L 111,130 Z" transform="translate(2 3)"/>
+    <path fill="#F7F5EF" d="M 0,0 L 26,0 L 55,64 L 84,0 L 110,0 L 110,130 L 0,130 Z M 110,0 L 195,0 L 195,130 L 169,130 L 140,66 L 111,130 Z"/>
+    <text x="97.5" y="161" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="24" letter-spacing="4.2" text-anchor="middle" fill="#F7F5EF">MODELLWERK</text>
+  </svg>
   <div class="lolb" id="lolb">Cargando entorno...</div>
   <div class="lob"><div class="lof" id="lof"></div></div>
 </div>
 
 <header id="header">
-  <div class="logo">Modell<em>werk</em></div>
-  <nav id="hnav">
-    <a href="#" class="nl active">Configurar</a>
-    <a href="#" class="nl">Galería</a>
-    <a href="#" class="nl">Tecnología</a>
-    <a href="#" class="nl">Contacto</a>
+  <a class="brand" href="../index.html" aria-label="Ir a Modellwerk">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -8 203 144" role="img" aria-label="Modellwerk">
+      <path fill="#9DA2A9" fill-opacity="0.45" d="M 0,0 L 26,0 L 55,64 L 84,0 L 110,0 L 110,130 L 0,130 Z M 110,0 L 195,0 L 195,130 L 169,130 L 140,66 L 111,130 Z" transform="translate(2 3)"/>
+      <path fill="#F7F5EF" d="M 0,0 L 26,0 L 55,64 L 84,0 L 110,0 L 110,130 L 0,130 Z M 110,0 L 195,0 L 195,130 L 169,130 L 140,66 L 111,130 Z"/>
+    </svg>
+    <span>MODELLWERK</span>
+  </a>
+  <nav id="hnav" aria-label="Secciones">
+    <a href="#" class="nl active">Configurador</a>
+    <a href="#" class="nl">Sistema</a>
+    <a href="#" class="nl">BIM</a>
+    <a href="#" class="nl">Documentacion</a>
   </nav>
-  <button class="btn-cta" onclick="openCotizar()">Solicitar cotización</button>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="togglePresentation()" title="Modo presentacion" aria-label="Modo presentacion">[]</button>
+    <button class="btn-cta" onclick="openCotizar()">Solicitar cotizacion</button>
+  </div>
 </header>
 
-<div id="app">
-
-  <!-- Sidebar izquierda: selector de módulos + resumen -->
-  <aside id="pl">
-    <div class="sll">Módulos</div>
-
-    <div class="mc active" data-glb="modulo_v01.glb" onclick="selectMod(this)">
-      <div class="mth">
-        <svg width="22" height="14" viewBox="0 0 22 14" fill="none">
-          <rect x="1" y="2" width="20" height="11" rx="1" stroke="#c4a572" stroke-width="1.2"/>
-          <line x1="1"  y1="2" x2="3.5"  y2="0" stroke="#c4a572" stroke-width="1"/>
-          <line x1="21" y1="2" x2="18.5" y2="0" stroke="#c4a572" stroke-width="1"/>
-          <line x1="3.5" y1="0" x2="18.5" y2="0" stroke="#c4a572" stroke-width="1"/>
-        </svg>
+<main id="app">
+  <aside id="pl" aria-label="Configuracion">
+    <div class="panel-head">
+      <div>
+        <p class="eyebrow">Configurador</p>
+        <h1>Modulo habitable</h1>
       </div>
-      <div class="mi"><div class="mn">MW40</div><div class="md">9.00 × 3.00 × 2.80 m</div></div>
-      <div class="mb">Activo</div>
+      <button class="icon-btn dark" onclick="togglePanel('left')" title="Contraer panel izquierdo" aria-label="Contraer panel izquierdo">&lt;</button>
     </div>
 
-    <div class="sld"></div>
-    <div class="sll">Configuración</div>
-    <div style="padding:0 18px">
-      <!-- legacy fallback; ui.js también puebla #pr-specs en la sidebar derecha -->
-      <div id="cfgsum" style="font-size:11px;color:#4a4a4a;line-height:1.9;font-family:'DM Mono',monospace"></div>
-    </div>
+    <section class="sidebar-section">
+      <div class="section-title">Serie modular</div>
+      <div id="module-selector" class="module-list"></div>
+    </section>
+
+    <section class="sidebar-section">
+      <div class="section-title">Decisiones</div>
+      <div id="configurator-options"></div>
+    </section>
+
+    <section class="sidebar-section pinned">
+      <div class="section-title">Configuracion actual</div>
+      <div id="current-config"></div>
+      <div class="quick-actions">
+        <button class="btns dark" onclick="resetConfiguration()">Resetear</button>
+        <button class="btns dark" onclick="downloadConfig()">Guardar</button>
+      </div>
+    </section>
   </aside>
 
-  <!-- Viewport 3D central -->
-  <div id="vw">
-    <!-- Toggle orbital / FPS -->
-    <div id="mt">
-      <button class="mdb active" id="bOrb" onclick="setMode('orbit')">Órbita</button>
-      <button class="mdb"        id="bFps" onclick="setMode('fps')">Recorrer</button>
+  <section id="vw" aria-label="Escena 3D">
+    <div id="sceneModes" class="mode-stack" aria-label="Modos de vista">
+      <button class="mdb active" data-view="commercial" onclick="setScenePreset('commercial')">Comercial</button>
+      <button class="mdb" data-view="technical" onclick="setScenePreset('technical')">Tecnica</button>
+      <button class="mdb" data-view="logistics" onclick="setScenePreset('logistics')">Logistica</button>
+      <button class="mdb" data-view="structure" onclick="setScenePreset('structure')">Estructura</button>
+      <button class="mdb" data-view="interior" onclick="setScenePreset('interior')">Interior</button>
+      <button class="mdb" data-view="install" onclick="setScenePreset('install')">Instalacion</button>
+      <button class="mdb" data-view="exploded" onclick="setScenePreset('exploded')">Exploded</button>
     </div>
 
-    <!-- Acciones de modelo (ensamblaje, etc.) -->
+    <div id="mt">
+      <button class="mdb active" id="bOrb" onclick="setMode('orbit')">Orbita</button>
+      <button class="mdb" id="bFps" onclick="setMode('fps')">Recorrer</button>
+    </div>
+
+    <div id="lightModes">
+      <button class="mdb active" data-light="day" onclick="setLightingMood('day')">Dia</button>
+      <button class="mdb" data-light="night" onclick="setLightingMood('night')">Noche</button>
+    </div>
+
     <div id="mta">
       <button class="mdb" id="bAssem" onclick="toggleStructure()" disabled>Bajar estructura</button>
+      <button class="mdb" onclick="toggleRoof()">Ocultar techo</button>
+      <button class="mdb" onclick="toggleExplodedView()">Exploded</button>
+      <button class="mdb" onclick="captureImage()">Capturar</button>
     </div>
 
-    <!-- Filtros de visualización -->
+    <div id="cameraBar">
+      <button class="cam-btn" onclick="setCameraView('front')" title="Frontal">F</button>
+      <button class="cam-btn" onclick="setCameraView('side')" title="Lateral">L</button>
+      <button class="cam-btn" onclick="setCameraView('axo')" title="Axonometrica">A</button>
+      <button class="cam-btn" onclick="setCameraView('plan')" title="Planta">P</button>
+      <button class="cam-btn" onclick="setCameraView('interior')" title="Interior">I</button>
+    </div>
+
     <div id="filters"></div>
-
-    <!-- Hint FPS -->
-    <div id="fh">Click para activar · WASD mover · ESC salir</div>
-
-    <!-- Crosshair FPS -->
+    <div id="fh">Click para activar - WASD mover - ESC salir</div>
     <div id="ch"></div>
+    <div id="component-info" aria-live="polite"></div>
 
-    <!-- Customizer flotante -->
     <div id="cust">
+      <div class="customizer-head">
+        <span>Materiales y componentes</span>
+        <small>Seleccion directa sobre el modulo</small>
+      </div>
       <div class="ctabs" id="ctabs"></div>
       <div class="copts" id="copts"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- Sidebar derecha: especificaciones + precio -->
-  <aside id="pr">
-    <div>
-      <div class="prt">Módulo MW40</div>
-      <div class="prs">Módulo habitable estándar · Serie 2025</div>
+  <aside id="pr" aria-label="Ficha tecnica y cotizacion">
+    <div class="panel-head light">
+      <div>
+        <p class="eyebrow">Ficha tecnica</p>
+        <h2>Cotizacion MW</h2>
+      </div>
+      <button class="icon-btn" onclick="togglePanel('right')" title="Contraer panel derecho" aria-label="Contraer panel derecho">&gt;</button>
     </div>
-
-    <div class="sb">
-      <div class="sbl">Dimensiones</div>
-      <div class="sr"><span class="sk">Largo</span>        <span class="sv">9.00 m</span></div>
-      <div class="sr"><span class="sk">Ancho</span>        <span class="sv">3.00 m</span></div>
-      <div class="sr"><span class="sk">Altura libre</span> <span class="sv">2.80 m</span></div>
-      <div class="sr"><span class="sk">Superficie</span>   <span class="sv">27 m²</span></div>
-    </div>
-
-    <div class="sb">
-      <div class="sbl">Sistema constructivo</div>
-      <div class="sr"><span class="sk">Estructura</span>    <span class="sv">Acero galvanizado</span></div>
-      <div class="sr"><span class="sk">Cerramiento</span>   <span class="sv">Panel PIR 80 mm</span></div>
-      <div class="sr"><span class="sk">Aislación</span>     <span class="sv">λ = 0.022 W/m·K</span></div>
-      <div class="sr"><span class="sk">Plazo de obra</span> <span class="sv">4–6 semanas</span></div>
-    </div>
-
-    <!-- Acabados: poblado dinámicamente por ui.js -->
-    <div class="sb">
-      <div class="sbl">Acabados</div>
-      <div id="pr-specs"></div>
-    </div>
-
-    <div class="pb">
-      <div class="pl2">Precio base estimado</div>
-      <div class="pa"><span class="pc">USD</span> 42.000</div>
-      <div class="pn">Precio orientativo. Incluye estructura, cerramiento y carpintería estándar.</div>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <button class="btnp" onclick="openCotizar()">Solicitar cotización formal</button>
-      <button class="btns">Descargar ficha técnica</button>
-    </div>
+    <div id="right-tabs" class="right-tabs"></div>
+    <div id="right-panel-content" class="right-panel-content"></div>
   </aside>
+</main>
 
-</div><!-- #app -->
+<div id="quote-modal" class="qm" aria-hidden="true">
+  <div class="qm-backdrop" onclick="closeCotizar()"></div>
+  <section class="qm-panel" role="dialog" aria-modal="true" aria-labelledby="qm-title">
+    <button class="qm-close" onclick="closeCotizar()" aria-label="Cerrar cotizacion">x</button>
+    <p class="qm-kicker">Solicitud tecnica</p>
+    <h2 id="qm-title">Cotizacion formal MODELLWERK</h2>
+    <p class="qm-copy">El precio mostrado es orientativo y queda sujeto a ingenieria final, ubicacion, transporte y alcance contractual.</p>
+    <div class="qm-grid">
+      <div><div class="qm-label">Modulo</div><div class="qm-value">MW40</div></div>
+      <div><div class="qm-label">Superficie</div><div class="qm-value">27 m2</div></div>
+      <div><div class="qm-label">Precio</div><div class="qm-value" id="qm-price">USD 0</div></div>
+    </div>
+    <div class="qm-summary" id="quote-summary"></div>
+    <label class="qm-field">
+      <span>Nombre / estudio</span>
+      <input id="quote-name" type="text" autocomplete="name" placeholder="Ej. Estudio Norte">
+    </label>
+    <label class="qm-field">
+      <span>Email</span>
+      <input id="quote-email" type="email" autocomplete="email" placeholder="nombre@empresa.com">
+    </label>
+    <label class="qm-field">
+      <span>Comentario</span>
+      <textarea id="quote-notes" rows="3" placeholder="Uso previsto, ubicacion, cantidad de modulos o plazo objetivo."></textarea>
+    </label>
+    <div class="qm-actions">
+      <button class="btnp" onclick="sendQuoteEmail()">Enviar por email</button>
+      <button class="btns" onclick="copyQuoteSummary()">Copiar resumen</button>
+      <button class="btns" onclick="downloadConfig()">Descargar JSON</button>
+    </div>
+  </section>
+</div>
 
 <script type="importmap">
 {"imports":{
@@ -141,16 +183,16 @@
 </script>
 <script type="module" src="scripts/viewer.js"></script>
 <script>
-  // Cursor personalizado — desactivado sobre el canvas 3D
   const cur = document.getElementById('cursor');
   document.addEventListener('mousemove', e => {
     cur.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
   });
-  document.querySelectorAll('a, button, .mc, .sw, .fbtn, .mdb').forEach(el => {
-    el.addEventListener('mouseenter', () => cur.classList.add('hovered'));
-    el.addEventListener('mouseleave', () => cur.classList.remove('hovered'));
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest('a, button, .module-card, .sw, .fbtn, .mdb, .option-pill, .right-tabs button')) cur.classList.add('hovered');
   });
-  // Sobre el canvas 3D el cursor nativo es necesario para la interacción
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('a, button, .module-card, .sw, .fbtn, .mdb, .option-pill, .right-tabs button')) cur.classList.remove('hovered');
+  });
   document.getElementById('vw').addEventListener('mouseenter', () => cur.style.opacity = '0');
   document.getElementById('vw').addEventListener('mouseleave', () => cur.style.opacity = '1');
 </script>

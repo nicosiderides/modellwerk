@@ -1,54 +1,34 @@
 import { CATS, catMeshes, fixedMeshes } from './config.js';
 
-// ─── Definición de vistas ─────────────────────────────────────────────────────
+const ALL_CATS = ['EXT_REV', 'EXT_TECHO', 'INT_PARED', 'INT_CIEL', 'PISO', 'CARP'];
+const ALL_FIXED = ['estructura', 'pisoEstructural', 'techoEstructural', 'vidrio', 'eps', 'sanitario', 'led', 'mobiliario'];
 
 const FILTERS = [
-  {
-    key:   'full',
-    label: 'Completo',
-    show:  { cats: ['EXT_REV','EXT_TECHO','INT_PARED','INT_CIEL','PISO','CARP'], fixed: ['estructura','vidrio','eps','sanitario','led'] },
-  },
-  {
-    key:   'no-roof',
-    label: 'Sin techo',
-    show:  { cats: ['EXT_REV','INT_PARED','INT_CIEL','PISO','CARP'], fixed: ['estructura','vidrio','eps','sanitario','led'] },
-  },
-  {
-    key:   'interior',
-    label: 'Interior',
-    show:  { cats: ['INT_PARED','INT_CIEL','PISO','CARP'], fixed: ['estructura','vidrio','sanitario','led'] },
-  },
-  {
-    key:   'structure',
-    label: 'Estructura',
-    show:  { cats: [], fixed: ['estructura'] },
-  },
-  {
-    key:   'technical',
-    label: 'Técnico',
-    show:  { cats: ['EXT_REV','EXT_TECHO','INT_PARED','INT_CIEL','PISO','CARP'], fixed: ['estructura','vidrio','eps','sanitario','led'] },
-    transparent: ['EXT_REV', 'EXT_TECHO'],
-  },
+  { key: 'full', label: 'Completo', show: { cats: ALL_CATS, fixed: ALL_FIXED } },
+  { key: 'no-roof', label: 'Sin techo', show: { cats: ['EXT_REV', 'INT_PARED', 'PISO', 'CARP'], fixed: ['estructura', 'pisoEstructural', 'vidrio', 'eps', 'sanitario', 'led', 'mobiliario'] } },
+  { key: 'interior', label: 'Interior', show: { cats: ['INT_PARED', 'INT_CIEL', 'PISO', 'CARP'], fixed: ['pisoEstructural', 'vidrio', 'sanitario', 'led', 'mobiliario'] } },
+  { key: 'structure', label: 'Estructura', show: { cats: [], fixed: ['estructura', 'pisoEstructural', 'techoEstructural'] } },
+  { key: 'technical', label: 'Tecnico', show: { cats: ALL_CATS, fixed: ALL_FIXED }, transparent: ['EXT_REV', 'EXT_TECHO'] },
+  { key: 'logistics', label: 'Logistica', show: { cats: ['EXT_REV', 'EXT_TECHO', 'CARP'], fixed: ['estructura', 'pisoEstructural', 'techoEstructural', 'vidrio'] } },
+  { key: 'install', label: 'Montaje', show: { cats: ['EXT_REV', 'EXT_TECHO', 'PISO', 'CARP'], fixed: ['estructura', 'pisoEstructural', 'techoEstructural', 'vidrio', 'eps'] }, transparent: ['EXT_REV'] },
 ];
 
 let activeFilter = 'full';
 
-// ─── Aplicar un filtro ────────────────────────────────────────────────────────
-
-function applyFilter(key) {
-  const f = FILTERS.find(f => f.key === key);
+export function applyFilter(key) {
+  const f = FILTERS.find(item => item.key === key);
   if (!f) return;
   activeFilter = key;
 
-  // categorías
   CATS.forEach(cat => {
     const visible = f.show.cats.includes(cat.key);
     const transparent = f.transparent?.includes(cat.key);
     catMeshes[cat.key].forEach(mesh => {
       mesh.visible = visible;
+      if (Array.isArray(mesh.material)) return;
       if (visible && transparent) {
         mesh.material.transparent = true;
-        mesh.material.opacity = 0.12;
+        mesh.material.opacity = 0.16;
       } else if (visible) {
         mesh.material.transparent = false;
         mesh.material.opacity = 1;
@@ -56,7 +36,6 @@ function applyFilter(key) {
     });
   });
 
-  // meshes fijos
   Object.entries(fixedMeshes).forEach(([group, meshes]) => {
     const visible = f.show.fixed.includes(group);
     meshes.forEach(mesh => { mesh.visible = visible; });
@@ -65,11 +44,10 @@ function applyFilter(key) {
   updateFilterButtons(key);
 }
 
-// ─── UI ───────────────────────────────────────────────────────────────────────
-
 export function buildFiltersUI() {
   const el = document.getElementById('filters');
   if (!el) return;
+  el.innerHTML = '';
 
   FILTERS.forEach(f => {
     const btn = document.createElement('button');
@@ -86,3 +64,5 @@ function updateFilterButtons(key) {
     btn.classList.toggle('active', btn.dataset.key === key)
   );
 }
+
+window.applyFilter = applyFilter;

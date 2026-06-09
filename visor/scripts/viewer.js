@@ -6,26 +6,24 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass     } from 'three/addons/postprocessing/RenderPass.js';
 import { SSAOPass       } from 'three/addons/postprocessing/SSAOPass.js';
 import { OutputPass     } from 'three/addons/postprocessing/OutputPass.js';
-// (Antes acá había integración Gaussian Splat con mkkellogg y luego gsplat.js;
-// ambos sin éxito en nuestro setup. Pivoteamos a entorno 3D dentro del GLB.)
 
 import { norm, CATS, catMeshes, fixedMeshes } from './config.js';
 import { fixedMat, getFixedKey, applyOption, applyOptionToWall } from './materials.js';
 import { buildUI }                            from './ui.js';
-import { buildFiltersUI }                     from './filters.js';
-import { initCamera, updateCamera, setOrbitFromModel, setFpsStart } from './camera.js';
+import { buildFiltersUI, applyFilter }        from './filters.js';
+import { initCamera, updateCamera, setOrbitFromModel, setFpsStart, setOrbitPose } from './camera.js';
 
 // ─── Renderer ─────────────────────────────────────────────────────────────────
 
 const vw = document.getElementById('vw');
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(vw.clientWidth, vw.clientHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace  = THREE.SRGBColorSpace;
 renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;     // ligeramente sobre-expuesto = colores más vivos
+renderer.toneMappingExposure = 0.98;
 vw.appendChild(renderer.domElement);
 
 // ─── Scene & Camera ──────────────────────────────────────────────────────────
@@ -50,9 +48,9 @@ const _msaaTarget = new THREE.WebGLRenderTarget(
 const composer = new EffectComposer(renderer, _msaaTarget);
 composer.addPass(new RenderPass(scene, camera));
 const ssao = new SSAOPass(scene, camera, vw.clientWidth * 0.5, vw.clientHeight * 0.5);
-ssao.kernelRadius = 0.3;
+ssao.kernelRadius = 0.75;
 ssao.minDistance  = 0.001;
-ssao.maxDistance  = 0.06;
+ssao.maxDistance  = 0.14;
 composer.addPass(ssao);
 composer.addPass(new OutputPass());
 
@@ -63,28 +61,28 @@ composer.addPass(new OutputPass());
 // Sun → key light fuerte con sombras definidas.
 // Fill → key suave del lado opuesto para no perder detalle en sombras.
 // Rim → contraluz tenue para separar el módulo del fondo oscuro.
-scene.add(new THREE.AmbientLight(0xffffff, 0.05));
+scene.add(new THREE.AmbientLight(0xffffff, 0.12));
 
 // KEY (sol cálido) — sombras definidas, key light dominante
-const sun = new THREE.DirectionalLight(0xffeacc, 3.2);
-sun.position.set(8, 18, 6);
+const sun = new THREE.DirectionalLight(0xfff1df, 1.65);
+sun.position.set(-7, 12, 8);
 sun.castShadow = true;
 sun.shadow.mapSize.set(4096, 4096);            // shadow más nítida
 sun.shadow.bias   = -0.00015;
 sun.shadow.normalBias = 0.02;
-sun.shadow.radius = 4;                          // sombras un poco más definidas
+sun.shadow.radius = 8;
 sun.shadow.camera.near   =   0.5; sun.shadow.camera.far    =  80;
 sun.shadow.camera.left   = -15;   sun.shadow.camera.right  =  15;
 sun.shadow.camera.top    =  15;   sun.shadow.camera.bottom = -15;
 scene.add(sun);
 
 // FILL (azulado frío) — abre las sombras del lado opuesto sin matarlas
-const fill = new THREE.DirectionalLight(0xa8c0e0, 0.35);
+const fill = new THREE.DirectionalLight(0xb7c4d2, 0.55);
 fill.position.set(-6, 8, -6);
 scene.add(fill);
 
 // RIM (contraluz suave desde atrás) — separa el módulo del fondo gris oscuro
-const rim = new THREE.DirectionalLight(0xffffff, 0.6);
+const rim = new THREE.DirectionalLight(0xffffff, 0.35);
 rim.position.set(0, 6, -10);
 scene.add(rim);
 
@@ -136,6 +134,331 @@ contactShadow.rotation.x = -Math.PI / 2;
 contactShadow.position.y = 0.005;
 scene.add(contactShadow);
 
+function makeSitePlane(w, d, mat, x, z, y = -0.012) {
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, d), mat);
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.set(x, y, z);
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+function makeSiteBox(w, h, d, mat, x, y, z) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+function makeFenceLine(group, axis, fixed, from, to, matPost, matRail) {
+  const postGeo = new THREE.CylinderGeometry(0.035, 0.035, 1.45, 10);
+  const postCount = 9;
+  for (let i = 0; i < postCount; i++) {
+    const t = i / (postCount - 1);
+    const p = from + (to - from) * t;
+    const post = new THREE.Mesh(postGeo, matPost);
+    post.position.set(axis === 'x' ? p : fixed, 0.72, axis === 'x' ? fixed : p);
+    post.castShadow = true;
+    group.add(post);
+  }
+
+  const len = Math.abs(to - from);
+  const center = (from + to) * 0.5;
+  [0.45, 0.88, 1.25].forEach(y => {
+    const rail = axis === 'x'
+      ? makeSiteBox(len, 0.035, 0.035, matRail, center, y, fixed)
+      : makeSiteBox(0.035, 0.035, len, matRail, fixed, y, center);
+    group.add(rail);
+  });
+}
+
+function addLightPole(group, x, z, matDark, matGlow) {
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.06, 3.2, 12), matDark);
+  pole.position.set(x, 1.6, z);
+  pole.castShadow = true;
+  group.add(pole);
+
+  const arm = makeSiteBox(1.0, 0.045, 0.045, matDark, x + 0.42, 3.15, z);
+  group.add(arm);
+
+  const lamp = makeSiteBox(0.32, 0.12, 0.22, matGlow, x + 0.9, 3.05, z);
+  group.add(lamp);
+
+  const point = new THREE.PointLight(0xfff0d6, 0.8, 8, 2);
+  point.position.set(x + 0.9, 2.9, z);
+  group.add(point);
+}
+
+function addScaleFigure(group, matDark) {
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 1.25, 14), matDark);
+  body.position.set(-6.7, 0.78, 3.4);
+  body.castShadow = true;
+  group.add(body);
+
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 14, 10), matDark);
+  head.position.set(-6.7, 1.55, 3.4);
+  head.castShadow = true;
+  group.add(head);
+}
+
+function createIndustrialSiteEnvironment() {
+  const group = new THREE.Group();
+  group.name = 'MW_Procedural_Industrial_Site';
+
+  const concreteD = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_diff_2k.jpg', true);
+  const concreteA = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_arm_2k.jpg', false);
+  const concreteN = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_nor_dx_2k.jpg', false);
+  concreteD.repeat.set(12, 8);
+  concreteA.repeat.set(12, 8);
+  concreteN.repeat.set(12, 8);
+
+  const matConcrete = new THREE.MeshPhysicalMaterial({
+    color: 0x777a75,
+    map: concreteD,
+    roughnessMap: concreteA,
+    normalMap: concreteN,
+    normalScale: new THREE.Vector2(0.18, -0.18),
+    roughness: 0.62,
+    metalness: 0.02,
+    clearcoat: 0.14,
+    clearcoatRoughness: 0.28,
+    envMapIntensity: 0.85,
+  });
+  const matGravel = new THREE.MeshStandardMaterial({ color: 0x746f64, roughness: 0.96 });
+  const matGrass = new THREE.MeshStandardMaterial({
+    map: gd,
+    roughnessMap: ga,
+    normalMap: gn,
+    normalScale: new THREE.Vector2(0.6, -0.6),
+    roughness: 1,
+  });
+  const matShed = new THREE.MeshStandardMaterial({ color: 0xb8b1a5, roughness: 0.82 });
+  const matShedDark = new THREE.MeshStandardMaterial({ color: 0x242b30, roughness: 0.72, metalness: 0.18 });
+  const matFrame = new THREE.MeshStandardMaterial({ color: 0x1f2225, roughness: 0.62, metalness: 0.35 });
+  const matLine = new THREE.MeshStandardMaterial({ color: 0xd4bf74, roughness: 0.8 });
+  const matPuddle = new THREE.MeshPhysicalMaterial({
+    color: 0x1f2528,
+    roughness: 0.03,
+    metalness: 0,
+    clearcoat: 1,
+    clearcoatRoughness: 0.02,
+    transparent: true,
+    opacity: 0.16,
+    depthWrite: false,
+    envMapIntensity: 1.35,
+  });
+  const matGlow = new THREE.MeshStandardMaterial({
+    color: 0xfff2d0,
+    emissive: 0xffe2a8,
+    emissiveIntensity: 1.1,
+    roughness: 0.35,
+  });
+
+  group.add(makeSitePlane(26, 16, matConcrete, 0, 0));
+  group.add(makeSitePlane(26, 3.0, matGravel, 0, 8.8, -0.018));
+  group.add(makeSitePlane(26, 3.0, matGravel, 0, -8.8, -0.018));
+  group.add(makeSitePlane(3.0, 16, matGrass, -14.5, 0, -0.018));
+  group.add(makeSitePlane(3.0, 16, matGrass, 14.5, 0, -0.018));
+
+  [
+    [-5.1, 4.5, 1.35, 0.38, 0.08],
+    [4.2, 4.8, 1.7, 0.44, -0.05],
+    [6.8, -2.9, 1.15, 0.34, 0.15],
+    [-7.6, -4.7, 1.45, 0.4, -0.18],
+  ].forEach(([x, z, sx, sz, rot]) => {
+    const puddle = new THREE.Mesh(new THREE.CircleGeometry(1, 48), matPuddle);
+    puddle.rotation.x = -Math.PI / 2;
+    puddle.rotation.z = rot;
+    puddle.position.set(x, 0.01, z);
+    puddle.scale.set(sx, sz, 1);
+    group.add(puddle);
+  });
+
+  // Nave de fondo: marco visual sin competir con el módulo.
+  makeFenceLine(group, 'x', 7.7, -11.5, 11.5, matFrame, matFrame);
+
+  addLightPole(group, -10.7, 6.7, matFrame, matGlow);
+  addLightPole(group, 9.8, 6.6, matFrame, matGlow);
+  addScaleFigure(group, matFrame);
+
+  // Marcas discretas de playa de maniobra.
+  [-4.5, -2.8, -1.1, 0.6].forEach(x => {
+    group.add(makeSiteBox(0.055, 0.01, 2.8, matLine, x, 0.008, 5.8));
+  });
+  group.add(makeSiteBox(7.0, 0.01, 0.055, matLine, -1.95, 0.008, 4.4));
+
+  group.traverse(o => {
+    if (o.isMesh) o.matrixAutoUpdate = true;
+  });
+  return group;
+}
+
+function addSimplePallet(group, matWood, matDark, x, z, rot = 0) {
+  const pallet = new THREE.Group();
+  pallet.rotation.y = rot;
+  pallet.position.set(x, 0, z);
+
+  [-0.38, 0, 0.38].forEach(px => {
+    pallet.add(makeSiteBox(0.08, 0.12, 0.72, matWood, px, 0.08, 0));
+  });
+  [-0.28, 0, 0.28].forEach(pz => {
+    pallet.add(makeSiteBox(0.9, 0.045, 0.08, matWood, 0, 0.17, pz));
+  });
+  pallet.add(makeSiteBox(0.92, 0.035, 0.74, matDark, 0, 0.21, 0));
+  group.add(pallet);
+}
+
+function addTechnicalPerson(group, matDark, x, z) {
+  const person = new THREE.Group();
+  person.position.set(x, 0, z);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 1.2, 16), matDark);
+  body.position.y = 0.74;
+  body.castShadow = true;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.17, 16, 12), matDark);
+  head.position.y = 1.52;
+  head.castShadow = true;
+  person.add(body, head);
+  group.add(person);
+}
+
+function addServiceTruck(group, matBody, matDark, matGlass, x, z, rot = 0) {
+  const truck = new THREE.Group();
+  truck.position.set(x, 0, z);
+  truck.rotation.y = rot;
+  truck.add(makeSiteBox(2.7, 1.0, 1.25, matBody, 0, 0.55, 0));
+  truck.add(makeSiteBox(1.05, 0.78, 1.2, matBody, -1.75, 0.63, 0));
+  truck.add(makeSiteBox(0.62, 0.36, 1.22, matGlass, -2.18, 0.88, 0));
+  [-1.95, -0.95, 0.95].forEach(px => {
+    [-0.68, 0.68].forEach(pz => {
+      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.18, 18), matDark);
+      wheel.rotation.z = Math.PI / 2;
+      wheel.position.set(px, 0.24, pz);
+      wheel.castShadow = true;
+      truck.add(wheel);
+    });
+  });
+  group.add(truck);
+}
+
+function createShowroomIndustrialEnvironment() {
+  const group = new THREE.Group();
+  group.name = 'MW_Showroom_Industrial_Premium';
+
+  const concreteD = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_diff_2k.jpg', true);
+  const concreteA = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_arm_2k.jpg', false);
+  const concreteN = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_nor_dx_2k.jpg', false);
+  concreteD.repeat.set(24, 18);
+  concreteA.repeat.set(24, 18);
+  concreteN.repeat.set(24, 18);
+
+  const matConcrete = new THREE.MeshPhysicalMaterial({
+    color: 0x555958,
+    map: concreteD,
+    roughnessMap: concreteA,
+    normalMap: concreteN,
+    normalScale: new THREE.Vector2(0.11, -0.11),
+    roughness: 0.57,
+    metalness: 0.02,
+    clearcoat: 0.22,
+    clearcoatRoughness: 0.34,
+    envMapIntensity: 0.92,
+  });
+  const matAsphalt = new THREE.MeshStandardMaterial({ color: 0x2f3332, roughness: 0.84 });
+  const matShed = new THREE.MeshStandardMaterial({ color: 0x24282b, roughness: 0.78, metalness: 0.12 });
+  const matShedFace = new THREE.MeshStandardMaterial({ color: 0x34383a, roughness: 0.82, metalness: 0.08 });
+  const matDark = new THREE.MeshStandardMaterial({ color: 0x141719, roughness: 0.62, metalness: 0.32 });
+  const matLine = new THREE.MeshStandardMaterial({ color: 0xd1b46b, roughness: 0.72 });
+  const matWhiteLine = new THREE.MeshStandardMaterial({ color: 0xd8d3c6, roughness: 0.8 });
+  const matWood = new THREE.MeshStandardMaterial({ color: 0x9b6a37, roughness: 0.78 });
+  const matTruck = new THREE.MeshStandardMaterial({ color: 0x4f5557, roughness: 0.58, metalness: 0.12 });
+  const matGlassDark = new THREE.MeshPhysicalMaterial({
+    color: 0x1f2b30,
+    roughness: 0.04,
+    metalness: 0,
+    clearcoat: 1,
+    clearcoatRoughness: 0.03,
+    transparent: true,
+    opacity: 0.78,
+    envMapIntensity: 2.0,
+  });
+  const matPuddle = new THREE.MeshPhysicalMaterial({
+    color: 0x101416,
+    roughness: 0.035,
+    metalness: 0,
+    clearcoat: 1,
+    clearcoatRoughness: 0.02,
+    transparent: true,
+    opacity: 0.12,
+    depthWrite: false,
+    envMapIntensity: 1.25,
+  });
+
+  group.add(makeSitePlane(92, 72, matConcrete, 0, 0, -0.025));
+  group.add(makeSitePlane(92, 9, matAsphalt, 0, 19, -0.024));
+
+  const shed = new THREE.Group();
+  shed.position.set(0, 0, -22);
+  shed.add(makeSiteBox(34, 4.3, 0.35, matShedFace, 0, 2.15, 0));
+  shed.add(makeSiteBox(35, 0.35, 3.2, matShed, 0, 4.35, 0.45));
+  [-14, -10, -6, -2, 2, 6, 10, 14].forEach(x => {
+    shed.add(makeSiteBox(0.08, 4.2, 0.42, matDark, x, 2.12, -0.01));
+  });
+  [-8, 0, 8].forEach(x => {
+    shed.add(makeSiteBox(5.2, 1.1, 0.08, matGlassDark, x, 2.75, 0.2));
+  });
+  group.add(shed);
+
+  [-7.5, -5.4, -3.3, -1.2, 0.9, 3.0].forEach(x => {
+    group.add(makeSiteBox(0.055, 0.012, 4.6, matLine, x, 0.006, 7.4));
+  });
+  group.add(makeSiteBox(11.7, 0.012, 0.055, matLine, -2.25, 0.006, 5.1));
+  group.add(makeSiteBox(14, 0.012, 0.045, matWhiteLine, 0, 0.007, -6.2));
+  group.add(makeSiteBox(0.045, 0.012, 8.5, matWhiteLine, -7.0, 0.007, -2.0));
+  group.add(makeSiteBox(0.045, 0.012, 8.5, matWhiteLine, 7.0, 0.007, -2.0));
+
+  [
+    [-6.0, 3.6, 1.15, 0.22, 0.1],
+    [5.5, 4.2, 1.35, 0.26, -0.08],
+    [8.5, -5.0, 0.9, 0.18, 0.22],
+  ].forEach(([x, z, sx, sz, rot]) => {
+    const puddle = new THREE.Mesh(new THREE.CircleGeometry(1, 56), matPuddle);
+    puddle.rotation.x = -Math.PI / 2;
+    puddle.rotation.z = rot;
+    puddle.position.set(x, 0.01, z);
+    puddle.scale.set(sx, sz, 1);
+    group.add(puddle);
+  });
+
+  addTechnicalPerson(group, matDark, -6.8, 3.2);
+  addServiceTruck(group, matTruck, matDark, matGlassDark, 12.5, 9.2, -0.12);
+  addSimplePallet(group, matWood, matDark, -8.4, 6.3, 0.15);
+  addSimplePallet(group, matWood, matDark, -9.6, 6.9, -0.08);
+
+  const secondaryMat = new THREE.MeshStandardMaterial({ color: 0x383d3e, roughness: 0.72, metalness: 0.08 });
+  const secondaryTrim = new THREE.MeshStandardMaterial({ color: 0x121416, roughness: 0.62, metalness: 0.25 });
+  [-13.2, 13.4].forEach((x, i) => {
+    const aux = new THREE.Group();
+    aux.position.set(x, 0, -11.2 - i * 1.5);
+    aux.rotation.y = i ? -0.2 : 0.18;
+    aux.add(makeSiteBox(5.2, 2.15, 2.05, secondaryMat, 0, 1.08, 0));
+    aux.add(makeSiteBox(5.35, 0.12, 2.2, secondaryTrim, 0, 2.22, 0));
+    aux.add(makeSiteBox(1.15, 0.85, 0.08, matGlassDark, -1.5, 1.3, 1.06));
+    aux.add(makeSiteBox(1.15, 0.85, 0.08, matGlassDark, 1.55, 1.3, 1.06));
+    group.add(aux);
+  });
+
+  makeFenceLine(group, 'x', 13.8, -18, 18, matDark, matDark);
+
+  group.traverse(o => {
+    if (o.isMesh) o.matrixAutoUpdate = true;
+  });
+  return group;
+}
+
+const siteEnvironment = createShowroomIndustrialEnvironment();
+scene.add(siteEnvironment);
+floor.visible = false;
+
 // ─── Entorno 3D dentro del GLB ───────────────────────────────────────────────
 // La nave industrial está modelada en Blender con prefijo ENV_ y exportada en
 // el mismo GLB. El handler en el traverse (más abajo) las identifica y las
@@ -147,6 +470,185 @@ let _envDetected = false;
 window.scene    = scene;
 window.renderer = renderer;
 window.camera   = camera;
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const interactiveMeshes = [];
+let hoveredMesh = null;
+let hoverRestore = null;
+let explodedActive = false;
+let explodedAnimating = false;
+let roofHidden = false;
+
+const COMPONENT_LABELS = {
+  roof: ['Cubierta', 'Sistema superior configurable. Permite inspeccion sin techo y sobretecho tecnico.'],
+  floor: ['Piso', 'Paquete de piso interior y terminacion seleccionada.'],
+  floorStructure: ['Estructura de piso', 'Bastidor inferior de acero para apoyo, transporte e izaje.'],
+  roofStructure: ['Estructura de techo', 'Bastidor superior y rigidizacion del modulo.'],
+  exterior: ['Panel exterior', 'Envolvente industrializada con terminacion configurable.'],
+  interior: ['Panel interior', 'Revestimiento interior configurable por pared.'],
+  ceiling: ['Cielorraso', 'Plano interior superior con iluminacion integrada.'],
+  carpentry: ['Carpinteria', 'Aberturas y marcos con comportamiento independiente en exploded view.'],
+  services: ['Instalaciones', 'Componentes MEP visibles en modos tecnico e instalacion.'],
+  furniture: ['Equipamiento', 'Mobiliario o equipamiento interior segun alcance.'],
+  structure: ['Estructura', 'Perfiles de acero y componentes portantes del sistema modular.'],
+  default: ['Componente', 'Elemento del modelo BIM del modulo.'],
+};
+
+function componentTypeFromName(n) {
+  if (n.includes('cielorraso') || n.includes('ceiling')) return 'ceiling';
+  if (n.includes('piso') || n.includes('floor')) {
+    if (n.includes('estructura') || n.includes('bastidor') || n.includes('perfil')) return 'floorStructure';
+    return 'floor';
+  }
+  if (n.includes('techo') || n.includes('roof') || n.includes('cubierta')) {
+    if (n.includes('estructura') || n.includes('bastidor') || n.includes('perfil')) return 'roofStructure';
+    return 'roof';
+  }
+  if (n.includes('ventana') || n.includes('puerta') || n.includes('carp') || n.includes('abertura') || n.includes('aluminio')) return 'carpentry';
+  if (n.includes('muro') || n.includes('wall') || n.includes('pared')) {
+    if (n.includes('int') || n.includes('interior')) return 'interior';
+    return 'exterior';
+  }
+  if (n.includes('sanitario') || n.includes('led') || n.includes('luminaria') || n.includes('electrica') || n.includes('instalacion')) return 'services';
+  if (n.includes('mobiliario') || n.includes('furniture') || n.includes('mesa') || n.includes('silla')) return 'furniture';
+  if (n.includes('tubo') || n.includes('viga') || n.includes('ipn') || n.includes('columna') || n.includes('estructura') || n.includes('perfil') || n.includes('correa')) return 'structure';
+  return 'default';
+}
+
+function registerInteractiveMesh(mesh, normalizedName) {
+  const type = componentTypeFromName(normalizedName);
+  mesh.userData.componentType = type;
+  mesh.userData.basePosition = mesh.position.clone();
+  interactiveMeshes.push(mesh);
+}
+
+function prepareExplodedParts(model) {
+  const box = new THREE.Box3().setFromObject(model);
+  const center = box.getCenter(new THREE.Vector3());
+  interactiveMeshes.forEach(mesh => {
+    const mbox = new THREE.Box3().setFromObject(mesh);
+    const mcenter = mbox.getCenter(new THREE.Vector3());
+    const radial = new THREE.Vector3(mcenter.x - center.x, 0, mcenter.z - center.z);
+    if (radial.lengthSq() < 0.0001) radial.set(1, 0, 0);
+    radial.normalize();
+    let offset;
+    switch (mesh.userData.componentType) {
+      case 'roof':
+      case 'roofStructure':
+      case 'ceiling':
+        offset = new THREE.Vector3(radial.x * .2, 1.35, radial.z * .2);
+        break;
+      case 'floorStructure':
+        offset = new THREE.Vector3(radial.x * .15, -.55, radial.z * .15);
+        break;
+      case 'floor':
+        offset = new THREE.Vector3(radial.x * .2, -.28, radial.z * .2);
+        break;
+      case 'exterior':
+        offset = radial.multiplyScalar(1.25);
+        break;
+      case 'interior':
+        offset = radial.multiplyScalar(.72);
+        offset.y = .18;
+        break;
+      case 'carpentry':
+        offset = radial.multiplyScalar(1.65);
+        offset.y = .12;
+        break;
+      case 'services':
+        offset = new THREE.Vector3(radial.x * .52, .55, radial.z * .52);
+        break;
+      default:
+        offset = radial.multiplyScalar(.38);
+    }
+    mesh.userData.explodedOffset = offset;
+  });
+}
+
+function tweenExploded(active, duration = 980) {
+  if (explodedAnimating) return;
+  explodedAnimating = true;
+  explodedActive = active;
+  const anims = interactiveMeshes.map(mesh => {
+    const base = mesh.userData.basePosition || mesh.position;
+    const offset = mesh.userData.explodedOffset || new THREE.Vector3();
+    return {
+      mesh,
+      start: mesh.position.clone(),
+      target: active ? base.clone().add(offset) : base.clone(),
+    };
+  });
+  const t0 = performance.now();
+  (function step() {
+    const t = Math.min(1, (performance.now() - t0) / duration);
+    const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    anims.forEach(a => a.mesh.position.lerpVectors(a.start, a.target, e));
+    if (t < 1) requestAnimationFrame(step);
+    else explodedAnimating = false;
+  })();
+}
+
+function setRoofHidden(hidden) {
+  roofHidden = hidden;
+  (catMeshes.EXT_TECHO || []).forEach(mesh => { mesh.visible = !hidden; });
+  (fixedMeshes.techoEstructural || []).forEach(mesh => { mesh.visible = !hidden; });
+}
+
+function showComponentInfo(mesh, persistent = false) {
+  const el = document.getElementById('component-info');
+  if (!el || !mesh) return;
+  const [title, body] = COMPONENT_LABELS[mesh.userData.componentType] || COMPONENT_LABELS.default;
+  el.innerHTML = `<strong>${title}</strong><span>${body}</span><span class="component-name">${mesh.name || 'Mesh sin nombre'}</span>`;
+  el.classList.add('show');
+  if (!persistent) {
+    clearTimeout(showComponentInfo.timer);
+    showComponentInfo.timer = setTimeout(() => el.classList.remove('show'), 1400);
+  }
+}
+
+function clearHover() {
+  if (hoveredMesh && hoverRestore) {
+    if (Array.isArray(hoveredMesh.material)) {
+      hoveredMesh.material.forEach((mat, i) => {
+        mat.emissive?.copy(hoverRestore[i]?.emissive || new THREE.Color(0x000000));
+      });
+    } else {
+      hoveredMesh.material.emissive?.copy(hoverRestore.emissive || new THREE.Color(0x000000));
+    }
+  }
+  hoveredMesh = null;
+  hoverRestore = null;
+}
+
+function setHover(mesh) {
+  if (hoveredMesh === mesh) return;
+  clearHover();
+  hoveredMesh = mesh;
+  if (!mesh) return;
+  if (Array.isArray(mesh.material)) {
+    hoverRestore = mesh.material.map(mat => ({ emissive: mat.emissive?.clone() }));
+    mesh.material.forEach(mat => mat.emissive?.set(0x1d63ff));
+  } else {
+    hoverRestore = { emissive: mesh.material.emissive?.clone() };
+    mesh.material.emissive?.set(0x1d63ff);
+  }
+}
+
+function onPointerMove(e) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hit = raycaster.intersectObjects(interactiveMeshes, false).find(item => item.object.visible);
+  setHover(hit?.object || null);
+}
+
+renderer.domElement.addEventListener('pointermove', onPointerMove);
+renderer.domElement.addEventListener('pointerleave', clearHover);
+renderer.domElement.addEventListener('click', () => {
+  if (hoveredMesh) showComponentInfo(hoveredMesh, true);
+});
 
 // ─── Load helpers ─────────────────────────────────────────────────────────────
 
@@ -170,28 +672,147 @@ setLoad(10, 'Cargando entorno...');
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 
-new RGBELoader().load('assets/hdri/meadow_2_2k.hdr', (hdr) => {
+new RGBELoader().load('assets/hdri/factory_yard_2k.hdr', (hdr) => {
   hdr.mapping = THREE.EquirectangularReflectionMapping;
   // SOLO como environment (IBL/reflejos): NO se ve como background.
-  // environmentIntensity 1.3 → reflejos más vivos en metales/vidrios.
+  // Intensidad controlada: reflejos vivos sin quemar vidrios ni metales.
   scene.environment = pmrem.fromEquirectangular(hdr).texture;
-  if ('environmentIntensity' in scene) scene.environmentIntensity = 1.3;
+  if ('environmentIntensity' in scene) scene.environmentIntensity = 0.95;
   hdr.dispose();
   pmrem.dispose();
 });
 
 // Background: gris oscuro neutro tipo "studio". Limpio, no compite con el módulo.
-scene.background = new THREE.Color(0x1a1c20);
+scene.background = new THREE.Color(0x202423);
+scene.fog = new THREE.Fog(0x202423, 28, 82);
 
 // Sol direccional alineado para sombras bonitas
-const SUN_ELEVATION_DEG = 45;
-const SUN_AZIMUTH_DEG   = 135;
+const SUN_ELEVATION_DEG = 22;
+const SUN_AZIMUTH_DEG   = 132;
 const _phi   = THREE.MathUtils.degToRad(90 - SUN_ELEVATION_DEG);
 const _theta = THREE.MathUtils.degToRad(SUN_AZIMUTH_DEG);
 const sunDir = new THREE.Vector3().setFromSphericalCoords(1, _phi, _theta);
 sun.position.copy(sunDir).multiplyScalar(50);
 sun.target.position.set(0, 0, 0);
 scene.add(sun.target);
+
+let _activeScenePreset = 'commercial';
+let _activeLightMood = 'day';
+
+const SCENE_PRESETS = {
+  commercial: {
+    target: new THREE.Vector3(0, 1.35, 0),
+    radius: 11.6,
+    theta: Math.PI * 0.23,
+    phi: 0.96,
+  },
+  technical: {
+    target: new THREE.Vector3(0, 1.85, 0),
+    radius: 12.8,
+    theta: Math.PI * 0.68,
+    phi: 0.82,
+  },
+  logistics: {
+    target: new THREE.Vector3(1.2, 1.6, 0.2),
+    radius: 16.5,
+    theta: Math.PI * 0.36,
+    phi: 0.68,
+  },
+  structure: {
+    target: new THREE.Vector3(0, 1.55, 0),
+    radius: 12.2,
+    theta: Math.PI * 0.12,
+    phi: 0.78,
+  },
+  interior: {
+    target: new THREE.Vector3(0, 1.35, 0),
+    radius: 7.2,
+    theta: Math.PI * 0.52,
+    phi: 1.08,
+  },
+  install: {
+    target: new THREE.Vector3(.8, 1.75, 0),
+    radius: 14.4,
+    theta: Math.PI * 0.82,
+    phi: 0.75,
+  },
+  exploded: {
+    target: new THREE.Vector3(0, 1.65, 0),
+    radius: 13.8,
+    theta: Math.PI * 0.2,
+    phi: 0.86,
+  },
+  front: {
+    target: new THREE.Vector3(0, 1.35, 0),
+    radius: 10.8,
+    theta: Math.PI * .5,
+    phi: 1.05,
+  },
+  side: {
+    target: new THREE.Vector3(0, 1.35, 0),
+    radius: 11.2,
+    theta: 0,
+    phi: 1.0,
+  },
+  axo: {
+    target: new THREE.Vector3(0, 1.35, 0),
+    radius: 12,
+    theta: Math.PI * .25,
+    phi: .82,
+  },
+  plan: {
+    target: new THREE.Vector3(0, 0, 0),
+    radius: 12,
+    theta: Math.PI * .25,
+    phi: .08,
+  },
+};
+
+const PRESET_FILTER = {
+  commercial: 'full',
+  technical: 'technical',
+  logistics: 'logistics',
+  structure: 'structure',
+  interior: 'interior',
+  install: 'install',
+  exploded: 'technical',
+};
+
+function applyScenePreset(key, duration = 900) {
+  const preset = SCENE_PRESETS[key] || SCENE_PRESETS.commercial;
+  _activeScenePreset = key;
+  setOrbitPose(preset, duration);
+  applyFilter(PRESET_FILTER[key] || 'full');
+  if (key === 'exploded') tweenExploded(true);
+  else if (explodedActive) tweenExploded(false);
+  setRoofHidden(key === 'interior');
+  document.querySelectorAll('[data-view]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === key);
+  });
+}
+
+window.setScenePreset = (key) => applyScenePreset(key);
+window.setCameraView = (key) => {
+  const preset = SCENE_PRESETS[key] || SCENE_PRESETS.axo;
+  setOrbitPose(preset, 820);
+};
+window.toggleExplodedView = () => tweenExploded(!explodedActive);
+window.toggleRoof = () => setRoofHidden(!roofHidden);
+
+window.setLightingMood = function(key) {
+  _activeLightMood = key;
+  const night = key === 'night';
+  scene.background = new THREE.Color(night ? 0x111417 : 0x202423);
+  scene.fog = new THREE.Fog(night ? 0x111417 : 0x202423, night ? 22 : 28, night ? 68 : 82);
+  renderer.toneMappingExposure = night ? 0.78 : 0.98;
+  sun.intensity = night ? 0.25 : 1.65;
+  fill.intensity = night ? 0.18 : 0.55;
+  rim.intensity = night ? 0.7 : 0.35;
+  if ('environmentIntensity' in scene) scene.environmentIntensity = night ? 0.55 : 0.95;
+  document.querySelectorAll('[data-light]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.light === key);
+  });
+};
 // La carga del modelo se dispara al final del script, después de que
 // _currentModel / _loadModel estén declarados (sino: TDZ con `let`).
 
@@ -381,6 +1002,12 @@ function _loadModel(url) {
   if (_currentModel) { scene.remove(_currentModel); _currentModel = null; }
   CATS.forEach(c => { catMeshes[c.key] = []; });
   Object.keys(fixedMeshes).forEach(k => { fixedMeshes[k] = []; });
+  interactiveMeshes.length = 0;
+  _carpMeshes.length = 0;
+  _envDetected = false;
+  explodedActive = false;
+  roofHidden = false;
+  clearHover();
 
   setLoad(25, 'Cargando modelo...');
 
@@ -433,6 +1060,8 @@ function _loadModel(url) {
       // assign materials
       model.traverse(child => {
         if (!child.isMesh) return;
+        const meshName = norm(child.name);
+        registerInteractiveMesh(child, meshName);
         child.castShadow = child.receiveShadow = true;
 
         // Collect carp meshes para exploded view. Los nombres son ahora
@@ -488,7 +1117,7 @@ function _loadModel(url) {
           return;
         }
 
-        const n  = norm(child.name);
+        const n  = meshName;
         const fm = fixedMat(n);
         if (fm) {
           child.material = fm;
@@ -516,12 +1145,14 @@ function _loadModel(url) {
       if (_envDetected) {
         floor.visible = false;
         contactShadow.visible = false;
+        siteEnvironment.visible = false;
         console.log('[ENV] Galpón detectado en GLB. Piso disc y contact shadow ocultos.');
       }
 
       // Computar dirección "outward" de cada carp mesh basada en su posición
       // relativa al centro del modelo (requiere model ya posicionado en escena).
       _computeCarpDirections(model);
+      prepareExplodedParts(model);
 
       // ── Detectar la pieza superior de la estructura para la animación ──
       // De las 2 piezas de estructura (base + techo), la "techo" es la que
@@ -555,6 +1186,7 @@ function _loadModel(url) {
         new THREE.Vector3(0, s3.y * .4, 0),
         Math.max(s3.length() * 1.35, 10)
       );
+      applyScenePreset(_activeScenePreset, 0);
 
       setLoad(100, 'Listo');
       setTimeout(() => document.getElementById('lo').classList.add('out'), 400);

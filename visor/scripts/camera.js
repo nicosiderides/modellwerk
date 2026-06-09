@@ -15,6 +15,7 @@ let orbitTheta  = Math.PI / 5;
 let orbitPhi    = Math.PI / 3.5;
 let orbitRadius = 14;
 const orbitTarget = new THREE.Vector3(0, 1.2, 0);
+let orbitTween = null;
 
 // Centro del modelo para el reposicionamiento al entrar en Recorrer.
 // viewer.js lo setea via setFpsStart() después de cargar el GLB.
@@ -96,6 +97,29 @@ export function setOrbitFromModel(target, radius) {
   orbitRadius = radius;
 }
 
+export function setOrbitPose({ target, radius, theta, phi }, duration = 900) {
+  mode = 'orbit';
+  if (_el && document.pointerLockElement === _el) document.exitPointerLock();
+  fpsLocked = false;
+  document.getElementById('bOrb')?.classList.toggle('active', true);
+  document.getElementById('bFps')?.classList.toggle('active', false);
+  document.getElementById('cust')?.classList.toggle('hidden', false);
+  document.getElementById('ch')?.classList.remove('active');
+
+  orbitTween = {
+    start: performance.now(),
+    duration,
+    fromTarget: orbitTarget.clone(),
+    toTarget: target ? target.clone() : orbitTarget.clone(),
+    fromRadius: orbitRadius,
+    toRadius: radius ?? orbitRadius,
+    fromTheta: orbitTheta,
+    toTheta: theta ?? orbitTheta,
+    fromPhi: orbitPhi,
+    toPhi: phi ?? orbitPhi,
+  };
+}
+
 /**
  * Punto de aparición al entrar en modo Recorrer.
  * @param {THREE.Vector3} centerVec3  Centro del módulo en unidades de escena
@@ -125,6 +149,16 @@ function _groundYAt(x, z) {
 /** Called every frame from the render loop in viewer.js. */
 export function updateCamera(camera) {
   if (mode === 'orbit') {
+    if (orbitTween) {
+      const t = Math.min(1, (performance.now() - orbitTween.start) / orbitTween.duration);
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      orbitTarget.lerpVectors(orbitTween.fromTarget, orbitTween.toTarget, e);
+      orbitRadius = THREE.MathUtils.lerp(orbitTween.fromRadius, orbitTween.toRadius, e);
+      orbitTheta = THREE.MathUtils.lerp(orbitTween.fromTheta, orbitTween.toTheta, e);
+      orbitPhi = THREE.MathUtils.lerp(orbitTween.fromPhi, orbitTween.toPhi, e);
+      if (t >= 1) orbitTween = null;
+    }
+
     const x = orbitTarget.x + orbitRadius * Math.sin(orbitPhi) * Math.sin(orbitTheta);
     const y = orbitTarget.y + orbitRadius * Math.cos(orbitPhi);
     const z = orbitTarget.z + orbitRadius * Math.sin(orbitPhi) * Math.cos(orbitTheta);

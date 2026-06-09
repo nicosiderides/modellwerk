@@ -34,8 +34,16 @@ export const INT_WALL_LABELS = {
 
 export const CATS = [
   {
+    key: 'EXT_TECHO', label: 'Cubierta', mode: 'texture-swap',
+    match: n => n.includes('techo') || n.includes('roof') || n.includes('cubierta') || n.includes('chapa techo'),
+    opts: [
+      { texSet: 'ext_chapa_vert', c: '#202326', name: 'Chapa tecnica', rotate: 0 },
+      { texSet: 'ext_madera_horiz', c: '#8d6b48', name: 'Sobretecho madera', uvScale: 0.7 },
+    ],
+  },
+  {
     key: 'EXT_REV', label: 'Revestimiento', mode: 'texture-swap',
-    match: n => (n.includes('muro panel pir') || n.includes('basic wall') || n.includes('ext muro') || n.includes('ext pared') || n.includes('mw ext')) && !n.includes('cielorraso') && !n.includes('interior'),
+    match: n => (n.includes('muro panel pir') || n.includes('basic wall') || n.includes('ext muro') || n.includes('ext pared') || n.includes('mw ext')) && !n.includes('cielorraso') && !n.includes('interior') && !n.includes('techo') && !n.includes('roof'),
     opts: [
       { texSet: 'ext_madera_horiz', c: '#d4a373', name: 'Madera horizontal' },
       { texSet: 'ext_chapa_vert',   c: '#1a1a1a', name: 'Chapa vertical',   rotate: 0 },
@@ -94,4 +102,13 @@ CATS.filter(c => c.multiWall).forEach(c => {
   c.walls.forEach(w => { wallState[c.key][w] = 0; });
 });
 
-export const fixedMeshes = { estructura: [], vidrio: [], eps: [], sanitario: [], led: [] };
+export const fixedMeshes = {
+  estructura: [],
+  pisoEstructural: [],
+  techoEstructural: [],
+  vidrio: [],
+  eps: [],
+  sanitario: [],
+  led: [],
+  mobiliario: [],
+};
