@@ -42,13 +42,13 @@ body.left-collapsed #pl { opacity: 0; pointer-events: none; }
 }
 
 .module-card:not(:disabled):hover {
-  border-color: rgba(199,166,107,.35);
-  transform: translateY(-1px);
+  border-color: rgba(199,166,107,.34);
+  background: rgba(255,255,255,.05);
 }
 
 .module-card.active {
-  background: var(--blue-soft);
-  border-color: rgba(29,99,255,.6);
+  background: var(--gold-soft);
+  border-color: rgba(199,166,107,.58);
 }
 
 .module-card.soon {
@@ -89,8 +89,8 @@ body.left-collapsed #pl { opacity: 0; pointer-events: none; }
 
 .module-state {
   padding: 4px 6px;
-  color: var(--blue);
-  background: rgba(29,99,255,.11);
+  color: var(--gold);
+  background: rgba(199,166,107,.1);
   text-transform: uppercase;
 }
 
@@ -140,7 +140,7 @@ body.left-collapsed #pl { opacity: 0; pointer-events: none; }
 
 .option-pill:hover {
   border-color: rgba(199,166,107,.4);
-  transform: translateY(-1px);
+  background: rgba(255,255,255,.05);
 }
 
 .option-pill.active {
@@ -188,8 +188,8 @@ body.left-collapsed #pl { opacity: 0; pointer-events: none; }
 .progress-track span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--blue), var(--gold));
-  transition: width .32s ease;
+  background: var(--gold);
+  transition: width .18s ease;
 }
 
 .progress-card small {

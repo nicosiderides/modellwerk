@@ -7,9 +7,9 @@
   transform: translateX(-50%);
   background: rgba(9,11,13,.82);
   border: 1px solid rgba(255,255,255,.1);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
-  transition: opacity .22s ease, transform .22s ease;
+  box-shadow: 0 14px 36px rgba(0,0,0,.26);
+  backdrop-filter: blur(12px);
+  transition: opacity .14s ease, transform .14s ease;
 }
 
 #cust.hidden {
@@ -111,18 +111,16 @@
   border: 1px solid rgba(255,255,255,.12);
   background-size: cover;
   background-position: center;
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  transition: border-color .1s ease, opacity .1s ease;
 }
 
 .sw:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0,0,0,.38);
-  border-color: rgba(245,242,234,.65);
+  border-color: rgba(199,166,107,.62);
 }
 
 .sw.active {
   border-color: var(--gold);
-  box-shadow: 0 0 0 1px rgba(199,166,107,.45);
+  box-shadow: inset 0 0 0 1px rgba(199,166,107,.42);
 }
 
 .sw::after {
@@ -153,15 +151,13 @@
   text-align: center;
   text-transform: uppercase;
   opacity: 0;
-  transform: translateY(5px);
-  transition: opacity .18s ease, transform .18s ease;
+  transition: opacity .1s ease;
   pointer-events: none;
 }
 
 .sw:hover .sw-overlay,
 .sw.active .sw-overlay {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .fp-wrap {
@@ -235,7 +231,6 @@
 .fp-wall.selected .fp-vis {
   stroke-width: 5;
   opacity: 1;
-  filter: drop-shadow(0 0 4px rgba(199,166,107,.6));
 }
 
 .fp-status {

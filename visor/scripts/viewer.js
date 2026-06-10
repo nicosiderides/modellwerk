@@ -476,6 +476,8 @@ const pointer = new THREE.Vector2();
 const interactiveMeshes = [];
 let hoveredMesh = null;
 let hoverRestore = null;
+let hoverFrame = 0;
+let pendingPointer = null;
 let explodedActive = false;
 let explodedAnimating = false;
 let roofHidden = false;
@@ -608,6 +610,11 @@ function showComponentInfo(mesh, persistent = false) {
 }
 
 function clearHover() {
+  if (hoverFrame) {
+    cancelAnimationFrame(hoverFrame);
+    hoverFrame = 0;
+  }
+  pendingPointer = null;
   if (hoveredMesh && hoverRestore) {
     if (Array.isArray(hoveredMesh.material)) {
       hoveredMesh.material.forEach((mat, i) => {
@@ -628,20 +635,27 @@ function setHover(mesh) {
   if (!mesh) return;
   if (Array.isArray(mesh.material)) {
     hoverRestore = mesh.material.map(mat => ({ emissive: mat.emissive?.clone() }));
-    mesh.material.forEach(mat => mat.emissive?.set(0x1d63ff));
+    mesh.material.forEach(mat => mat.emissive?.set(0x3a2c17));
   } else {
     hoverRestore = { emissive: mesh.material.emissive?.clone() };
-    mesh.material.emissive?.set(0x1d63ff);
+    mesh.material.emissive?.set(0x3a2c17);
   }
 }
 
-function onPointerMove(e) {
+function applyPendingHover() {
+  hoverFrame = 0;
+  if (!pendingPointer) return;
   const rect = renderer.domElement.getBoundingClientRect();
-  pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-  pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  pointer.x = ((pendingPointer.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((pendingPointer.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
   const hit = raycaster.intersectObjects(interactiveMeshes, false).find(item => item.object.visible);
   setHover(hit?.object || null);
+}
+
+function onPointerMove(e) {
+  pendingPointer = { clientX: e.clientX, clientY: e.clientY };
+  if (!hoverFrame) hoverFrame = requestAnimationFrame(applyPendingHover);
 }
 
 renderer.domElement.addEventListener('pointermove', onPointerMove);

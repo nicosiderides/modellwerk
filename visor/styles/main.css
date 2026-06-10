@@ -11,8 +11,8 @@
   --muted-dark: #596069;
   --line: rgba(255,255,255,.1);
   --line-dark: rgba(15,18,22,.13);
-  --blue: #1d63ff;
-  --blue-soft: rgba(29,99,255,.16);
+  --blue: #6f7780;
+  --blue-soft: rgba(199,166,107,.12);
   --gold: #c7a66b;
   --gold-soft: rgba(199,166,107,.16);
   --clay: #a55f3f;
@@ -48,14 +48,14 @@ button { cursor: none; }
   background-color: var(--gold);
   border: 1px solid rgba(255,255,255,.55);
   border-radius: 50%;
-  transition: width .18s ease, height .18s ease, opacity .18s ease, background-color .18s ease;
+  transition: width .08s ease, height .08s ease, opacity .08s ease, background-color .08s ease;
 }
 
 #cursor.hovered {
-  width: 34px;
-  height: 34px;
+  width: 18px;
+  height: 18px;
   background-color: transparent;
-  border-color: rgba(199,166,107,.85);
+  border-color: rgba(199,166,107,.7);
 }
 
 #toast {
@@ -148,7 +148,7 @@ button { cursor: none; }
   right: 0;
   bottom: -8px;
   height: 1px;
-  background: var(--blue);
+  background: var(--gold);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .18s ease;
@@ -170,7 +170,7 @@ button { cursor: none; }
 .btns,
 .icon-btn {
   border: 0;
-  transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease;
+  transition: border-color .12s ease, background .12s ease, color .12s ease;
 }
 
 .btn-cta,
@@ -189,7 +189,6 @@ button { cursor: none; }
 .btn-cta:hover,
 .btnp:hover {
   background: #dcc086;
-  transform: translateY(-1px);
 }
 
 .btns {
@@ -206,7 +205,6 @@ button { cursor: none; }
 
 .btns:hover {
   border-color: var(--ink);
-  transform: translateY(-1px);
 }
 
 .btns.dark {
@@ -279,7 +277,7 @@ body.presentation-mode #app {
   font-size: 10px;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--blue);
+  color: var(--muted);
 }
 
 .section-title {
@@ -317,7 +315,7 @@ body.presentation-mode #app {
   justify-content: center;
   gap: 18px;
   background:
-    radial-gradient(circle at 50% 36%, rgba(29,99,255,.12), transparent 34%),
+    radial-gradient(circle at 50% 36%, rgba(199,166,107,.1), transparent 34%),
     #0a0c0e;
   transition: opacity .6s ease;
 }
@@ -378,7 +376,7 @@ body.presentation-mode #app {
   font-size: 9px;
   letter-spacing: .17em;
   text-transform: uppercase;
-  color: var(--blue);
+  color: var(--gold);
 }
 .qm-panel h2 {
   max-width: 430px;

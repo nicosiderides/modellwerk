@@ -32,8 +32,8 @@
   padding: 4px;
   background: rgba(9,11,13,.72);
   border: 1px solid rgba(255,255,255,.1);
-  box-shadow: 0 18px 50px rgba(0,0,0,.18);
-  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.16);
+  backdrop-filter: blur(10px);
 }
 
 .mode-stack {
@@ -132,8 +132,8 @@
   font-size: 9px;
   letter-spacing: .14em;
   text-transform: uppercase;
-  backdrop-filter: blur(12px);
-  transition: opacity .24s ease;
+  backdrop-filter: blur(8px);
+  transition: opacity .14s ease;
 }
 
 #fh.visible { opacity: 1; }
@@ -175,9 +175,9 @@
   background: rgba(245,242,234,.92);
   color: var(--ink);
   border: 1px solid rgba(255,255,255,.35);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(12px);
-  transition: opacity .2s ease, transform .2s ease;
+  box-shadow: 0 14px 36px rgba(0,0,0,.22);
+  backdrop-filter: blur(8px);
+  transition: opacity .14s ease, transform .14s ease;
 }
 
 #component-info.show {
