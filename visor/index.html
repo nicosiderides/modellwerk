@@ -79,6 +79,8 @@
   </aside>
 
   <section id="vw" aria-label="Escena 3D">
+    <button id="openLeftPanel" class="stage-panel-toggle left" onclick="togglePanel('left')" aria-label="Abrir configuracion">Configurar</button>
+    <button id="openRightPanel" class="stage-panel-toggle right" onclick="togglePanel('right')" aria-label="Abrir ficha tecnica">Ficha tecnica</button>
     <div id="sceneModes" class="mode-stack" aria-label="Modos de vista">
       <button class="mdb active" data-view="commercial" onclick="setScenePreset('commercial')">Comercial</button>
       <button class="mdb" data-view="technical" onclick="setScenePreset('technical')">Tecnica</button>
@@ -195,6 +197,11 @@
   });
   document.getElementById('vw').addEventListener('mouseenter', () => cur.style.opacity = '0');
   document.getElementById('vw').addEventListener('mouseleave', () => cur.style.opacity = '1');
+
+  // En pantallas medianas priorizamos el modulo y dejamos los paneles como
+  // cajones accesibles desde los botones del visor.
+  if (window.innerWidth <= 1180) document.body.classList.add('right-collapsed');
+  if (window.innerWidth <= 900) document.body.classList.add('left-collapsed');
 </script>
 
 </body>

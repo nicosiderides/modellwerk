@@ -4,6 +4,7 @@ const ALL_CATS = ['EXT_REV', 'EXT_TECHO', 'INT_PARED', 'INT_CIEL', 'PISO', 'CARP
 const ALL_FIXED = ['estructura', 'pisoEstructural', 'techoEstructural', 'vidrio', 'eps', 'sanitario', 'led', 'mobiliario'];
 
 const FILTERS = [
+  { key: 'commercial', label: 'Comercial', hidden: true, show: { cats: ALL_CATS, fixed: ['vidrio', 'eps', 'sanitario', 'led', 'mobiliario'] } },
   { key: 'full', label: 'Completo', show: { cats: ALL_CATS, fixed: ALL_FIXED } },
   { key: 'no-roof', label: 'Sin techo', show: { cats: ['EXT_REV', 'INT_PARED', 'PISO', 'CARP'], fixed: ['estructura', 'pisoEstructural', 'vidrio', 'eps', 'sanitario', 'led', 'mobiliario'] } },
   { key: 'interior', label: 'Interior', show: { cats: ['INT_PARED', 'INT_CIEL', 'PISO', 'CARP'], fixed: ['pisoEstructural', 'vidrio', 'sanitario', 'led', 'mobiliario'] } },
@@ -49,7 +50,7 @@ export function buildFiltersUI() {
   if (!el) return;
   el.innerHTML = '';
 
-  FILTERS.forEach(f => {
+  FILTERS.filter(f => !f.hidden).forEach(f => {
     const btn = document.createElement('button');
     btn.className = 'fbtn' + (f.key === activeFilter ? ' active' : '');
     btn.dataset.key = f.key;

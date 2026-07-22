@@ -39,30 +39,30 @@
 .mode-stack {
   left: 18px;
   top: 18px;
-  width: 142px;
-  max-width: 142px;
-  flex-direction: column;
-  align-items: stretch;
+  right: 18px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
 }
 
 #mt {
-  top: 126px;
+  top: 60px;
   right: 18px;
 }
 
 #lightModes {
-  top: 278px;
+  top: 102px;
   left: 18px;
 }
 
 #mta {
-  top: 18px;
-  right: 18px;
+  top: 60px;
+  left: 18px;
 }
 
 #cameraBar {
   right: 18px;
-  top: 72px;
+  top: 102px;
 }
 
 #filters {
@@ -88,9 +88,33 @@
 
 .mode-stack .mdb {
   width: 100%;
-  justify-content: flex-start;
-  text-align: left;
+  padding-inline: 8px;
+  text-align: center;
 }
+
+.stage-panel-toggle {
+  position: absolute;
+  top: 50%;
+  z-index: 12;
+  display: none;
+  min-height: 34px;
+  padding: 10px 8px;
+  border: 1px solid rgba(199,166,107,.42);
+  background: rgba(9,11,13,.86);
+  color: var(--gold);
+  font-family: var(--ff-m);
+  font-size: 8px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  backdrop-filter: blur(12px);
+  transform: translateY(-50%);
+}
+
+.stage-panel-toggle.left { left: 10px; }
+.stage-panel-toggle.right { right: 10px; transform: translateY(-50%) rotate(180deg); }
+body.left-collapsed #openLeftPanel,
+body.right-collapsed #openRightPanel { display: flex; }
 
 .cam-btn {
   width: 32px;
@@ -200,18 +224,19 @@
 }
 
 @media (max-width: 1180px) {
-  .mode-stack {
-    width: 132px;
-    max-width: 132px;
-    top: 104px;
-  }
-  #mt { top: 18px; }
-  #mta {
-    top: 58px;
-    left: 18px;
-    right: auto;
-  }
-  #lightModes { top: 356px; }
-  #cameraBar { top: 58px; }
   #filters { display: none; }
+}
+
+@media (max-width: 700px) {
+  .mode-stack {
+    display: flex;
+    right: 14px;
+    left: 14px;
+    overflow-x: auto;
+  }
+  .mode-stack .mdb { width: auto; min-width: 84px; }
+  #mta { display: none; }
+  #mt { top: 60px; left: 14px; right: auto; }
+  #lightModes { top: 60px; left: auto; right: 14px; }
+  #cameraBar { top: 102px; right: 14px; }
 }
