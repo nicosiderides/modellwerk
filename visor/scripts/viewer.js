@@ -434,8 +434,9 @@ function createShowroomIndustrialEnvironment() {
 }
 
 const siteEnvironment = createShowroomIndustrialEnvironment();
+siteEnvironment.visible = false;
 scene.add(siteEnvironment);
-floor.visible = false;
+floor.visible = true;
 
 // ─── Entorno 3D dentro del GLB ───────────────────────────────────────────────
 // La nave industrial está modelada en Blender con prefijo ENV_ y exportada en
@@ -1073,8 +1074,8 @@ function _loadModel(url) {
         // mantienen el material del Blender (ya tienen PBR aplicado).
         // No tiran sombra (son contexto) pero sí reciben (el módulo proyecta sobre ellas).
         if (child.name.startsWith('ENV_')) {
-          _envDetected = true;
           child.userData.isEnvironment = true;
+          child.visible = false;
           child.castShadow    = false;
           child.receiveShadow = true;
           return;
@@ -1139,7 +1140,8 @@ function _loadModel(url) {
       // necesita adoptar esas opciones para que todas las categorias tengan
       // estado, etiqueta y respuesta visual desde el primer render.
       CATS.forEach(cat => {
-        if (catMeshes[cat.key].length) applyOption(cat.key, 0, { initial: true });
+        const initialIndex = cat.key === 'EXT_REV' ? 1 : 0;
+        if (catMeshes[cat.key].length) applyOption(cat.key, initialIndex, { initial: true });
       });
 
       // Si el GLB trae el entorno (ENV_*), ocultamos el piso disc + contact
