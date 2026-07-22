@@ -1,2 +1,2 @@
-:HL["/modellwerk/visor1.0/_next/static/chunks/3yqoiev7gmx2z.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"xhSxyV7xcFsXS6r8wshF8"}
+:HL["/modellwerk/visor1.0/_next/static/chunks/2x3jae-ourrjv.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"onPRKQSD9kXU56Tpd3Aq8"}
