@@ -2,10 +2,6 @@ import * as THREE from 'three';
 import { GLTFLoader   } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader  } from 'three/addons/loaders/DRACOLoader.js';
 import { RGBELoader   } from 'three/addons/loaders/RGBELoader.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass     } from 'three/addons/postprocessing/RenderPass.js';
-import { SSAOPass       } from 'three/addons/postprocessing/SSAOPass.js';
-import { OutputPass     } from 'three/addons/postprocessing/OutputPass.js';
 
 import { norm, CATS, catMeshes, fixedMeshes } from './config.js';
 import { fixedMat, getFixedKey, applyOption, applyOptionToWall } from './materials.js';
@@ -16,11 +12,11 @@ import { initCamera, updateCamera, setOrbitFromModel, setFpsStart, setOrbitPose 
 // ─── Renderer ─────────────────────────────────────────────────────────────────
 
 const vw = document.getElementById('vw');
-const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.35));
 renderer.setSize(vw.clientWidth, vw.clientHeight);
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type    = THREE.PCFShadowMap;
 renderer.outputColorSpace  = THREE.SRGBColorSpace;
 renderer.toneMapping       = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.98;
@@ -34,25 +30,7 @@ camera.position.set(10, 5, 10);
 
 // ─── Post-processing ──────────────────────────────────────────────────────────
 
-// MSAA render target (WebGL2): da bordes suaves dentro del pipeline de
-// post-procesado. Sin esto, el composer bypasea el AA del renderer y los
-// bordes se ven facetados/dentados.
-const _msaaTarget = new THREE.WebGLRenderTarget(
-  vw.clientWidth, vw.clientHeight,
-  {
-    samples: 4,                                       // 4x MSAA (subir a 8 si la GPU aguanta)
-    type:    THREE.HalfFloatType,                     // preserva rango HDR del tone mapping
-    colorSpace: THREE.LinearSRGBColorSpace,
-  }
-);
-const composer = new EffectComposer(renderer, _msaaTarget);
-composer.addPass(new RenderPass(scene, camera));
-const ssao = new SSAOPass(scene, camera, vw.clientWidth * 0.5, vw.clientHeight * 0.5);
-ssao.kernelRadius = 0.75;
-ssao.minDistance  = 0.001;
-ssao.maxDistance  = 0.14;
-composer.addPass(ssao);
-composer.addPass(new OutputPass());
+// Render directo: evita el costo permanente de composer + SSAO en cada frame.
 
 // ─── Lighting ────────────────────────────────────────────────────────────────
 
@@ -67,7 +45,7 @@ scene.add(new THREE.AmbientLight(0xffffff, 0.12));
 const sun = new THREE.DirectionalLight(0xfff1df, 1.65);
 sun.position.set(-7, 12, 8);
 sun.castShadow = true;
-sun.shadow.mapSize.set(4096, 4096);            // shadow más nítida
+sun.shadow.mapSize.set(2048, 2048);
 sun.shadow.bias   = -0.00015;
 sun.shadow.normalBias = 0.02;
 sun.shadow.radius = 8;
@@ -715,10 +693,10 @@ let _activeLightMood = 'day';
 
 const SCENE_PRESETS = {
   commercial: {
-    target: new THREE.Vector3(0, 1.35, 0),
-    radius: 11.6,
+    target: new THREE.Vector3(0, 1.18, 0),
+    radius: 14.2,
     theta: Math.PI * 0.23,
-    phi: 0.96,
+    phi: 1.02,
   },
   technical: {
     target: new THREE.Vector3(0, 1.85, 0),
@@ -783,7 +761,7 @@ const SCENE_PRESETS = {
 };
 
 const PRESET_FILTER = {
-  commercial: 'full',
+  commercial: 'commercial',
   technical: 'technical',
   logistics: 'logistics',
   structure: 'structure',
@@ -1074,7 +1052,10 @@ function _loadModel(url) {
       // assign materials
       model.traverse(child => {
         if (!child.isMesh) return;
-        const meshName = norm(child.name);
+        const materialNames = (Array.isArray(child.material) ? child.material : [child.material])
+          .map(material => material?.name || '')
+          .join(' ');
+        const meshName = norm(`${child.name} ${materialNames}`);
         registerInteractiveMesh(child, meshName);
         child.castShadow = child.receiveShadow = true;
 
@@ -1152,6 +1133,13 @@ function _loadModel(url) {
         if (!hit) {
           console.log('[sin categoría]', child.name);
         }
+      });
+
+      // El GLB inicial ya trae una terminacion coherente, pero el configurador
+      // necesita adoptar esas opciones para que todas las categorias tengan
+      // estado, etiqueta y respuesta visual desde el primer render.
+      CATS.forEach(cat => {
+        if (catMeshes[cat.key].length) applyOption(cat.key, 0, { initial: true });
       });
 
       // Si el GLB trae el entorno (ENV_*), ocultamos el piso disc + contact
@@ -1232,8 +1220,6 @@ window.addEventListener('resize', () => {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
-  composer.setSize(w, h);
-  _msaaTarget.setSize(w, h);   // mantener el MSAA buffer sincronizado
 });
 
 // ─── Render loop ─────────────────────────────────────────────────────────────
@@ -1241,5 +1227,5 @@ window.addEventListener('resize', () => {
 (function loop() {
   requestAnimationFrame(loop);
   updateCamera(camera);
-  composer.render();    // pipeline completo: MSAA + SSAO + tone mapping
+  renderer.render(scene, camera);
 }());
