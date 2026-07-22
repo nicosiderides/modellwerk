@@ -78,28 +78,34 @@ function _loadTex(url, srgb) {
   return t;
 }
 
-// Piso circular de pasto, 16m de diámetro. Espacio suficiente para que las
-// sombras del módulo (9m de largo) caigan completas dentro del disco.
+// Basamento circular de hormigón, 16 m de diámetro y 30 cm de espesor.
+// La cara superior queda en y=0 para conservar el apoyo original del módulo.
 const FLOOR_RADIUS = 8;
-const GRASS_REP = 6;            // tiles de pasto en el disco (densidad)
-const gd = _loadTex('assets/suelo_pasto/aerial_grass_rock_diff_2k.jpg', true);
-const ga = _loadTex('assets/suelo_pasto/aerial_grass_rock_arm_2k.jpg',  false);
-const gn = _loadTex('assets/suelo_pasto/aerial_grass_rock_nor_dx_2k.jpg', false);
-gd.repeat.set(GRASS_REP, GRASS_REP);
-ga.repeat.set(GRASS_REP, GRASS_REP);
-gn.repeat.set(GRASS_REP, GRASS_REP);
+const FLOOR_THICKNESS = 0.3;
+const FLOOR_REP = 6;
+const floorD = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_diff_2k.jpg', true);
+const floorA = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_arm_2k.jpg', false);
+const floorN = _loadTex('assets/textures/piso_cemento/concrete_floor_worn_001_nor_dx_2k.jpg', false);
+floorD.repeat.set(FLOOR_REP, FLOOR_REP);
+floorA.repeat.set(FLOOR_REP, FLOOR_REP);
+floorN.repeat.set(FLOOR_REP, FLOOR_REP);
 
 const floor = new THREE.Mesh(
-  new THREE.CircleGeometry(FLOOR_RADIUS, 96),
-  new THREE.MeshStandardMaterial({
-    map: gd, roughnessMap: ga, metalnessMap: ga, normalMap: gn,
-    normalScale: new THREE.Vector2(1, -1),
-    roughness: 1.0,
-    metalness: 0,
-    envMapIntensity: 0.7,
+  new THREE.CylinderGeometry(FLOOR_RADIUS, FLOOR_RADIUS, FLOOR_THICKNESS, 96),
+  new THREE.MeshPhysicalMaterial({
+    color: 0x555958,
+    map: floorD,
+    roughnessMap: floorA,
+    normalMap: floorN,
+    normalScale: new THREE.Vector2(0.11, -0.11),
+    roughness: 0.57,
+    metalness: 0.02,
+    clearcoat: 0.22,
+    clearcoatRoughness: 0.34,
+    envMapIntensity: 0.92,
   })
 );
-floor.rotation.x = -Math.PI / 2;
+floor.position.y = -FLOOR_THICKNESS / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
@@ -433,8 +439,8 @@ function createShowroomIndustrialEnvironment() {
   return group;
 }
 
-const siteEnvironment = createShowroomIndustrialEnvironment();
-siteEnvironment.visible = false;
+const siteEnvironment = new THREE.Group();
+siteEnvironment.name = 'MW_Environment_Disabled';
 scene.add(siteEnvironment);
 floor.visible = true;
 
