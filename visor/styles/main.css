@@ -246,14 +246,14 @@ button { cursor: none; }
 
 #app {
   display: grid;
-  grid-template-columns: 336px minmax(0, 1fr) 360px;
+  grid-template-columns: 300px minmax(0, 1fr) 320px;
   height: 100vh;
   padding-top: 64px;
   transition: grid-template-columns .26s ease;
 }
 
-body.left-collapsed #app { grid-template-columns: 0 minmax(0, 1fr) 360px; }
-body.right-collapsed #app { grid-template-columns: 336px minmax(0, 1fr) 0; }
+body.left-collapsed #app { grid-template-columns: 0 minmax(0, 1fr) 320px; }
+body.right-collapsed #app { grid-template-columns: 300px minmax(0, 1fr) 0; }
 body.left-collapsed.right-collapsed #app { grid-template-columns: 0 minmax(0, 1fr) 0; }
 
 body.presentation-mode #header,

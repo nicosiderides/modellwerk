@@ -157,14 +157,16 @@ function _assignMaterialSmooth(mesh, material) {
   })();
 }
 
-export function applyOption(catKey, idx) {
+export function applyOption(catKey, idx, { initial = false } = {}) {
   const cat = CATS.find(c => c.key === catKey);
   if (!cat) return;
   const opt = cat.opts[idx];
   catState[catKey] = idx;
 
   catMeshes[catKey].forEach(mesh => {
-    _assignMaterialSmooth(mesh, _buildMatForOpt(mesh, cat, opt));
+    const material = _buildMatForOpt(mesh, cat, opt);
+    if (initial) mesh.material = material;
+    else _assignMaterialSmooth(mesh, material);
   });
 
   // Si la categoría es multi-pared, también sincronizamos el estado por-pared.
@@ -173,7 +175,7 @@ export function applyOption(catKey, idx) {
   }
 
   document.dispatchEvent(new CustomEvent('material-changed', {
-    detail: { catKey, idx, label: cat.label, optName: opt.name },
+    detail: { catKey, idx, label: cat.label, optName: opt.name, initial },
   }));
 }
 

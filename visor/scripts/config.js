@@ -83,7 +83,7 @@ export const CATS = [
     // Mode texture-swap: la opción puede traer texSet (PBR) o no (metal/sólido).
     // metalness/roughness por opción → permite aluminio realista sin textura.
     key: 'CARP', label: 'Carpintería', mode: 'texture-swap',
-    match: n => n.includes('ventana') || (n.includes('aluminio') && !n.includes('puerta')) || n.includes('alum de cero'),
+    match: n => n.includes('mw carp') || n.includes('abertura') || n.includes('ventana') || (n.includes('aluminio') && !n.includes('puerta')) || n.includes('alum de cero'),
     opts: [
       { c: '#222222', name: 'Aluminio negro', metalness: 0.85, roughness: 0.28 },
       { texSet: 'wood_oak', c: '#a07a4a', name: 'Madera roble', uvScale: 0.8 },

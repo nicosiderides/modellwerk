@@ -508,7 +508,7 @@ function _signedUSD(value) {
 }
 
 document.addEventListener('material-changed', e => {
-  const { catKey, optName } = e.detail;
+  const { catKey, optName, initial } = e.detail;
   renderOpts();
   updateSummary();
   const row = document.getElementById(`spec-${catKey}`);
@@ -516,7 +516,7 @@ document.addEventListener('material-changed', e => {
     row.classList.add('flash');
     setTimeout(() => row.classList.remove('flash'), 700);
   }
-  _toast(`${optName} seleccionado`);
+  if (!initial) _toast(`${optName} seleccionado`);
 });
 
 document.addEventListener('wall-changed', () => {
