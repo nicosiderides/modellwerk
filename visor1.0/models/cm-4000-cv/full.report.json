@@ -1,0 +1,11 @@
+{
+  "source": "C:\\Users\\nicos\\Documents\\proyectos\\modellwerk\\build\\revit-export\\CM_4000_CV_v3\\full.fbx",
+  "output": "C:\\Users\\nicos\\Documents\\proyectos\\modellwerk\\public\\models\\cm-4000-cv\\full.glb",
+  "sourceBytes": 874272,
+  "outputBytes": 176636,
+  "mappedObjects": 134,
+  "objects": 134,
+  "vertices": 15332,
+  "triangles": 19780,
+  "materials": 12
+}
