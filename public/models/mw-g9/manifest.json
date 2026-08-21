@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "mw-g9",
+  "source": "MWG9.rvt",
+  "sourceView": "MW G9",
+  "revitVersion": "2026",
+  "units": "meters",
+  "compression": "KHR_draco_mesh_compression",
+  "metadata": "/models/mw-g9/metadata.json",
+  "recommendedMode": "packages",
+  "dimensions": {
+    "length": 11.17,
+    "width": 3.46,
+    "height": 4.3
+  },
+  "models": [
+    {
+      "id": "full",
+      "url": "/models/mw-g9/full.glb",
+      "role": "complete-model-alternative",
+      "defaultVisible": false,
+      "bytes": 648244,
+      "objects": 293,
+      "triangles": 100240
+    },
+    {
+      "id": "structure",
+      "url": "/models/mw-g9/structure.glb",
+      "role": "structure",
+      "defaultVisible": true,
+      "bytes": 150880,
+      "objects": 130,
+      "triangles": 4864
+    },
+    {
+      "id": "envelope",
+      "url": "/models/mw-g9/envelope.glb",
+      "role": "envelope",
+      "defaultVisible": true,
+      "bytes": 144468,
+      "objects": 114,
+      "triangles": 9412
+    },
+    {
+      "id": "interiors",
+      "url": "/models/mw-g9/interiors.glb",
+      "role": "interiors",
+      "defaultVisible": true,
+      "bytes": 109700,
+      "objects": 24,
+      "triangles": 24766
+    },
+    {
+      "id": "mep",
+      "url": "/models/mw-g9/mep.glb",
+      "role": "mep",
+      "defaultVisible": true,
+      "bytes": 237180,
+      "objects": 21,
+      "triangles": 60638
+    }
+  ]
+}

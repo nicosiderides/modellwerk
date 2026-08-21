@@ -1,0 +1,11 @@
+{
+  "source": "C:\\Users\\nicos\\Documents\\proyectos\\modellwerk\\build\\revit-export\\MWG9\\envelope.fbx",
+  "output": "C:\\Users\\nicos\\Documents\\proyectos\\modellwerk\\public\\models\\mw-g9\\envelope.glb",
+  "sourceBytes": 591952,
+  "outputBytes": 144468,
+  "mappedObjects": 114,
+  "objects": 114,
+  "vertices": 4706,
+  "triangles": 9412,
+  "materials": 7
+}

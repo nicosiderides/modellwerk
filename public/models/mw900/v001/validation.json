@@ -1,0 +1,43 @@
+{
+  "valid": true,
+  "designStatus": "concept-not-engineered",
+  "file": "structure.glb",
+  "bytes": 79316,
+  "objects": 176,
+  "triangles": 11232,
+  "boundsMeters": {
+    "min": [
+      -4.5,
+      -1.5,
+      0.0
+    ],
+    "max": [
+      4.5,
+      1.5,
+      2.8
+    ],
+    "size": [
+      9.0,
+      3.0,
+      2.8
+    ]
+  },
+  "expectedBoundsMeters": {
+    "min": [
+      -4.5,
+      -1.5,
+      0.0
+    ],
+    "max": [
+      4.5,
+      1.5,
+      2.799999952316284
+    ]
+  },
+  "checks": {
+    "exactEnvelopeWithin2mm": true,
+    "originAtCenterFloor": true,
+    "semanticExtras": true,
+    "referenceExcluded": true
+  }
+}

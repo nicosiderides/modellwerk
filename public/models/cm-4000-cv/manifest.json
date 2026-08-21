@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "cm-4000-cv",
+  "source": "CM 4000 CV.rvt",
+  "revitVersion": "2026",
+  "units": "meters",
+  "compression": "KHR_draco_mesh_compression",
+  "metadata": "/models/cm-4000-cv/metadata.json",
+  "recommendedMode": "packages",
+  "models": [
+    {
+      "id": "full",
+      "url": "/models/cm-4000-cv/full.glb",
+      "role": "complete-model-alternative",
+      "defaultVisible": false,
+      "bytes": 176636,
+      "objects": 134,
+      "triangles": 19780
+    },
+    {
+      "id": "structure",
+      "url": "/models/cm-4000-cv/structure.glb",
+      "role": "structure",
+      "defaultVisible": true,
+      "bytes": 129588,
+      "objects": 88,
+      "triangles": 14284
+    },
+    {
+      "id": "envelope",
+      "url": "/models/cm-4000-cv/envelope.glb",
+      "role": "envelope",
+      "defaultVisible": true,
+      "bytes": 33720,
+      "objects": 41,
+      "triangles": 5116
+    },
+    {
+      "id": "interiors",
+      "url": "/models/cm-4000-cv/interiors.glb",
+      "role": "interiors",
+      "defaultVisible": true,
+      "bytes": 3048,
+      "objects": 1,
+      "triangles": 104
+    },
+    {
+      "id": "mep",
+      "url": "/models/cm-4000-cv/mep.glb",
+      "role": "mep",
+      "defaultVisible": true,
+      "bytes": 8372,
+      "objects": 4,
+      "triangles": 276
+    }
+  ]
+}

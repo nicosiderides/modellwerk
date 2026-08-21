@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "productId": "MW900",
+  "version": "v002",
+  "designStatus": "concept-not-engineered",
+  "units": "meters",
+  "summary": {
+    "meshParts": 216,
+    "connectionAssemblies": 16,
+    "MW-NI6": 8,
+    "MW-NC8": 8
+  },
+  "items": [
+    {
+      "sku": "C 120x50x15x2.5",
+      "quantity": 12,
+      "role": "roof-joist",
+      "profile": "C 120x50x15x2.5",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "C 180x60x20x3",
+      "quantity": 12,
+      "role": "floor-joist",
+      "profile": "C 180x60x20x3",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "MW-HW-M16-052",
+      "quantity": 112,
+      "role": "fastener",
+      "profile": "",
+      "manufacturing": "purchased-standard-hardware",
+      "status": "concept-not-engineered",
+      "connectionFamilies": [
+        "MW-NC8",
+        "MW-NI6"
+      ]
+    },
+    {
+      "sku": "MW-NC8-END",
+      "quantity": 8,
+      "role": "corner-node-end-leg",
+      "profile": "",
+      "manufacturing": "laser-cut-and-folded-cassette-leg",
+      "status": "concept-not-engineered",
+      "connectionFamilies": [
+        "MW-NC8"
+      ]
+    },
+    {
+      "sku": "MW-NC8-SIDE",
+      "quantity": 8,
+      "role": "corner-node-side-leg",
+      "profile": "",
+      "manufacturing": "laser-cut-and-folded-cassette-leg",
+      "status": "concept-not-engineered",
+      "connectionFamilies": [
+        "MW-NC8"
+      ]
+    },
+    {
+      "sku": "MW-NC8-SPINE",
+      "quantity": 8,
+      "role": "corner-node-fold-spine",
+      "profile": "",
+      "manufacturing": "fold-line-or-shop-weld-concept",
+      "status": "concept-not-engineered",
+      "connectionFamilies": [
+        "MW-NC8"
+      ]
+    },
+    {
+      "sku": "MW-NI6-PLATE",
+      "quantity": 8,
+      "role": "longitudinal-splice-node-plate",
+      "profile": "",
+      "manufacturing": "laser-cut-flat-plate",
+      "status": "concept-not-engineered",
+      "connectionFamilies": [
+        "MW-NI6"
+      ]
+    },
+    {
+      "sku": "MW-NODE-CAP",
+      "quantity": 16,
+      "role": "column-bearing-cap",
+      "profile": "",
+      "manufacturing": "laser-cut-flat-plate",
+      "status": "concept-not-engineered",
+      "connectionFamilies": [
+        "MW-NC8",
+        "MW-NI6"
+      ]
+    },
+    {
+      "sku": "RHS 120x120x4",
+      "quantity": 8,
+      "role": "portal-column",
+      "profile": "RHS 120x120x4",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "RHS 140x80x4",
+      "quantity": 2,
+      "role": "transverse-roof-portal",
+      "profile": "RHS 140x80x4",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "RHS 160x100x4",
+      "quantity": 8,
+      "role": "segmented-longitudinal-roof-rail",
+      "profile": "RHS 160x100x4",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "RHS 180x80x4",
+      "quantity": 2,
+      "role": "transverse-floor-portal",
+      "profile": "RHS 180x80x4",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "RHS 200x100x4",
+      "quantity": 8,
+      "role": "segmented-longitudinal-floor-rail",
+      "profile": "RHS 200x100x4",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    },
+    {
+      "sku": "optional-stability-brace",
+      "quantity": 4,
+      "role": "optional-stability-brace",
+      "profile": "",
+      "manufacturing": "",
+      "status": "concept-not-engineered",
+      "connectionFamilies": []
+    }
+  ],
+  "engineeringNotice": "Concept quantities only; profiles, plates and fasteners require engineering verification."
+}

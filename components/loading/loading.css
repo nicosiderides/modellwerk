@@ -1,0 +1,591 @@
+/* Modellwerk architectural loading system. Imported after the viewer theme. */
+.modellwerk-loader.architectural-loader {
+  position: absolute;
+  inset: 0;
+  z-index: var(--mw-z-loader);
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 47%, rgba(200, 168, 78, 0.055), transparent 20%),
+    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.018), transparent 28%),
+    linear-gradient(125deg, #0d1010 0%, #080a0a 56%, #10100e 100%);
+  color: #e9e7df;
+  clip-path: inset(0);
+}
+
+.modellwerk-loader.architectural-loader::before,
+.modellwerk-loader.architectural-loader::after {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.modellwerk-loader.architectural-loader::before {
+  display: none;
+}
+
+.modellwerk-loader.architectural-loader::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 19%, transparent 78%, rgba(0, 0, 0, 0.24));
+}
+
+.architectural-loader.is-closing {
+  animation: loaderViewportExit 880ms var(--mw-ease-precision) forwards;
+  pointer-events: none;
+}
+
+.loader-architectural-stage {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  width: min(360px, calc(100vw - 48px));
+  justify-items: center;
+  transform: translateY(-1.5vh);
+}
+
+/* Subtle fabrication field ------------------------------------------------ */
+.loader-technical-field {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(640px, 74vw);
+  height: min(350px, 43vh);
+  opacity: 0;
+  transform: translate(-50%, -54%) scale(0.985);
+  animation: loaderFieldWake 900ms 130ms var(--mw-ease-precision) forwards;
+  pointer-events: none;
+}
+
+.loader-grid-plane {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.035);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.027) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.023) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, #000 12%, rgba(0, 0, 0, 0.8) 42%, transparent 78%);
+}
+
+.loader-axis,
+.module-wire,
+.module-node,
+.loader-coordinate {
+  position: absolute;
+  display: block;
+}
+
+.loader-axis {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.loader-axis-x {
+  top: 50%;
+  right: -7%;
+  left: -7%;
+  height: 1px;
+}
+
+.loader-axis-y {
+  top: -9%;
+  bottom: -9%;
+  left: 50%;
+  width: 1px;
+}
+
+.loader-module-wireframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 68%;
+  height: 42%;
+  opacity: 0.36;
+  transform: translate(-50%, -50%);
+}
+
+.module-wire {
+  background: rgba(233, 231, 223, 0.15);
+  box-shadow: 0 0 0 1px rgba(8, 10, 10, 0.16);
+}
+
+.module-wire-top,
+.module-wire-bottom {
+  right: 0;
+  left: 0;
+  height: 1px;
+}
+
+.module-wire-top { top: 0; }
+.module-wire-bottom { bottom: 0; }
+
+.module-wire-left,
+.module-wire-right,
+.module-wire-post-a,
+.module-wire-post-b {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.module-wire-left { left: 0; }
+.module-wire-right { right: 0; }
+.module-wire-post-a { left: 27%; }
+.module-wire-post-b { right: 26%; }
+
+.module-wire-opening {
+  right: 7%;
+  bottom: 0;
+  width: 17%;
+  height: 58%;
+  border: 1px solid rgba(200, 168, 78, 0.2);
+  background: transparent;
+}
+
+.module-node {
+  width: 4px;
+  height: 4px;
+  border: 1px solid rgba(200, 168, 78, 0.38);
+  background: #080a0a;
+  transform: translate(-50%, -50%);
+}
+
+.node-a { top: 0; left: 0; }
+.node-b { top: 0; left: 100%; }
+.node-c { top: 100%; left: 0; }
+.node-d { top: 100%; left: 100%; }
+
+.loader-coordinate {
+  color: rgba(142, 144, 140, 0.36);
+  font-family: var(--mw-font-tech);
+  font-size: 7px;
+  letter-spacing: 0.12em;
+}
+
+.coordinate-a { top: 23%; left: 9%; }
+.coordinate-b { right: 9%; bottom: 21%; }
+.coordinate-c { right: 9%; top: 23%; color: rgba(200, 168, 78, 0.34); }
+
+.architectural-loader.is-ready .loader-technical-field {
+  opacity: 0.42;
+  transform: translate(-50%, -54%) scale(1.025);
+  transition: opacity 420ms ease, transform 520ms var(--mw-ease-precision);
+}
+
+/* Logo assembly ----------------------------------------------------------- */
+.logo-assembly {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  justify-items: center;
+  align-content: start;
+}
+
+.logo-construction {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 210px;
+  height: 150px;
+  transform: translate(-50%, -58%);
+}
+
+.construction-line {
+  position: absolute;
+  display: block;
+  background: rgba(233, 231, 223, 0.18);
+  transform-origin: center;
+}
+
+.construction-line-a,
+.construction-line-b {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: scaleY(0);
+  animation: logoConstructionY 620ms 90ms var(--mw-ease-precision) forwards;
+}
+
+.construction-line-a { left: 18%; }
+.construction-line-b { right: 18%; animation-delay: 180ms; }
+
+.construction-line-c,
+.construction-line-d {
+  right: 0;
+  left: 0;
+  height: 1px;
+  transform: scaleX(0);
+  animation: logoConstructionX 650ms 210ms var(--mw-ease-precision) forwards;
+}
+
+.construction-line-c { top: 13%; }
+.construction-line-d { bottom: 13%; animation-delay: 290ms; }
+
+.logo-monogram {
+  position: relative;
+  width: 176px;
+  height: 142px;
+}
+
+.logo-monogram img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-monogram-draft {
+  opacity: 0;
+  filter: brightness(1.18) drop-shadow(0 0 1px rgba(233, 231, 223, 0.34));
+  clip-path: inset(0 50%);
+  animation: logoDraftReveal 720ms 180ms var(--mw-ease-precision) forwards;
+}
+
+.logo-monogram-solid {
+  opacity: 0.96;
+  clip-path: inset(100% 0 0 0);
+  filter: sepia(0.03) saturate(0.72) brightness(0.96);
+  animation: logoSurfaceAssemble 860ms 520ms var(--mw-ease-precision) forwards;
+}
+
+.logo-light-pass {
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: -18%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(233, 231, 223, 0.72) 35%, rgba(200, 168, 78, 0.62) 62%, transparent);
+  box-shadow: 0 0 18px rgba(200, 168, 78, 0.18);
+  opacity: 0;
+}
+
+.logo-assembly.is-ready .logo-light-pass {
+  animation: logoFinalPass 520ms var(--mw-ease-precision) forwards;
+}
+
+.logo-assembly.is-ready .logo-monogram-solid {
+  filter: sepia(0.02) saturate(0.75) brightness(1.02) drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  transition: filter 320ms ease;
+}
+
+.logo-wordmark {
+  margin-top: 9px;
+  color: #e9e7df;
+  font-family: var(--mw-font-ui);
+  font-size: 14px;
+  font-weight: 560;
+  letter-spacing: 0.3em;
+  opacity: 0;
+  text-indent: 0.3em;
+  animation: logoWordmarkSet 600ms 950ms var(--mw-ease-precision) forwards;
+}
+
+/* Industrial progress ----------------------------------------------------- */
+.precision-progress {
+  width: min(340px, calc(100vw - 48px));
+  margin-top: 30px;
+}
+
+.precision-progress-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding-bottom: 9px;
+  color: rgba(233, 231, 223, 0.62);
+  font-family: var(--mw-font-tech);
+  font-size: 9px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.precision-progress-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.precision-progress-copy strong {
+  min-width: 36px;
+  color: rgba(233, 231, 223, 0.82);
+  font-size: 10px;
+  font-weight: 520;
+  text-align: right;
+}
+
+.precision-progress-track {
+  position: relative;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.105);
+}
+
+.precision-progress-track span {
+  display: block;
+  width: var(--loader-progress);
+  height: 100%;
+  background: linear-gradient(90deg, rgba(139, 110, 38, 0.74), #c8a84e);
+  transition: width 360ms var(--mw-ease-precision);
+}
+
+.precision-progress-track i {
+  position: absolute;
+  top: 50%;
+  left: var(--loader-progress);
+  width: 4px;
+  height: 9px;
+  border: 1px solid rgba(200, 168, 78, 0.72);
+  background: #080a0a;
+  transform: translate(-50%, -50%);
+  transition: left 360ms var(--mw-ease-precision);
+}
+
+.precision-progress-track.is-indeterminate {
+  overflow: hidden;
+}
+
+.precision-progress-track.is-indeterminate span {
+  width: 22%;
+  animation: precisionProgressSearch 1.35s ease-in-out infinite;
+}
+
+.precision-progress-track.is-indeterminate i {
+  display: none;
+}
+
+.precision-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 9px;
+  color: rgba(142, 144, 140, 0.42);
+  font-family: var(--mw-font-tech);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.precision-progress-meta em {
+  flex: 0 0 auto;
+  color: rgba(200, 168, 78, 0.48);
+  font-style: normal;
+}
+
+.architectural-loader.is-ready .precision-progress-copy span,
+.architectural-loader.is-ready .precision-progress-copy strong {
+  color: rgba(200, 168, 78, 0.82);
+}
+
+.architectural-loader .loader-skip {
+  position: absolute;
+  right: auto;
+  bottom: max(22px, env(safe-area-inset-bottom));
+  left: 50%;
+  min-height: 34px;
+  border: 0;
+  padding: 0 10px;
+  background: transparent;
+  color: rgba(233, 231, 223, 0.34);
+  cursor: pointer;
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  transition: color 180ms ease;
+}
+
+.architectural-loader .loader-skip:hover,
+.architectural-loader .loader-skip:focus-visible {
+  color: rgba(233, 231, 223, 0.82);
+  outline: 1px solid rgba(200, 168, 78, 0.48);
+  outline-offset: 3px;
+}
+
+/* Recoverable failure ----------------------------------------------------- */
+.loader-error-panel {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  width: min(390px, calc(100vw - 40px));
+  justify-items: center;
+}
+
+.loader-error-panel .logo-assembly {
+  min-height: 195px;
+  transform: scale(0.84);
+  transform-origin: bottom center;
+}
+
+.loader-error-copy {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.loader-error-copy strong {
+  color: #e9e7df;
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.loader-error-copy span {
+  color: rgba(233, 231, 223, 0.5);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.loader-error-panel > button {
+  min-width: 148px;
+  min-height: 40px;
+  margin-top: 24px;
+  border: 1px solid rgba(200, 168, 78, 0.48);
+  border-radius: 2px;
+  background: rgba(200, 168, 78, 0.07);
+  color: #e9e7df;
+  cursor: pointer;
+  font-family: var(--mw-font-tech);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.loader-error-panel > button:hover,
+.loader-error-panel > button:focus-visible {
+  border-color: rgba(200, 168, 78, 0.85);
+  background: rgba(200, 168, 78, 0.12);
+  outline: 2px solid rgba(200, 168, 78, 0.36);
+  outline-offset: 2px;
+}
+
+@media (max-height: 720px) {
+  .loader-technical-field {
+    height: min(300px, 43vh);
+  }
+
+  .logo-assembly {
+    min-height: 0;
+  }
+
+  .logo-monogram {
+    width: 148px;
+    height: 119px;
+  }
+
+  .logo-construction {
+    width: 180px;
+    height: 128px;
+  }
+
+  .precision-progress {
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .loader-technical-field {
+    width: 92vw;
+    height: 300px;
+  }
+
+  .loader-grid-plane,
+  .loader-coordinate,
+  .loader-axis-y {
+    opacity: 0.46;
+  }
+
+  .loader-module-wireframe {
+    width: 78%;
+  }
+
+  .logo-monogram {
+    width: 148px;
+    height: 119px;
+  }
+
+  .logo-construction {
+    width: 178px;
+    height: 128px;
+  }
+
+  .logo-wordmark {
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-indent: 0.25em;
+  }
+
+  .precision-progress {
+    margin-top: 25px;
+  }
+
+  .precision-progress-meta span {
+    display: none;
+  }
+
+  .precision-progress-meta {
+    justify-content: flex-end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .architectural-loader *,
+  .architectural-loader,
+  .loader-technical-field,
+  .logo-monogram img,
+  .logo-light-pass,
+  .precision-progress-track span,
+  .precision-progress-track i {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+@keyframes loaderFieldWake {
+  from { opacity: 0; transform: translate(-50%, -54%) scale(0.985); }
+  to { opacity: 0.34; transform: translate(-50%, -54%) scale(1); }
+}
+
+@keyframes logoConstructionY {
+  from { opacity: 0; transform: scaleY(0); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+@keyframes logoConstructionX {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes logoDraftReveal {
+  0% { opacity: 0; clip-path: inset(0 50%); }
+  50% { opacity: 0.22; }
+  100% { opacity: 0.16; clip-path: inset(0); }
+}
+
+@keyframes logoSurfaceAssemble {
+  0% { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0); }
+}
+
+@keyframes logoWordmarkSet {
+  from { opacity: 0; letter-spacing: 0.42em; }
+  to { opacity: 1; letter-spacing: 0.3em; }
+}
+
+@keyframes logoFinalPass {
+  0% { left: -18%; opacity: 0; }
+  18% { opacity: 0.82; }
+  82% { opacity: 0.58; }
+  100% { left: 118%; opacity: 0; }
+}
+
+@keyframes precisionProgressSearch {
+  from { transform: translateX(-115%); }
+  to { transform: translateX(560%); }
+}
