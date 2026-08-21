@@ -1,0 +1,11 @@
+{
+  "source": "C:\\Users\\nicos\\Documents\\proyectos\\modellwerk\\build\\revit-export\\MWG9\\full.fbx",
+  "output": "C:\\Users\\nicos\\Documents\\proyectos\\modellwerk\\public\\models\\mw-g9\\full.glb",
+  "sourceBytes": 2927248,
+  "outputBytes": 648244,
+  "mappedObjects": 293,
+  "objects": 293,
+  "vertices": 60280,
+  "triangles": 100240,
+  "materials": 21
+}

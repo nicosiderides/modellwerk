@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "mw900",
+  "name": "MW900",
+  "version": "v001",
+  "units": "meters",
+  "designStatus": "concept-not-engineered",
+  "dimensions": {
+    "length": 9.0,
+    "width": 3.0,
+    "height": 2.8
+  },
+  "origin": "center-floor",
+  "authoringAxes": {
+    "length": "X",
+    "width": "Y",
+    "height": "Z"
+  },
+  "runtimeAxes": {
+    "length": "X",
+    "width": "Z",
+    "height": "Y"
+  },
+  "packages": [
+    {
+      "id": "structure",
+      "url": "/models/mw900/v001/structure.glb",
+      "defaultVisible": true,
+      "bytes": 79316,
+      "objects": 176,
+      "triangles": 11232
+    }
+  ],
+  "systems": {
+    "grid": "3 bays / 4 portal lines",
+    "primaryFrame": "segmented RHS rails and RHS columns",
+    "secondaryFrame": "light-gauge lipped C joists",
+    "connections": "standardized 4-bolt node plates",
+    "optionalStability": "removable end-wall tension-rod cassettes"
+  }
+}

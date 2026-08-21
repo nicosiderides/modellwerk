@@ -2,4 +2,4 @@
 2:I[39756,["/modellwerk/visor1.0/_next/static/chunks/368reha_yvn2z.js"],"default"]
 3:I[37457,["/modellwerk/visor1.0/_next/static/chunks/368reha_yvn2z.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"KfvvcGny2ddFtExlhFB_o"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"jeLatSmGQFR-elSGc7CxJ"}

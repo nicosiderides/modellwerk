@@ -1,0 +1,37 @@
+{
+  "valid": true,
+  "file": "structure.glb",
+  "objectsIncludingRoot": 217,
+  "meshObjects": 216,
+  "triangles": 13312,
+  "connectionAssemblies": 16,
+  "versions": [
+    "v002"
+  ],
+  "boundsMeters": {
+    "min": [
+      -4.5,
+      -1.500042,
+      0.0
+    ],
+    "max": [
+      4.500041,
+      1.5,
+      2.800044
+    ],
+    "size": [
+      9.000042,
+      3.000041,
+      2.800044
+    ]
+  },
+  "maximumDimensionErrorMm": 0.04406,
+  "checks": {
+    "expectedMeshCount": true,
+    "semanticExtrasOnEveryObject": true,
+    "uniquePartIds": true,
+    "connectionAssemblies": true,
+    "versionExtras": true,
+    "dimensionsWithin0_1mm": true
+  }
+}

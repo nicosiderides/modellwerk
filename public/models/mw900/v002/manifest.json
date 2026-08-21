@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "mw900",
+  "name": "MW900",
+  "version": "v002",
+  "units": "meters",
+  "designStatus": "concept-not-engineered",
+  "dimensions": {
+    "length": 9.0,
+    "width": 3.0,
+    "height": 2.8
+  },
+  "origin": "center-floor",
+  "authoringAxes": {
+    "length": "X",
+    "width": "Y",
+    "height": "Z"
+  },
+  "runtimeAxes": {
+    "length": "X",
+    "width": "Z",
+    "height": "Y"
+  },
+  "packages": [
+    {
+      "id": "structure",
+      "url": "/models/mw900/v002/structure.glb",
+      "bomUrl": "/models/mw900/v002/bom.json",
+      "defaultVisible": true,
+      "bytes": 133148,
+      "objects": 216,
+      "triangles": 13312
+    }
+  ],
+  "systems": {
+    "grid": "3 bays / 4 portal lines",
+    "primaryFrame": "segmented RHS rails and RHS columns; unchanged from v001",
+    "secondaryFrame": "light-gauge lipped C joists; unchanged from v001",
+    "connections": "MW-LOCK v002 / MW-NI6 intermediate nodes / MW-NC8 corner nodes",
+    "optionalStability": "removable end-wall tension-rod cassettes"
+  },
+  "connectionKit": {
+    "assemblies": 16,
+    "families": [
+      {
+        "id": "MW-NI6",
+        "quantity": 8,
+        "fastenersPerAssembly": 6
+      },
+      {
+        "id": "MW-NC8",
+        "quantity": 8,
+        "fastenersPerAssembly": 8
+      }
+    ]
+  }
+}

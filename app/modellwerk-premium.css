@@ -1,0 +1,1222 @@
+:root {
+  --mw-space-1: 4px;
+  --mw-space-2: 8px;
+  --mw-space-3: 12px;
+  --mw-space-4: 16px;
+  --mw-space-5: 24px;
+  --mw-panel-radius: 8px;
+  --mw-line-soft: rgba(245, 241, 232, 0.09);
+  --mw-line-strong: rgba(245, 241, 232, 0.17);
+  --mw-surface-deep: rgba(10, 12, 13, 0.94);
+  --mw-surface-raised: rgba(18, 20, 21, 0.92);
+  --mw-copy-muted: rgba(245, 241, 232, 0.48);
+  --mw-copy-soft: rgba(245, 241, 232, 0.7);
+  --mw-duration-fast: 180ms;
+  --mw-duration-panel: 340ms;
+  --mw-duration-entry: 720ms;
+  --mw-ease-precision: cubic-bezier(0.2, 0.72, 0.24, 1);
+  --mw-z-scene-overlay: 2;
+  --mw-z-hud: 10;
+  --mw-z-loader: 50;
+}
+
+/* Real asset loader ------------------------------------------------------- */
+.modellwerk-loader {
+  position: absolute;
+  inset: 0;
+  z-index: var(--mw-z-loader);
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(245, 241, 232, 0.026) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(245, 241, 232, 0.022) 1px, transparent 1px),
+    radial-gradient(circle at 50% 46%, rgba(200, 155, 60, 0.105), transparent 29%),
+    linear-gradient(115deg, #15191a 0%, #0c0e0f 56%, #191814 100%);
+  background-size: 44px 44px, 44px 44px, auto, auto;
+  color: var(--mw-paper);
+  clip-path: inset(0);
+}
+
+.modellwerk-loader::before,
+.modellwerk-loader::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.modellwerk-loader::before {
+  inset: 18px;
+  border: 1px solid rgba(245, 241, 232, 0.055);
+}
+
+.modellwerk-loader::after {
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0 49.95%, rgba(245, 241, 232, 0.035) 50%, transparent 50.05%);
+}
+
+.modellwerk-loader.is-closing {
+  animation: loaderViewportExit 880ms var(--mw-ease-precision) forwards;
+  pointer-events: none;
+}
+
+.loader-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--loader-progress);
+  width: 1px;
+  background: linear-gradient(180deg, transparent 9%, rgba(240, 211, 143, 0.1) 28%, rgba(240, 211, 143, 0.68) 50%, rgba(240, 211, 143, 0.1) 72%, transparent 91%);
+  box-shadow: 0 0 26px rgba(200, 155, 60, 0.12);
+  opacity: 0.7;
+  transition: left 320ms var(--mw-ease-precision);
+}
+
+.is-booting .loader-scan {
+  animation: loaderBootScan 1.7s ease-in-out infinite;
+}
+
+.loader-system-copy {
+  position: absolute;
+  top: 30px;
+  right: 34px;
+  left: 34px;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(245, 241, 232, 0.32);
+  font-family: var(--mw-font-tech);
+  font-size: 9px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.loader-blueprint {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  width: min(600px, 76vw);
+  height: min(268px, 31vh);
+  border: 1px solid rgba(245, 241, 232, 0.12);
+  background:
+    linear-gradient(90deg, rgba(245, 241, 232, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(245, 241, 232, 0.03) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(245, 241, 232, 0.018), rgba(245, 241, 232, 0.006));
+  background-size: 24px 24px;
+  clip-path: inset(0 calc(100% - var(--loader-progress)) 0 0);
+  transform: translate(-50%, -83%);
+  transition: clip-path 360ms var(--mw-ease-precision), opacity 260ms ease;
+}
+
+.is-booting .loader-blueprint {
+  clip-path: inset(0 34% 0 0);
+  opacity: 0.42;
+}
+
+.is-condensed .loader-blueprint,
+.is-condensed .loader-system-copy {
+  opacity: 0.36;
+}
+
+.blueprint-axis,
+.blueprint-rail,
+.blueprint-post,
+.blueprint-opening,
+.blueprint-control,
+.blueprint-dimension,
+.blueprint-dimension::before,
+.blueprint-dimension::after {
+  position: absolute;
+  display: block;
+}
+
+.blueprint-axis {
+  background: rgba(245, 241, 232, 0.08);
+}
+
+.axis-x {
+  top: 50%;
+  right: 4%;
+  left: 4%;
+  height: 1px;
+}
+
+.axis-y {
+  top: 7%;
+  bottom: 7%;
+  left: 50%;
+  width: 1px;
+}
+
+.blueprint-module {
+  position: absolute;
+  inset: 25% 12% 27%;
+  border: 1px solid rgba(240, 211, 143, 0.52);
+  box-shadow: inset 0 0 34px rgba(200, 155, 60, 0.025);
+}
+
+.blueprint-rail {
+  right: 0;
+  left: 0;
+  height: 3px;
+  border-top: 1px solid rgba(245, 241, 232, 0.44);
+  border-bottom: 1px solid rgba(245, 241, 232, 0.14);
+}
+
+.rail-top { top: 8px; }
+.rail-bottom { bottom: 8px; }
+
+.blueprint-post {
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-right: 1px solid rgba(245, 241, 232, 0.38);
+  border-left: 1px solid rgba(245, 241, 232, 0.12);
+}
+
+.post-a { left: 18%; }
+.post-b { left: 51%; }
+.post-c { right: 17%; }
+
+.blueprint-opening {
+  right: 4.5%;
+  bottom: 9px;
+  width: 19%;
+  height: 58%;
+  border: 1px solid rgba(240, 211, 143, 0.62);
+  background: rgba(200, 155, 60, 0.025);
+}
+
+.blueprint-control {
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(240, 211, 143, 0.82);
+  background: #111416;
+  transform: translate(-50%, -50%);
+}
+
+.control-a { top: 0; left: 0; }
+.control-b { top: 0; left: 100%; }
+.control-c { top: 100%; left: 0; }
+.control-d { top: 100%; left: 100%; }
+
+.blueprint-dimension {
+  color: rgba(245, 241, 232, 0.46);
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.blueprint-dimension::before,
+.blueprint-dimension::after {
+  background: rgba(245, 241, 232, 0.26);
+  content: "";
+}
+
+.dimension-x {
+  right: 12%;
+  bottom: 15%;
+  left: 12%;
+  border-top: 1px solid rgba(245, 241, 232, 0.2);
+  text-align: center;
+}
+
+.dimension-x span {
+  position: relative;
+  top: -6px;
+  padding: 0 7px;
+  background: #101314;
+}
+
+.dimension-x::before,
+.dimension-x::after {
+  top: -4px;
+  width: 1px;
+  height: 8px;
+}
+
+.dimension-x::before { left: 0; }
+.dimension-x::after { right: 0; }
+
+.dimension-y {
+  top: 25%;
+  bottom: 27%;
+  left: 6.5%;
+  border-left: 1px solid rgba(245, 241, 232, 0.2);
+}
+
+.dimension-y span {
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  padding: 5px 0;
+  background: #101314;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.blueprint-area {
+  position: absolute;
+  right: 13%;
+  bottom: 7%;
+  color: rgba(240, 211, 143, 0.58);
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+
+.loader-lockup {
+  position: absolute;
+  top: calc(47% + 46px);
+  left: 50%;
+  display: grid;
+  width: min(320px, 76vw);
+  justify-items: center;
+  gap: 16px;
+  transform: translateX(-50%);
+}
+
+.loader-logo-build {
+  position: relative;
+  overflow: hidden;
+  width: 184px;
+}
+
+.loader-logo-build img {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  animation: loaderLogoBuild 1.15s 180ms var(--mw-ease-precision) forwards;
+}
+
+.loader-logo-build span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 2px;
+  background: var(--mw-accent-soft);
+  box-shadow: 0 0 18px rgba(240, 211, 143, 0.5);
+  animation: loaderLogoCursor 1.15s 180ms var(--mw-ease-precision) forwards;
+}
+
+.loader-phase {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+}
+
+.loader-phase span {
+  color: rgba(240, 211, 143, 0.62);
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+}
+
+.loader-phase strong {
+  color: rgba(245, 241, 232, 0.76);
+  font-size: 10px;
+  font-weight: 520;
+  letter-spacing: 0.14em;
+}
+
+.loader-progress-block {
+  position: absolute;
+  top: calc(47% + 174px);
+  left: 50%;
+  width: min(430px, 76vw);
+  transform: translateX(-50%);
+}
+
+.loader-progress-track {
+  height: 2px;
+  overflow: hidden;
+  background: rgba(245, 241, 232, 0.1);
+}
+
+.loader-progress-track span {
+  display: block;
+  width: var(--loader-progress);
+  height: 100%;
+  background: linear-gradient(90deg, #8e6724, var(--mw-accent-soft));
+  transition: width 320ms var(--mw-ease-precision);
+}
+
+.loader-progress-track.is-indeterminate span {
+  width: 28%;
+  animation: loaderIndeterminate 1.45s ease-in-out infinite;
+}
+
+.loader-progress-meta {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding-top: 9px;
+  color: rgba(245, 241, 232, 0.34);
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.loader-progress-meta strong {
+  color: rgba(245, 241, 232, 0.7);
+  font-size: 10px;
+}
+
+.loader-progress-meta em {
+  color: rgba(240, 211, 143, 0.56);
+  font-style: normal;
+}
+
+.loader-skip {
+  position: absolute;
+  right: 30px;
+  bottom: 28px;
+  min-height: 36px;
+  border: 0;
+  border-bottom: 1px solid rgba(240, 211, 143, 0.3);
+  padding: 0 2px;
+  background: transparent;
+  color: rgba(245, 241, 232, 0.45);
+  cursor: pointer;
+  font-family: var(--mw-font-tech);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color var(--mw-duration-fast) ease, color var(--mw-duration-fast) ease;
+}
+
+.loader-skip:hover,
+.loader-skip:focus-visible {
+  border-color: var(--mw-accent-soft);
+  color: var(--mw-paper);
+  outline: 0;
+}
+
+/* Minimal brand loader --------------------------------------------------- */
+.modellwerk-loader.minimal-loader {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(224, 193, 126, 0.055), transparent 23%),
+    linear-gradient(135deg, #0d1011 0%, #090b0c 58%, #10100e 100%);
+}
+
+.modellwerk-loader.minimal-loader::before {
+  inset: -35%;
+  border: 0;
+  background: conic-gradient(
+    from 210deg at 50% 50%,
+    transparent 0deg,
+    rgba(245, 241, 232, 0.022) 42deg,
+    transparent 82deg,
+    transparent 260deg,
+    rgba(200, 155, 60, 0.018) 315deg,
+    transparent 360deg
+  );
+  transform: rotate(-8deg);
+}
+
+.modellwerk-loader.minimal-loader::after {
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(245, 241, 232, 0.018) 50%, transparent calc(50% + 1px)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 22%, transparent 78%, rgba(0, 0, 0, 0.18));
+  opacity: 0.72;
+}
+
+.loader-minimal-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(286px, calc(100vw - 48px));
+  justify-items: stretch;
+}
+
+.loader-brand-stage {
+  position: relative;
+  display: grid;
+  min-height: 132px;
+  place-items: center;
+}
+
+.loader-brand-stage::before {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 211, 143, 0.045), transparent 68%);
+  content: "";
+  pointer-events: none;
+}
+
+.loader-brand-logo {
+  position: relative;
+  z-index: 1;
+  width: 218px;
+}
+
+.loader-brand-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: inset(0 50% 0 50%);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+  animation: minimalLogoReveal 920ms 120ms var(--mw-ease-precision) forwards;
+}
+
+.loader-brand-logo i {
+  position: absolute;
+  top: -17px;
+  bottom: -17px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(240, 211, 143, 0.86) 35%, rgba(240, 211, 143, 0.86) 65%, transparent);
+  box-shadow: 0 0 16px rgba(200, 155, 60, 0.24);
+  opacity: 0;
+  transform: scaleY(0.12);
+  animation: minimalLogoCut 980ms 80ms var(--mw-ease-precision) forwards;
+}
+
+.loader-brand-aperture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(360px, 82vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 241, 232, 0.14) 24%, rgba(240, 211, 143, 0.38) 50%, rgba(245, 241, 232, 0.14) 76%, transparent);
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(0.04);
+  animation: minimalApertureOpen 1.05s 250ms var(--mw-ease-precision) forwards;
+}
+
+.loader-minimal-status {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 29px;
+  color: rgba(245, 241, 232, 0.46);
+  font-family: var(--mw-font-tech);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.loader-minimal-status span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loader-minimal-status strong {
+  min-width: 34px;
+  color: rgba(245, 241, 232, 0.72);
+  font-size: 10px;
+  font-weight: 520;
+  text-align: right;
+}
+
+.loader-minimal-progress {
+  position: relative;
+  height: 1px;
+  margin-top: 7px;
+  background: rgba(245, 241, 232, 0.1);
+}
+
+.loader-minimal-progress span {
+  display: block;
+  width: var(--loader-progress);
+  height: 100%;
+  background: linear-gradient(90deg, rgba(176, 125, 40, 0.72), var(--mw-accent-soft));
+  transition: width 360ms var(--mw-ease-precision);
+}
+
+.loader-minimal-progress i {
+  position: absolute;
+  top: 50%;
+  left: var(--loader-progress);
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgba(240, 211, 143, 0.82);
+  background: #0b0d0e;
+  opacity: 0.9;
+  transform: translate(-50%, -50%);
+  transition: left 360ms var(--mw-ease-precision);
+}
+
+.loader-minimal-progress.is-indeterminate {
+  overflow: hidden;
+}
+
+.loader-minimal-progress.is-indeterminate span {
+  width: 24%;
+  animation: minimalProgressSearch 1.25s ease-in-out infinite;
+}
+
+.loader-minimal-progress.is-indeterminate i {
+  display: none;
+}
+
+.minimal-loader.is-ready .loader-brand-logo img {
+  filter: drop-shadow(0 12px 34px rgba(200, 155, 60, 0.06));
+}
+
+.minimal-loader.is-ready .loader-brand-aperture {
+  opacity: 0.32;
+  transform: translate(-50%, -50%) scaleX(1.16);
+  transition: opacity 260ms ease, transform 420ms var(--mw-ease-precision);
+}
+
+.minimal-loader.is-ready .loader-minimal-status span,
+.minimal-loader.is-ready .loader-minimal-status strong {
+  color: rgba(240, 211, 143, 0.76);
+}
+
+.minimal-loader .loader-skip {
+  right: auto;
+  bottom: 22px;
+  left: 50%;
+  min-height: 32px;
+  border: 0;
+  padding: 0 8px;
+  color: rgba(245, 241, 232, 0.28);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  transform: translateX(-50%);
+}
+
+.minimal-loader .loader-skip:hover,
+.minimal-loader .loader-skip:focus-visible {
+  color: rgba(245, 241, 232, 0.72);
+}
+
+@media (max-width: 640px) {
+  .loader-minimal-shell {
+    width: min(252px, calc(100vw - 40px));
+  }
+
+  .loader-brand-stage {
+    min-height: 116px;
+  }
+
+  .loader-brand-logo {
+    width: 188px;
+  }
+
+  .loader-minimal-status {
+    margin-top: 24px;
+  }
+}
+
+/* Scene separation and controlled HUD entry ------------------------------ */
+.factory-canvas::after {
+  position: absolute;
+  inset: 0;
+  z-index: var(--mw-z-scene-overlay);
+  background:
+    radial-gradient(ellipse 31% 27% at 52% 52%, rgba(236, 202, 132, 0.085), transparent 72%),
+    linear-gradient(90deg, rgba(7, 9, 10, 0.18), transparent 24%, transparent 75%, rgba(7, 9, 10, 0.2));
+  content: "";
+  pointer-events: none;
+}
+
+.hud-awaiting-entry .hud-top,
+.hud-awaiting-entry .station-timeline,
+.hud-awaiting-entry .station-panel,
+.hud-awaiting-entry .module-material-panel,
+.hud-awaiting-entry .hud-bottom,
+.hud-awaiting-entry .factory-route-legend {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+.hud-entered .hud-top,
+.hud-entered .station-timeline,
+.hud-entered .station-panel,
+.hud-entered .module-material-panel,
+.hud-entered .hud-bottom,
+.hud-entered .factory-route-legend {
+  animation: hudPrecisionEntry var(--mw-duration-entry) var(--mw-ease-precision) both;
+}
+
+.hud-entered .hud-top { animation-delay: 120ms; }
+.hud-entered .station-timeline { animation-delay: 260ms; }
+.hud-entered .station-panel { animation-delay: 420ms; }
+.hud-entered .module-material-panel { animation-delay: 570ms; }
+.hud-entered .hud-bottom,
+.hud-entered .factory-route-legend { animation-delay: 720ms; }
+
+.hud-overview.hud-entered .station-panel {
+  animation-name: hudOverviewPanelEntry;
+}
+
+/* Product hierarchy ------------------------------------------------------ */
+.hud-overview .station-timeline {
+  right: clamp(374px, 24vw, 420px);
+  left: clamp(330px, 23vw, 382px);
+}
+
+.station-timeline {
+  overflow: visible;
+}
+
+.station-timeline::after {
+  position: absolute;
+  right: auto;
+  bottom: -1px;
+  left: 0;
+  z-index: 2;
+  width: var(--timeline-progress);
+  height: 2px;
+  background: linear-gradient(90deg, #8d6422, var(--mw-accent-soft));
+  content: "";
+  pointer-events: none;
+  transition: width var(--mw-duration-panel) var(--mw-ease-precision);
+}
+
+.station-step {
+  overflow: visible;
+}
+
+.station-dot {
+  display: grid;
+  width: 12px;
+  height: 12px;
+  place-items: center;
+  border-radius: 2px;
+}
+
+.station-dot svg {
+  width: 8px;
+  height: 8px;
+  stroke-width: 2.2;
+}
+
+.station-step.pending {
+  color: rgba(245, 241, 232, 0.38);
+}
+
+.station-tooltip {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  z-index: 6;
+  width: 190px;
+  border: 1px solid var(--mw-line-strong);
+  border-radius: 4px;
+  padding: 8px 9px;
+  background: rgba(10, 12, 13, 0.96);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.32);
+  color: var(--mw-copy-soft);
+  font-size: 9px;
+  font-weight: 450;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  text-transform: none;
+  transform: translate(-50%, -4px);
+  transition: opacity var(--mw-duration-fast) ease, transform var(--mw-duration-fast) ease;
+  white-space: normal;
+}
+
+.station-step:hover .station-tooltip,
+.station-step:focus-visible .station-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.station-step:first-child .station-tooltip {
+  left: 6px;
+  transform: translate(0, -4px);
+}
+
+.station-step:first-child:hover .station-tooltip,
+.station-step:first-child:focus-visible .station-tooltip {
+  transform: translate(0, 0);
+}
+
+.station-step:last-child .station-tooltip {
+  right: 6px;
+  left: auto;
+  transform: translate(0, -4px);
+}
+
+.station-step:last-child:hover .station-tooltip,
+.station-step:last-child:focus-visible .station-tooltip {
+  transform: translate(0, 0);
+}
+
+.hud-overview .station-panel {
+  left: clamp(22px, 1.7vw, 32px);
+  width: clamp(292px, 18vw, 326px);
+  border-radius: var(--mw-panel-radius);
+  background:
+    linear-gradient(145deg, rgba(20, 22, 23, 0.94), rgba(11, 13, 14, 0.9)),
+    rgba(10, 12, 13, 0.92);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+}
+
+.overview-intro {
+  padding: 30px 26px 23px;
+}
+
+.overview-intro h2 {
+  max-width: 260px;
+  margin: 16px 0 14px;
+  font-size: clamp(24px, 1.85vw, 31px);
+  letter-spacing: -0.036em;
+}
+
+.overview-intro h2 em {
+  color: #d8aa52;
+}
+
+.hud-overview .station-panel .overview-intro p {
+  max-width: 252px;
+  font-size: 12px;
+  line-height: 1.62;
+}
+
+.overview-journey {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-top: 18px;
+  color: rgba(245, 241, 232, 0.36);
+  font-family: var(--mw-font-tech);
+  font-size: 7px;
+  letter-spacing: 0.08em;
+}
+
+.overview-journey i {
+  height: 1px;
+  overflow: hidden;
+  background: rgba(245, 241, 232, 0.12);
+}
+
+.overview-journey b {
+  display: block;
+  width: 12.5%;
+  height: 100%;
+  background: var(--mw-accent-soft);
+}
+
+.overview-journey em {
+  font-style: normal;
+}
+
+.station-context {
+  animation: stationContextSwap var(--mw-duration-panel) var(--mw-ease-precision) both;
+}
+
+.overview-intro-actions button,
+.hud-premium button {
+  transition:
+    border-color var(--mw-duration-fast) ease,
+    background-color var(--mw-duration-fast) ease,
+    color var(--mw-duration-fast) ease,
+    transform var(--mw-duration-fast) ease;
+}
+
+.overview-intro-actions button:hover,
+.hud-premium button:hover {
+  border-color: rgba(240, 211, 143, 0.58);
+}
+
+.overview-intro-actions button:active,
+.hud-premium button:active {
+  transform: translateY(1px);
+}
+
+.hud-premium button:focus-visible {
+  outline: 2px solid rgba(240, 211, 143, 0.92);
+  outline-offset: 2px;
+}
+
+/* Technical cards in the initial configuration rail --------------------- */
+.hud-premium .quickstart-heading span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.hud-premium .quickstart-heading span b {
+  color: rgba(240, 211, 143, 0.58);
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.hud-premium .quickstart-options button,
+.hud-premium .preset-options button {
+  border-radius: 4px;
+  background: rgba(245, 241, 232, 0.026);
+}
+
+.hud-premium .module-options button {
+  display: grid;
+  min-height: 82px;
+  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  place-items: initial;
+  gap: 2px 6px;
+  align-content: center;
+  text-align: left;
+}
+
+.quickstart-card-mark {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  grid-row: 1 / span 3;
+  place-items: center;
+  border: 1px solid rgba(245, 241, 232, 0.12);
+  color: rgba(245, 241, 232, 0.54);
+}
+
+.hud-premium .module-options button.active .quickstart-card-mark {
+  border-color: rgba(240, 211, 143, 0.52);
+  color: var(--mw-accent-soft);
+}
+
+.hud-premium .module-options .quickstart-card-mark svg {
+  width: 12px;
+  height: 12px;
+}
+
+.hud-premium .module-options button strong {
+  align-self: end;
+  color: rgba(245, 241, 232, 0.9);
+  font-size: 10px;
+}
+
+.hud-premium .module-options button small,
+.hud-premium .module-options button em {
+  overflow: hidden;
+  color: rgba(245, 241, 232, 0.38);
+  font-family: var(--mw-font-tech);
+  font-size: 7px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-premium .use-options button {
+  min-height: 76px;
+  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  place-items: initial;
+  align-content: center;
+  gap: 2px 7px;
+  text-align: left;
+}
+
+.hud-premium .use-options button > svg {
+  width: 17px;
+  height: 17px;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+.hud-premium .use-options button small {
+  display: -webkit-box;
+  overflow: hidden;
+  color: rgba(245, 241, 232, 0.35);
+  font-size: 7px;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hud-premium .preset-options button.active {
+  border-color: rgba(225, 176, 79, 0.62);
+  background: rgba(200, 155, 60, 0.11);
+}
+
+.hud-premium .configurator-apply-bar {
+  min-height: 72px;
+  grid-template-columns: minmax(0, 0.78fr) minmax(148px, 1.22fr);
+}
+
+.hud-premium .configurator-apply-bar > div small {
+  display: block;
+  max-width: 138px;
+  color: rgba(245, 241, 232, 0.3);
+  font-size: 7px;
+  line-height: 1.3;
+}
+
+.hud-premium .configurator-apply-bar button {
+  min-height: 42px;
+  background: linear-gradient(135deg, #d8ad57, #ad7b28);
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+/* Responsive composition ------------------------------------------------ */
+@media (max-width: 1280px) and (min-width: 901px) {
+  .hud-overview .station-timeline {
+    right: 358px;
+    left: 278px;
+  }
+
+  .hud-overview .station-panel {
+    left: 18px;
+    width: 270px;
+  }
+
+  .overview-intro {
+    padding: 23px 20px 19px;
+  }
+
+  .overview-intro h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-height: 790px) and (min-width: 901px) {
+  .loader-blueprint {
+    top: 43%;
+    height: 224px;
+  }
+
+  .loader-lockup {
+    top: calc(43% + 31px);
+  }
+
+  .loader-progress-block {
+    top: calc(43% + 156px);
+  }
+
+  .hud-overview .station-panel {
+    top: 48%;
+  }
+
+  .overview-intro {
+    padding: 21px 19px 17px;
+  }
+
+  .overview-intro h2 {
+    margin-block: 11px;
+    font-size: 23px;
+  }
+
+  .overview-journey {
+    margin-top: 12px;
+  }
+
+  .overview-intro-actions {
+    margin-top: 14px;
+  }
+
+  .hud-premium .module-options button {
+    min-height: 68px;
+  }
+
+  .hud-premium .use-options button {
+    min-height: 62px;
+  }
+
+  .hud-premium .quickstart-group,
+  .hud-premium .quickstart-group:first-child,
+  .hud-premium .quickstart-group:last-child {
+    padding-block: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .modellwerk-loader::before {
+    inset: 10px;
+  }
+
+  .loader-system-copy {
+    top: 19px;
+    right: 20px;
+    left: 20px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .loader-system-copy span:last-child {
+    display: none;
+  }
+
+  .loader-blueprint {
+    top: 43%;
+    width: min(520px, 84vw);
+    height: 220px;
+  }
+
+  .loader-lockup {
+    top: calc(43% + 42px);
+  }
+
+  .loader-progress-block {
+    top: calc(43% + 166px);
+  }
+
+  .loader-skip {
+    right: 18px;
+    bottom: 16px;
+  }
+
+  .hud-overview .station-timeline {
+    right: 10px;
+    left: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .station-tooltip {
+    display: none;
+  }
+
+  .hud-overview .station-panel {
+    top: 134px;
+    left: 12px;
+    width: min(276px, calc(100vw - 24px));
+    transform: none;
+  }
+
+  .hud-overview.hud-entered .station-panel {
+    animation-name: hudPrecisionEntry;
+  }
+
+  .overview-intro {
+    padding: 18px;
+  }
+
+  .overview-journey,
+  .overview-specs {
+    display: none;
+  }
+
+  .hud-premium .module-material-panel,
+  .hud-premium.hud-overview .module-material-panel,
+  .hud-premium .module-material-panel.sheet-mid {
+    max-height: min(42vh, 360px);
+  }
+
+  .hud-premium .overview-quickstart {
+    grid-template-columns: repeat(3, minmax(248px, 1fr));
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .hud-premium .quickstart-group,
+  .hud-premium .quickstart-group:first-child,
+  .hud-premium .quickstart-group:last-child {
+    border-right: 1px solid var(--mw-line-soft);
+    border-bottom: 0;
+    padding: 8px 12px;
+  }
+
+  .hud-premium .quickstart-group:last-child {
+    border-right: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .loader-blueprint {
+    height: 190px;
+  }
+
+  .loader-logo-build {
+    width: 156px;
+  }
+
+  .hud-overview .station-panel {
+    width: min(250px, calc(100vw - 24px));
+  }
+
+  .overview-intro h2 {
+    font-size: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modellwerk-loader *,
+  .modellwerk-loader,
+  .hud-entered .hud-top,
+  .hud-entered .station-timeline,
+  .hud-entered .station-panel,
+  .hud-entered .module-material-panel,
+  .hud-entered .hud-bottom,
+  .hud-entered .factory-route-legend,
+  .hud-premium button,
+  .station-timeline::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+@keyframes loaderLogoBuild {
+  from { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+@keyframes loaderLogoCursor {
+  from { left: 0; opacity: 1; }
+  88% { opacity: 1; }
+  to { left: calc(100% - 2px); opacity: 0; }
+}
+
+@keyframes loaderViewportExit {
+  0% { clip-path: inset(0); opacity: 1; }
+  72% { opacity: 1; }
+  100% { clip-path: inset(0 0 0 100%); opacity: 0; }
+}
+
+@keyframes loaderBootScan {
+  0%, 100% { left: 18%; opacity: 0.25; }
+  50% { left: 82%; opacity: 0.68; }
+}
+
+@keyframes loaderIndeterminate {
+  0% { transform: translateX(-115%); }
+  100% { transform: translateX(420%); }
+}
+
+@keyframes minimalLogoReveal {
+  from { clip-path: inset(0 50% 0 50%); }
+  to { clip-path: inset(0); }
+}
+
+@keyframes minimalLogoCut {
+  0% { opacity: 0; transform: scaleY(0.08); }
+  22% { opacity: 1; }
+  70% { opacity: 0.72; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(1); }
+}
+
+@keyframes minimalApertureOpen {
+  0% { opacity: 0; transform: translate(-50%, -50%) scaleX(0.04); }
+  40% { opacity: 0.68; }
+  100% { opacity: 0.18; transform: translate(-50%, -50%) scaleX(1); }
+}
+
+@keyframes minimalProgressSearch {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(520%); }
+}
+
+@keyframes hudPrecisionEntry {
+  from { opacity: 0; filter: blur(2px); transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+}
+
+@keyframes hudOverviewPanelEntry {
+  from { opacity: 0; filter: blur(2px); transform: translateY(calc(-52% + 12px)) scale(0.99); }
+  to { opacity: 1; filter: blur(0); transform: translateY(-52%) scale(1); }
+}
+
+@keyframes stationContextSwap {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

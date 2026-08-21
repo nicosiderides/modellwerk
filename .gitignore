@@ -9,6 +9,21 @@ visor/assets/splat/
 Thumbs.db
 *.log
 
+# Next.js / Node
+node_modules/
+.next/
+out/
+next-env.d.ts
+dist/
+coverage/
+*.tsbuildinfo
+.dotnet-cli/
+
+# Intermedios generados por la conversión Revit -> GLB
+build/revit-export/
+tools/revit_web_export/bin/
+tools/revit_web_export/obj/
+
 # Blender backups
 *.blend1
 *.blend2
