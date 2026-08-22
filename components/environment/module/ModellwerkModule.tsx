@@ -32,10 +32,6 @@ import type {
 import { getStationConfig } from "../stations/stationsConfig";
 import { getModuleMaterialOption } from "./moduleOptions";
 
-const DEFAULT_MODULE_MODEL_URL = assetPath("/models/modulo_v01.glb");
-const CM4000_MODULE_MODEL_URL = assetPath("/models/cm-4000-cv/full.glb");
-const MWG9_MODULE_MODEL_URL = assetPath("/models/mw-g9/full.glb");
-const MW900_MODULE_MODEL_URL = assetPath("/models/mw900/v002/structure.glb");
 const DRACO_DECODER_PATH = assetPath("/draco/");
 const MODULE_SURFACE_MATERIALS = new Set([
   "MAT_Piso_MaderaRoble",
@@ -104,6 +100,47 @@ const texturePaths = {
     normal: assetPath("/textures/piso_cemento/concrete_floor_worn_001_nor_dx_2k.jpg"),
   },
 } as const;
+
+type TextureBundleName = keyof typeof texturePaths;
+
+const MODULE_MATERIAL_KEYS: ModuleMaterialKey[] = [
+  "EXT_TECHO",
+  "EXT_REV",
+  "INT_PARED",
+  "INT_CIEL",
+  "PISO",
+  "CARP",
+];
+
+function getRemoteTextureBundleName(
+  selection: ModuleMaterialSelection,
+  key: ModuleMaterialKey
+): TextureBundleName | null {
+  const option = getModuleMaterialOption(selection, key);
+  if (key === "CARP") return null;
+  if (
+    option?.id === "pir-microprofile" ||
+    option?.id === "pir-roof-panel" ||
+    option?.id === "corrugated-sheet" ||
+    option?.id === "fiber-cement-siding" ||
+    option?.id === "osb-visible"
+  ) {
+    return null;
+  }
+  if (option?.id.includes("sheet") || option?.id.includes("aluminum")) return "sheet";
+  if (option?.id.includes("microcement") || option?.id.includes("homogeneous")) return "concrete";
+  if (option?.id.includes("floor")) return "woodFloor";
+  if (
+    option?.id.includes("paint") ||
+    option?.id.includes("ceiling") ||
+    option?.id.includes("gypsum") ||
+    option?.id.includes("sanitary")
+  ) {
+    return "paint";
+  }
+  if (option?.id.includes("oak") || option?.id.includes("slats")) return "oak";
+  return "extWood";
+}
 
 function createProceduralSurface(kind: "micro-rib" | "corrugated" | "siding" | "osb") {
   const canvas = document.createElement("canvas");
@@ -271,12 +308,26 @@ function useModuleMaterials(
   exteriorFinishColor: string,
   interiorFinishColor: string
 ): ModuleMaterialSet {
-  const extWood = useTexture(texturePaths.extWood) as TextureBundle;
-  const sheet = useTexture(texturePaths.sheet) as TextureBundle;
-  const paint = useTexture(texturePaths.paint) as TextureBundle;
-  const oak = useTexture(texturePaths.oak) as TextureBundle;
-  const woodFloor = useTexture(texturePaths.woodFloor) as TextureBundle;
-  const concrete = useTexture(texturePaths.concrete) as TextureBundle;
+  const selectedBundleNames = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          MODULE_MATERIAL_KEYS
+            .map((key) => getRemoteTextureBundleName(selection, key))
+            .filter((name): name is TextureBundleName => Boolean(name))
+        )
+      ),
+    [selection]
+  );
+  const selectedTextureUrls = useMemo(
+    () =>
+      selectedBundleNames.flatMap((name) => {
+        const paths = texturePaths[name];
+        return [paths.map, paths.arm, paths.normal];
+      }),
+    [selectedBundleNames]
+  );
+  const selectedTextures = useTexture(selectedTextureUrls) as Texture[];
   const procedural = useMemo(
     () => ({
       microProfile: { map: createProceduralSurface("micro-rib") } as TextureBundle,
@@ -288,12 +339,29 @@ function useModuleMaterials(
   );
 
   return useMemo(() => {
-    configureBundle(extWood, [0.72, 0.72]);
-    configureBundle(sheet, [0.86, 0.86]);
-    configureBundle(paint, [0.5, 0.5]);
-    configureBundle(oak, [0.85, 0.85]);
-    configureBundle(woodFloor, [0.72, 0.72], -1);
-    configureBundle(concrete, [0.62, 0.62], -1);
+    const loadedBundles = new Map<TextureBundleName, TextureBundle>();
+    selectedBundleNames.forEach((name, index) => {
+      const textureIndex = index * 3;
+      loadedBundles.set(name, {
+        map: selectedTextures[textureIndex],
+        arm: selectedTextures[textureIndex + 1],
+        normal: selectedTextures[textureIndex + 2],
+      });
+    });
+
+    loadedBundles.forEach((bundle, name) => {
+      const repeat: [number, number] =
+        name === "paint"
+          ? [0.5, 0.5]
+          : name === "sheet"
+            ? [0.86, 0.86]
+            : name === "oak"
+              ? [0.85, 0.85]
+              : name === "concrete"
+                ? [0.62, 0.62]
+                : [0.72, 0.72];
+      configureBundle(bundle, repeat, name === "woodFloor" || name === "concrete" ? -1 : 1);
+    });
     configureBundle(procedural.microProfile, [1, 1]);
     configureBundle(procedural.corrugated, [1.15, 1]);
     configureBundle(procedural.siding, [0.72, 0.72]);
@@ -305,19 +373,8 @@ function useModuleMaterials(
       if (option?.id === "corrugated-sheet") return procedural.corrugated;
       if (option?.id === "fiber-cement-siding") return procedural.siding;
       if (option?.id === "osb-visible") return procedural.osb;
-      if (option?.id.includes("sheet") || option?.id.includes("aluminum")) return sheet;
-      if (option?.id.includes("microcement") || option?.id.includes("homogeneous")) return concrete;
-      if (option?.id.includes("floor")) return woodFloor;
-      if (
-        option?.id.includes("paint") ||
-        option?.id.includes("ceiling") ||
-        option?.id.includes("gypsum") ||
-        option?.id.includes("sanitary")
-      ) {
-        return paint;
-      }
-      if (option?.id.includes("oak") || option?.id.includes("slats")) return oak;
-      return extWood;
+      const bundleName = getRemoteTextureBundleName(selection, key);
+      return (bundleName ? loadedBundles.get(bundleName) : null) ?? procedural.microProfile;
     };
 
     const make = (key: ModuleMaterialKey) => {
@@ -427,7 +484,7 @@ function useModuleMaterials(
         envMapIntensity: 0.7,
       }),
     };
-  }, [concrete, exteriorFinishColor, extWood, interiorFinishColor, oak, paint, procedural, selection, sheet, structureColor, woodFloor]);
+  }, [exteriorFinishColor, interiorFinishColor, procedural, selectedBundleNames, selectedTextures, selection, structureColor]);
 }
 
 function getMaterialForSource(meshName: string, materialName: string, materials: ModuleMaterialSet): Material {
@@ -854,7 +911,7 @@ export function ModellwerkModule({
     });
   }, [moduleMeshes, quality]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     moduleMeshes.forEach((object) => {
       if (object.name.startsWith("ENV_")) return;
       const group = object.userData.moduleHighlightGroup as ModuleHighlightGroup;
@@ -886,8 +943,3 @@ export function ModellwerkModule({
     </group>
   );
 }
-
-useGLTF.preload(DEFAULT_MODULE_MODEL_URL, DRACO_DECODER_PATH, true);
-useGLTF.preload(CM4000_MODULE_MODEL_URL, DRACO_DECODER_PATH, true);
-useGLTF.preload(MWG9_MODULE_MODEL_URL, DRACO_DECODER_PATH, true);
-useGLTF.preload(MW900_MODULE_MODEL_URL, DRACO_DECODER_PATH, true);

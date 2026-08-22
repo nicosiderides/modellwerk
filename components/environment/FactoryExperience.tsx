@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -58,11 +58,13 @@ import type {
 } from "./utils/sceneTypes";
 import { FactoryLevaPanel } from "./utils/FactoryDebug";
 import ModellwerkLoader from "./ModellwerkLoader";
+import { markStationTransitionStart } from "./utils/FactoryPerformanceTelemetry";
 
 const FactoryCanvas = dynamic(() => import("./FactoryCanvas"), {
   ssr: false,
   loading: () => <ModellwerkLoader variant="boot" />,
 });
+const MemoizedFactoryCanvas = memo(FactoryCanvas);
 
 type ModeConfig = {
   mode: NavigationMode;
@@ -1269,6 +1271,7 @@ export default function FactoryExperience() {
   };
 
   const goToStation = (stationId: StationId) => {
+    markStationTransitionStart(stationId);
     const nextStation = getStationConfig(stationId);
     const firstStationMaterial = nextStation.materialKeys[0];
 
@@ -1293,7 +1296,7 @@ export default function FactoryExperience() {
 
   return (
     <main className="factory-app">
-      <FactoryCanvas
+      <MemoizedFactoryCanvas
         activeStationId={activeStationId}
         guidedMode={guidedMode}
         mode={mode}

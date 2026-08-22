@@ -1,12 +1,11 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   AdaptiveDpr,
   Html,
   KeyboardControls,
-  Preload,
   useProgress,
 } from "@react-three/drei";
 import {
@@ -67,7 +66,7 @@ function SceneFallback() {
   );
 }
 
-function CanvasLoadingOverlay({ onExitStart }: { onExitStart: () => void }) {
+function CanvasLoadingOverlay({ coreReady, onExitStart }: { coreReady: boolean; onExitStart: () => void }) {
   const { active, errors, item, loaded, progress, total } = useProgress();
   return (
     <ModellwerkLoader
@@ -78,9 +77,53 @@ function CanvasLoadingOverlay({ onExitStart }: { onExitStart: () => void }) {
       progress={progress}
       total={total}
       hasError={errors.length > 0}
+      ready={coreReady}
       onExitStart={onExitStart}
     />
   );
+}
+
+function SceneReadyCoordinator({ onReady }: { onReady: () => void }) {
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
+  const camera = useThree((state) => state.camera);
+  const warmedRef = useRef(false);
+  const cleanupRef = useRef<(() => void) | null>(null);
+
+  useFrame(() => {
+    if (warmedRef.current || !scene.environment) return;
+    warmedRef.current = true;
+    const startedAt = performance.now();
+
+    // Drei's <Preload all /> performs six cube-camera renders. One render from
+    // the actual entry camera is enough to initialize geometry and shadow/depth
+    // variants; the extra cube capture is redundant with the authored HDR.
+    gl.compile(scene, camera, scene);
+    gl.render(scene, camera);
+
+    if (new URLSearchParams(window.location.search).get("perf") === "1") {
+      console.info("[MW perf] shader-warmup", JSON.stringify({
+        durationMs: Number((performance.now() - startedAt).toFixed(1)),
+        programs: gl.info.programs?.length ?? 0,
+      }));
+    }
+
+    const previous = scene.onAfterRender;
+    const handleAfterRender: typeof scene.onAfterRender = (...args) => {
+      previous.apply(scene, args);
+      if (scene.onAfterRender === handleAfterRender) scene.onAfterRender = previous;
+      cleanupRef.current = null;
+      queueMicrotask(onReady);
+    };
+    scene.onAfterRender = handleAfterRender;
+    cleanupRef.current = () => {
+      if (scene.onAfterRender === handleAfterRender) scene.onAfterRender = previous;
+    };
+  });
+
+  useLayoutEffect(() => () => cleanupRef.current?.(), []);
+
+  return null;
 }
 
 export default function FactoryCanvas({
@@ -99,6 +142,23 @@ export default function FactoryCanvas({
   experienceStarted,
   onExperienceStart,
 }: FactoryCanvasProps) {
+  const [coreReady, setCoreReady] = useState(false);
+  const coreReadyReportedRef = useRef(false);
+  const markCoreReady = useCallback(() => {
+    if (coreReadyReportedRef.current) return;
+    coreReadyReportedRef.current = true;
+    setCoreReady(true);
+
+    if (new URLSearchParams(window.location.search).get("perf") === "1") {
+      const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+      console.info("[MW perf] core-ready", JSON.stringify({
+        atMs: Number(performance.now().toFixed(1)),
+        resources: resources.length,
+        encodedBytes: resources.reduce((total, resource) => total + resource.encodedBodySize, 0),
+        transferBytes: resources.reduce((total, resource) => total + resource.transferSize, 0),
+      }));
+    }
+  }, []);
   const dpr: [number, number] =
     quality === "ultra"
       ? [1, 1.55]
@@ -112,7 +172,7 @@ export default function FactoryCanvas({
 
   return (
     <div className="factory-canvas">
-      <CanvasLoadingOverlay onExitStart={onExperienceStart} />
+      <CanvasLoadingOverlay coreReady={coreReady} onExitStart={onExperienceStart} />
       <KeyboardControls map={factoryKeyboardMap}>
         <Canvas
           shadows={shadowsEnabled ? { type: PCFShadowMap } : false}
@@ -158,7 +218,7 @@ export default function FactoryCanvas({
               viewMode={viewMode}
               experienceStarted={experienceStarted}
             />
-            <Preload all />
+            <SceneReadyCoordinator onReady={markCoreReady} />
           </Suspense>
         </Canvas>
       </KeyboardControls>

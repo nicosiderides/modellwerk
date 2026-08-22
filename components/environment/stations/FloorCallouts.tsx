@@ -11,10 +11,10 @@ const FLOOR_LAYERS: Array<{ anchor: Vec3; label: Vec3; title: string; detail: st
 ];
 
 export function FloorCallouts({ activeStationId }: { activeStationId: StationId }) {
-  if (activeStationId !== "floor") return null;
+  const active = activeStationId === "floor";
 
   return (
-    <group name="FloorTechnicalCallouts">
+    <group name="FloorTechnicalCallouts" visible={active}>
       {FLOOR_LAYERS.map((layer) => {
         const elbow: Vec3 = [layer.label[0] * 0.78, layer.label[1], layer.label[2]];
         return (
@@ -23,8 +23,21 @@ export function FloorCallouts({ activeStationId }: { activeStationId: StationId 
               <sphereGeometry args={[0.045, 10, 10]} />
               <meshBasicMaterial color="#e2b25b" toneMapped={false} />
             </mesh>
-            <Line points={[layer.anchor, elbow, layer.label]} color="#d9b66f" lineWidth={0.5} transparent opacity={0.68} depthTest={false} />
-            <Html position={layer.label} center distanceFactor={10} zIndexRange={[12, 0]}>
+            <Line
+              points={[layer.anchor, elbow, layer.label]}
+              color="#d9b66f"
+              lineWidth={0.5}
+              transparent
+              opacity={0.68}
+              depthTest={false}
+            />
+            <Html
+              position={layer.label}
+              center
+              distanceFactor={10}
+              zIndexRange={[12, 0]}
+              style={{ display: active ? "block" : "none" }}
+            >
               <div className="structure-callout floor-callout">
                 <span>{layer.title}</span>
                 <small>{layer.detail}</small>

@@ -1,6 +1,6 @@
 "use client";
 
-import { type ElementRef, type MutableRefObject, useEffect, useMemo, useRef } from "react";
+import { type ElementRef, type MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { CameraControls, useKeyboardControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Camera, Euler, MathUtils, Vector3 } from "three";
@@ -29,6 +29,7 @@ type LookState = {
 const LOOK_SENSITIVITY = 0.0022;
 const MIN_WALK_PITCH = -Math.PI * 0.38;
 const MAX_WALK_PITCH = Math.PI * 0.32;
+const INTRO_APPROACH_DISTANCE_SCALE = 1.22;
 const forward = new Vector3();
 const right = new Vector3();
 const move = new Vector3();
@@ -37,6 +38,7 @@ const lookEuler = new Euler(0, 0, 0, "YXZ");
 const moduleAnchor = new Vector3();
 const guidedPosition = new Vector3();
 const guidedTarget = new Vector3();
+const introPosition = new Vector3();
 const cameraOffset = new Vector3();
 const targetOffset = new Vector3();
 
@@ -120,9 +122,7 @@ export function CameraRig({
   const pointerIdRef = useRef<number | null>(null);
   const lastPointerRef = useRef({ x: 0, y: 0 });
 
-  useEffect(() => {
-    if (!experienceStarted) return;
-
+  useLayoutEffect(() => {
     if (guidedMode) {
       moduleAnchor.fromArray(activeStation.modulePose.position);
       // Camera presets are factory-space views. Keeping them independent from the
@@ -143,6 +143,28 @@ export function CameraRig({
         guidedTarget.copy(moduleAnchor).add(targetOffset);
       }
 
+      if (!experienceStarted) {
+        // Start on the same sight line as the overview camera so the intro keeps
+        // its gentle dolly-in without revealing a different cold part of the scene.
+        introPosition
+          .copy(guidedPosition)
+          .sub(guidedTarget)
+          .multiplyScalar(INTRO_APPROACH_DISTANCE_SCALE)
+          .add(guidedTarget);
+        camera.position.copy(introPosition);
+        camera.lookAt(guidedTarget);
+        controlsRef.current?.setLookAt(
+          introPosition.x,
+          introPosition.y,
+          introPosition.z,
+          guidedTarget.x,
+          guidedTarget.y,
+          guidedTarget.z,
+          false
+        );
+        return;
+      }
+
       // Cancel any in-flight orbit before starting the next station view. This
       // prevents a quick station change from replaying the previous camera arc.
       controlsRef.current?.stop();
@@ -157,6 +179,8 @@ export function CameraRig({
       );
       return;
     }
+
+    if (!experienceStarted) return;
 
     const preset = CAMERA_PRESETS[mode];
 

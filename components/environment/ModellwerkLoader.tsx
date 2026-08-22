@@ -12,14 +12,15 @@ type ModellwerkLoaderProps = {
   progress?: number;
   total?: number;
   hasError?: boolean;
+  ready?: boolean;
   onExitStart?: () => void;
 };
 
 const INTRO_PREFERENCE_KEY = "modellwerk:skip-intro:v3";
-const INTRO_MINIMUM_MS = 2800;
-const READY_PAUSE_MS = 420;
-const EXIT_DURATION_MS = 880;
-const ENTER_OPTION_DELAY_MS = 5600;
+const INTRO_MINIMUM_MS = 900;
+const READY_PAUSE_MS = 180;
+const EXIT_DURATION_MS = 560;
+const ENTER_OPTION_DELAY_MS = 2400;
 
 function getLoaderMessage(progress: number, item: string, complete: boolean) {
   if (complete) return "Sistema listo";
@@ -43,6 +44,7 @@ export default function ModellwerkLoader({
   progress = 0,
   total = 0,
   hasError = false,
+  ready = false,
   onExitStart,
 }: ModellwerkLoaderProps) {
   const [skipIntro, setSkipIntro] = useState(false);
@@ -52,8 +54,10 @@ export default function ModellwerkLoader({
   const mountedAtRef = useRef<number>(0);
   const exitStartedRef = useRef(false);
   const measured = variant === "assets" && total > 0;
-  const normalizedProgress = measured ? Math.min(100, Math.max(0, progress)) : 0;
-  const complete = measured && !active && !hasError && normalizedProgress >= 99.5;
+  const measuredProgress = measured ? Math.min(100, Math.max(0, progress)) : 0;
+  const complete = ready || (measured && !active && !hasError && measuredProgress >= 99.5);
+  const normalizedProgress = complete ? 100 : measuredProgress;
+  const blockingError = hasError && !ready;
   const loaderMessage = getLoaderMessage(normalizedProgress, item.toLowerCase(), complete);
 
   useEffect(() => {
@@ -72,13 +76,13 @@ export default function ModellwerkLoader({
   }, []);
 
   useEffect(() => {
-    if (variant !== "assets" || complete || hasError) return;
+    if (variant !== "assets" || complete || blockingError) return;
     const timer = window.setTimeout(() => setEnterOptionAvailable(true), ENTER_OPTION_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [complete, hasError, variant]);
+  }, [blockingError, complete, variant]);
 
   useEffect(() => {
-    if (variant !== "assets" || !complete || hasError || exitStartedRef.current) return;
+    if (variant !== "assets" || !complete || blockingError || exitStartedRef.current) return;
 
     const elapsed = performance.now() - mountedAtRef.current;
     const remainingIntro = skipIntro ? 0 : Math.max(0, INTRO_MINIMUM_MS - elapsed);
@@ -90,7 +94,7 @@ export default function ModellwerkLoader({
     }, Math.max(READY_PAUSE_MS, remainingIntro));
 
     return () => window.clearTimeout(timer);
-  }, [complete, hasError, onExitStart, skipIntro, variant]);
+  }, [blockingError, complete, onExitStart, skipIntro, variant]);
 
   useEffect(() => {
     if (!closing) return;
@@ -113,7 +117,7 @@ export default function ModellwerkLoader({
     "--loader-progress": `${normalizedProgress}%`,
   } as CSSProperties;
 
-  if (hasError) {
+  if (blockingError) {
     return (
       <div className="modellwerk-loader architectural-loader is-error" style={progressStyle} role="alert">
         <div className="loader-error-panel">

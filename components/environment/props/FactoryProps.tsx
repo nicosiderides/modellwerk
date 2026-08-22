@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import type { Group, Material, PointLight } from "three";
+import { Color, Matrix4, Quaternion, Vector3 } from "three";
+import type { InstancedMesh, Material } from "three";
 import type { FactoryMaterialSet } from "../materials/useFactoryMaterials";
 import { BeamBetween } from "../utils/BeamBetween";
 import { InstancedBoxes, type BoxInstance } from "../utils/InstancedBoxes";
@@ -171,40 +172,84 @@ function RoboticArm({
   );
 }
 
-function WeldingArc({ position }: { position: Vec3 }) {
-  const sparks = useRef<Group>(null);
-  const light = useRef<PointLight>(null);
+const WELDING_ARC_POSITIONS: Vec3[] = [
+  [-51.15, 1.03, -13.83],
+  [-40.6, 1.03, -15.45],
+];
+
+function WeldingActivity({ active }: { active: boolean }) {
+  const sparks = useRef<InstancedMesh>(null);
+  const cores = useRef<InstancedMesh>(null);
+  const matrix = useMemo(() => new Matrix4(), []);
+  const position = useMemo(() => new Vector3(), []);
+  const scale = useMemo(() => new Vector3(1, 1, 1), []);
+  const rotation = useMemo(() => new Quaternion(), []);
+
+  const updateSparks = useCallback((phase: number) => {
+    const mesh = sparks.current;
+    if (!mesh) return;
+
+    WELDING_ARC_POSITIONS.forEach((origin, arcIndex) => {
+      for (let sparkIndex = 0; sparkIndex < 14; sparkIndex += 1) {
+        const age = (phase * 0.18 + sparkIndex * 0.137 + arcIndex * 0.31) % 1;
+        const angle = sparkIndex * 2.399 + arcIndex * 0.7;
+        const instanceIndex = arcIndex * 14 + sparkIndex;
+        position.set(
+          origin[0] + Math.cos(angle) * age * 0.42,
+          origin[1] + 0.04 - age * age * 0.5,
+          origin[2] + Math.sin(angle) * age * 0.42
+        );
+        scale.setScalar(1 - age * 0.72);
+        matrix.compose(position, rotation, scale);
+        mesh.setMatrixAt(instanceIndex, matrix);
+      }
+    });
+
+    mesh.instanceMatrix.needsUpdate = true;
+  }, [matrix, position, rotation, scale]);
+
+  useLayoutEffect(() => {
+    const coreMesh = cores.current;
+    if (coreMesh) {
+      WELDING_ARC_POSITIONS.forEach((origin, index) => {
+        position.fromArray(origin);
+        scale.set(1, 1, 1);
+        matrix.compose(position, rotation, scale);
+        coreMesh.setMatrixAt(index, matrix);
+      });
+      coreMesh.instanceMatrix.needsUpdate = true;
+      coreMesh.computeBoundingSphere();
+    }
+
+    const sparkMesh = sparks.current;
+    if (sparkMesh) {
+      const cool = new Color("#e8f8ff");
+      const warm = new Color("#ffbf50");
+      for (let index = 0; index < 28; index += 1) {
+        sparkMesh.setColorAt(index, index % 3 ? warm : cool);
+      }
+      if (sparkMesh.instanceColor) sparkMesh.instanceColor.needsUpdate = true;
+      updateSparks(0);
+      sparkMesh.computeBoundingSphere();
+    }
+  }, [matrix, position, rotation, scale, updateSparks]);
 
   useFrame(({ clock }) => {
+    if (!active) return;
     const phase = clock.elapsedTime * 7.5;
-    if (light.current) light.current.intensity = 1.3 + Math.sin(phase * 3.7) * 0.8;
-    sparks.current?.children.forEach((spark, index) => {
-      const age = (phase * 0.18 + index * 0.137) % 1;
-      const angle = index * 2.399;
-      spark.position.set(
-        Math.cos(angle) * age * 0.42,
-        0.04 - age * age * 0.5,
-        Math.sin(angle) * age * 0.42
-      );
-      spark.scale.setScalar(1 - age * 0.72);
-    });
+    updateSparks(phase);
   });
 
   return (
-    <group position={position} name="ActiveWeldingArc">
-      <pointLight ref={light} color="#80d9ff" intensity={1.5} distance={5.5} decay={2} />
-      <mesh>
+    <group name="StationOneWeldingActivity" visible={active}>
+      <instancedMesh ref={cores} args={[undefined, undefined, WELDING_ARC_POSITIONS.length]} castShadow={false} receiveShadow={false}>
         <sphereGeometry args={[0.055, 12, 8]} />
         <meshBasicMaterial color="#dff8ff" toneMapped={false} />
-      </mesh>
-      <group ref={sparks}>
-        {Array.from({ length: 14 }, (_, index) => (
-          <mesh key={index}>
-            <sphereGeometry args={[0.014, 6, 4]} />
-            <meshBasicMaterial color={index % 3 ? "#ffbf50" : "#e8f8ff"} toneMapped={false} />
-          </mesh>
-        ))}
-      </group>
+      </instancedMesh>
+      <instancedMesh ref={sparks} args={[undefined, undefined, 28]} castShadow={false} receiveShadow={false}>
+        <sphereGeometry args={[0.014, 6, 4]} />
+        <meshBasicMaterial vertexColors toneMapped={false} />
+      </instancedMesh>
     </group>
   );
 }
@@ -318,12 +363,7 @@ function SteelFrameAssembly({ materials, activeStationId }: FactoryPropsProps) {
       <InstancedBoxes items={blackSteelStock} material={materials.graphiteSteel} />
       <RoboticArm materials={materials} position={[-53.4, 0, -13.2]} rotation={-0.28} />
       <RoboticArm materials={materials} position={[-38.6, 0, -16.1]} rotation={Math.PI * 0.88} />
-      {activeStationId === "structure" && (
-        <>
-          <WeldingArc position={[-51.15, 1.03, -13.83]} />
-          <WeldingArc position={[-40.6, 1.03, -15.45]} />
-        </>
-      )}
+      <WeldingActivity active={activeStationId === "structure"} />
       <group position={[-54.3, 0, -18.8]}>
         <GasCylinder materials={materials} position={[0, 0, 0]} color="red" />
         <GasCylinder materials={materials} position={[0.48, 0, 0]} color="yellow" />

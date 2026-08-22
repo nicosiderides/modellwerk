@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import { Color, Fog } from "three";
 import ModuleSlot from "./ModuleSlot";
@@ -9,9 +9,7 @@ import { FactoryShell } from "./factory/FactoryShell";
 import { FloorSystem } from "./factory/FloorSystem";
 import { FactoryLighting } from "./lights/FactoryLighting";
 import { useFactoryMaterials } from "./materials/useFactoryMaterials";
-import { FactoryPostProcessing } from "./postprocessing/FactoryPostProcessing";
 import { FactoryProps } from "./props/FactoryProps";
-import { AssetPipelineWarmup } from "./utils/AssetPipelineWarmup";
 import type {
   ModuleMaterialSelection,
   ModuleViewMode,
@@ -20,6 +18,13 @@ import type {
   StationId,
 } from "./utils/sceneTypes";
 import { FactoryDebugControls } from "./utils/FactoryDebug";
+import { FactoryPerformanceTelemetry } from "./utils/FactoryPerformanceTelemetry";
+
+const LazyFactoryPostProcessing = lazy(() =>
+  import("./postprocessing/FactoryPostProcessing").then((module) => ({
+    default: module.FactoryPostProcessing,
+  }))
+);
 
 type FactorySceneProps = {
   activeStationId: StationId;
@@ -62,7 +67,6 @@ export function FactoryScene({
 
   return (
     <>
-      <AssetPipelineWarmup />
       <FactoryLighting activeStationId={activeStationId} guidedMode={guidedMode} materials={materials} quality={quality} />
       <FloorSystem activeStationId={activeStationId} materials={materials} />
       <FactoryShell materials={materials} />
@@ -87,7 +91,12 @@ export function FactoryScene({
         experienceStarted={experienceStarted}
       />
       <FactoryDebugControls />
-      <FactoryPostProcessing quality={quality} />
+      <FactoryPerformanceTelemetry activeStationId={activeStationId} />
+      {quality === "ultra" && (
+        <Suspense fallback={null}>
+          <LazyFactoryPostProcessing quality={quality} />
+        </Suspense>
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Billboard, Line, Text } from "@react-three/drei";
+import { Html, Line } from "@react-three/drei";
 import type { StationId, Vec3 } from "../utils/sceneTypes";
 
 type StructuralCallout = {
@@ -19,14 +19,14 @@ const CALLOUTS: StructuralCallout[] = [
 ];
 
 export function StructuralCallouts({ activeStationId }: { activeStationId: StationId }) {
-  if (activeStationId !== "structure") return null;
+  const active = activeStationId === "structure";
 
   return (
-    <group name="StructuralTechnicalCallouts">
+    <group name="StructuralTechnicalCallouts" visible={active}>
       {CALLOUTS.map((callout) => (
         <group key={callout.id}>
           <mesh position={callout.anchor}>
-              <sphereGeometry args={[0.05, 12, 12]} />
+            <sphereGeometry args={[0.05, 12, 12]} />
             <meshBasicMaterial color="#e2b25b" toneMapped={false} />
           </mesh>
           <Line
@@ -37,49 +37,18 @@ export function StructuralCallouts({ activeStationId }: { activeStationId: Stati
             opacity={0.72}
             depthTest={false}
           />
-          <Billboard position={callout.label} follow>
-            <mesh position={[0, 0, -0.01]} renderOrder={20}>
-              <planeGeometry args={[1.72, 0.52]} />
-              <meshBasicMaterial
-                color="#111619"
-                transparent
-                opacity={0.9}
-                depthTest={false}
-                depthWrite={false}
-                toneMapped={false}
-              />
-            </mesh>
-            <mesh position={[-0.84, 0, 0.005]} renderOrder={21}>
-              <boxGeometry args={[0.035, 0.52, 0.012]} />
-              <meshBasicMaterial color="#dfad4e" depthTest={false} toneMapped={false} />
-            </mesh>
-            <Text
-              position={[-0.73, 0.1, 0.018]}
-              fontSize={0.13}
-              letterSpacing={0.035}
-              anchorX="left"
-              anchorY="middle"
-              color="#fff2d3"
-              material-depthTest={false}
-              material-toneMapped={false}
-              renderOrder={22}
-            >
-              {callout.title.toUpperCase()}
-            </Text>
-            <Text
-              position={[-0.73, -0.12, 0.018]}
-              fontSize={0.085}
-              letterSpacing={0.015}
-              anchorX="left"
-              anchorY="middle"
-              color="#9eaaa9"
-              material-depthTest={false}
-              material-toneMapped={false}
-              renderOrder={22}
-            >
-              {callout.detail}
-            </Text>
-          </Billboard>
+          <Html
+            position={callout.label}
+            center
+            distanceFactor={10}
+            zIndexRange={[12, 0]}
+            style={{ display: active ? "block" : "none" }}
+          >
+            <div className="structure-callout">
+              <span>{callout.title}</span>
+              <small>{callout.detail}</small>
+            </div>
+          </Html>
         </group>
       ))}
     </group>
