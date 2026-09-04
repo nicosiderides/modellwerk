@@ -6,11 +6,12 @@
   display: grid;
   overflow: hidden;
   place-items: center;
-  background:
-    radial-gradient(circle at 50% 47%, rgba(200, 168, 78, 0.055), transparent 20%),
-    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.018), transparent 28%),
-    linear-gradient(125deg, #0d1010 0%, #080a0a 56%, #10100e 100%);
-  color: #e9e7df;
+  background-color: var(--mw-ink);
+  background-image:
+    linear-gradient(90deg, rgba(245, 241, 232, 0.026) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(245, 241, 232, 0.026) 1px, transparent 1px);
+  background-size: 44px 44px;
+  color: var(--mw-paper);
   clip-path: inset(0);
 }
 
@@ -28,7 +29,7 @@
 }
 
 .modellwerk-loader.architectural-loader::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 19%, transparent 78%, rgba(0, 0, 0, 0.24));
+  display: none;
 }
 
 .architectural-loader.is-closing {
@@ -139,15 +140,15 @@
   bottom: 0;
   width: 17%;
   height: 58%;
-  border: 1px solid rgba(200, 168, 78, 0.2);
+  border: 1px solid rgba(200, 155, 60, 0.28);
   background: transparent;
 }
 
 .module-node {
   width: 4px;
   height: 4px;
-  border: 1px solid rgba(200, 168, 78, 0.38);
-  background: #080a0a;
+  border: 1px solid rgba(200, 155, 60, 0.46);
+  background: var(--mw-ink);
   transform: translate(-50%, -50%);
 }
 
@@ -165,7 +166,7 @@
 
 .coordinate-a { top: 23%; left: 9%; }
 .coordinate-b { right: 9%; bottom: 21%; }
-.coordinate-c { right: 9%; top: 23%; color: rgba(200, 168, 78, 0.34); }
+.coordinate-c { right: 9%; top: 23%; color: rgba(200, 155, 60, 0.5); }
 
 .architectural-loader.is-ready .loader-technical-field {
   opacity: 0.42;
@@ -239,7 +240,7 @@
 
 .logo-monogram-draft {
   opacity: 0;
-  filter: brightness(1.18) drop-shadow(0 0 1px rgba(233, 231, 223, 0.34));
+  filter: none;
   clip-path: inset(0 50%);
   animation: logoDraftReveal 720ms 180ms var(--mw-ease-precision) forwards;
 }
@@ -247,7 +248,7 @@
 .logo-monogram-solid {
   opacity: 0.96;
   clip-path: inset(100% 0 0 0);
-  filter: sepia(0.03) saturate(0.72) brightness(0.96);
+  filter: none;
   animation: logoSurfaceAssemble 860ms 520ms var(--mw-ease-precision) forwards;
 }
 
@@ -257,30 +258,48 @@
   bottom: -10%;
   left: -18%;
   width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(233, 231, 223, 0.72) 35%, rgba(200, 168, 78, 0.62) 62%, transparent);
-  box-shadow: 0 0 18px rgba(200, 168, 78, 0.18);
+  display: none;
   opacity: 0;
 }
 
 .logo-assembly.is-ready .logo-light-pass {
-  animation: logoFinalPass 520ms var(--mw-ease-precision) forwards;
+  animation: none;
 }
 
 .logo-assembly.is-ready .logo-monogram-solid {
-  filter: sepia(0.02) saturate(0.75) brightness(1.02) drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  filter: none;
   transition: filter 320ms ease;
 }
 
 .logo-wordmark {
   margin-top: 9px;
-  color: #e9e7df;
-  font-family: var(--mw-font-ui);
-  font-size: 14px;
-  font-weight: 560;
-  letter-spacing: 0.3em;
+  color: var(--mw-paper);
+  font-family: var(--mw-font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   opacity: 0;
-  text-indent: 0.3em;
+  text-indent: 0.08em;
   animation: logoWordmarkSet 600ms 950ms var(--mw-ease-precision) forwards;
+}
+
+.logo-division,
+.logo-product {
+  font-family: var(--mw-font-tech);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.logo-division {
+  margin-top: 9px;
+  color: var(--mw-signal);
+}
+
+.logo-product {
+  margin-top: 5px;
+  color: rgba(245, 241, 232, 0.46);
 }
 
 /* Industrial progress ----------------------------------------------------- */
@@ -326,7 +345,7 @@
   display: block;
   width: var(--loader-progress);
   height: 100%;
-  background: linear-gradient(90deg, rgba(139, 110, 38, 0.74), #c8a84e);
+  background: var(--mw-signal);
   transition: width 360ms var(--mw-ease-precision);
 }
 
@@ -336,8 +355,8 @@
   left: var(--loader-progress);
   width: 4px;
   height: 9px;
-  border: 1px solid rgba(200, 168, 78, 0.72);
-  background: #080a0a;
+  border: 1px solid var(--mw-signal);
+  background: var(--mw-ink);
   transform: translate(-50%, -50%);
   transition: left 360ms var(--mw-ease-precision);
 }
@@ -369,13 +388,13 @@
 
 .precision-progress-meta em {
   flex: 0 0 auto;
-  color: rgba(200, 168, 78, 0.48);
+  color: rgba(200, 155, 60, 0.7);
   font-style: normal;
 }
 
 .architectural-loader.is-ready .precision-progress-copy span,
 .architectural-loader.is-ready .precision-progress-copy strong {
-  color: rgba(200, 168, 78, 0.82);
+  color: var(--mw-signal);
 }
 
 .architectural-loader .loader-skip {
@@ -400,7 +419,7 @@
 .architectural-loader .loader-skip:hover,
 .architectural-loader .loader-skip:focus-visible {
   color: rgba(233, 231, 223, 0.82);
-  outline: 1px solid rgba(200, 168, 78, 0.48);
+  outline: 1px solid rgba(200, 155, 60, 0.62);
   outline-offset: 3px;
 }
 
@@ -445,9 +464,9 @@
   min-width: 148px;
   min-height: 40px;
   margin-top: 24px;
-  border: 1px solid rgba(200, 168, 78, 0.48);
+  border: 1px solid rgba(200, 155, 60, 0.58);
   border-radius: 2px;
-  background: rgba(200, 168, 78, 0.07);
+  background: rgba(200, 155, 60, 0.07);
   color: #e9e7df;
   cursor: pointer;
   font-family: var(--mw-font-tech);
@@ -458,9 +477,9 @@
 
 .loader-error-panel > button:hover,
 .loader-error-panel > button:focus-visible {
-  border-color: rgba(200, 168, 78, 0.85);
-  background: rgba(200, 168, 78, 0.12);
-  outline: 2px solid rgba(200, 168, 78, 0.36);
+  border-color: var(--mw-signal);
+  background: rgba(200, 155, 60, 0.12);
+  outline: 2px solid rgba(200, 155, 60, 0.36);
   outline-offset: 2px;
 }
 
@@ -516,8 +535,8 @@
 
   .logo-wordmark {
     font-size: 12px;
-    letter-spacing: 0.25em;
-    text-indent: 0.25em;
+    letter-spacing: 0.08em;
+    text-indent: 0.08em;
   }
 
   .precision-progress {

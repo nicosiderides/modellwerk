@@ -54,7 +54,7 @@ export const PRODUCT_MODULES: ProductModule[] = [
     id: "MW40",
     name: "MW40",
     series: "Habitable",
-    available: true,
+    available: false,
     dimensions: { length: 6, width: 3, height: 2.8 },
     area: 18,
     basePrice: 34000,
@@ -124,6 +124,8 @@ export const PRODUCT_MODULES: ProductModule[] = [
     priceOnRequest: true,
   },
 ];
+
+export const AVAILABLE_PRODUCT_MODULES = PRODUCT_MODULES.filter((product) => product.available);
 
 export const PRODUCT_OPTION_GROUPS: ProductOptionGroup[] = [
   {

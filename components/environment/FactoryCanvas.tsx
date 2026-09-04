@@ -59,7 +59,7 @@ function SceneFallback() {
   return (
     <Html center>
       <div className="loading-lockup">
-        <img src={assetPath("/brand/mw-lockup-light.svg")} alt="MODELLWERK" />
+        <img src={assetPath("/brand/mw-lockup-light.svg?v=3")} alt="MODELLWERK" />
         <span>Cargando geometria</span>
       </div>
     </Html>

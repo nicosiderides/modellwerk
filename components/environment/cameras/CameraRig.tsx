@@ -30,6 +30,9 @@ const LOOK_SENSITIVITY = 0.0022;
 const MIN_WALK_PITCH = -Math.PI * 0.38;
 const MAX_WALK_PITCH = Math.PI * 0.32;
 const INTRO_APPROACH_DISTANCE_SCALE = 1.32;
+const REFERENCE_MODULE_DIMENSIONS = { length: 6.05, width: 2.43, height: 2.83 };
+const MIN_MODULE_FRAME_SCALE = 0.62;
+const MAX_MODULE_FRAME_SCALE = 2.1;
 const forward = new Vector3();
 const right = new Vector3();
 const move = new Vector3();
@@ -41,6 +44,17 @@ const guidedTarget = new Vector3();
 const introPosition = new Vector3();
 const cameraOffset = new Vector3();
 const targetOffset = new Vector3();
+
+function projectedModuleSpan(
+  dimensions: { length: number; width: number },
+  cameraPosition: readonly [number, number, number]
+) {
+  const viewX = Math.abs(cameraPosition[0]);
+  const viewZ = Math.abs(cameraPosition[2]);
+  const viewLength = Math.hypot(viewX, viewZ) || 1;
+
+  return (dimensions.length * viewZ + dimensions.width * viewX) / viewLength;
+}
 
 function clampCamera(position: Vector3, mode: NavigationMode) {
   position.x = MathUtils.clamp(position.x, CAMERA_BOUNDS.minX, CAMERA_BOUNDS.maxX);
@@ -112,8 +126,15 @@ export function CameraRig({
   const gl = useThree((state) => state.gl);
   const activeStation = getStationConfig(activeStationId);
   const activeCamera = activeStation.camera;
-  const moduleFrameScale = MathUtils.clamp(moduleDimensions.length / 6.05, 1, 2.1);
-  const moduleHeightLift = Math.max(0, (moduleDimensions.height - 2.83) * 0.45);
+  const referenceSpan = projectedModuleSpan(REFERENCE_MODULE_DIMENSIONS, activeCamera.position);
+  const horizontalFrameScale = projectedModuleSpan(moduleDimensions, activeCamera.position) / referenceSpan;
+  const verticalFrameScale = moduleDimensions.height / REFERENCE_MODULE_DIMENSIONS.height;
+  const moduleFrameScale = MathUtils.clamp(
+    Math.max(horizontalFrameScale, verticalFrameScale * 0.82),
+    MIN_MODULE_FRAME_SCALE,
+    MAX_MODULE_FRAME_SCALE
+  );
+  const moduleHeightLift = (moduleDimensions.height - REFERENCE_MODULE_DIMENSIONS.height) * 0.5;
   const effectiveMode: NavigationMode = guidedMode ? "orbit" : mode;
   const yawRef = useRef(0);
   const pitchRef = useRef(0);
@@ -131,7 +152,10 @@ export function CameraRig({
       cameraOffset.fromArray(activeCamera.position);
       cameraOffset.x *= moduleFrameScale;
       cameraOffset.z *= moduleFrameScale;
-      cameraOffset.y += moduleHeightLift;
+      cameraOffset.y =
+        activeCamera.target[1] +
+        moduleHeightLift +
+        (activeCamera.position[1] - activeCamera.target[1]) * moduleFrameScale;
       guidedPosition.copy(moduleAnchor).add(cameraOffset);
 
       if (activeStation.modulePose.cameraTarget) {
@@ -279,7 +303,7 @@ export function CameraRig({
         <CameraControls
           ref={controlsRef}
           makeDefault
-          minDistance={guidedMode ? activeCamera.minDistance : 8}
+          minDistance={guidedMode ? Math.max(2.4, activeCamera.minDistance * moduleFrameScale) : 8}
           maxDistance={guidedMode ? activeCamera.maxDistance * moduleFrameScale : 86}
           minPolarAngle={guidedMode ? activeCamera.minPolarAngle : Math.PI * 0.08}
           maxPolarAngle={guidedMode ? activeCamera.maxPolarAngle : Math.PI * 0.49}

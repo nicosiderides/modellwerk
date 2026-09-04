@@ -31,10 +31,10 @@ import {
   MODULE_MATERIAL_CATEGORIES,
 } from "./module/moduleOptions";
 import {
+  AVAILABLE_PRODUCT_MODULES,
   DEFAULT_PRODUCT_CONFIGURATION,
   formatUsd,
   getProductOptionGroup,
-  PRODUCT_MODULES,
 } from "./product/productOptions";
 import { calculateProductQuote } from "./product/modellwerkConfigurator";
 import type {
@@ -296,10 +296,11 @@ function FactoryHud({
   return (
     <div className={`hud hud-premium ${experienceStarted ? "hud-entered" : "hud-awaiting-entry"} ${isOverview ? "hud-overview" : "hud-station"} ${isStructure ? "hud-structure" : ""} ${isFloor ? "hud-floor" : ""} ${isWalls ? "hud-walls" : ""} ${isRoof ? "hud-roof" : ""} ${isOpenings ? "hud-openings" : ""} ${isFinishes ? "hud-finishes" : ""}`}>
       <header className="hud-top">
-        <div className="brand" aria-label="MODELLWERK">
-          <img src={assetPath("/brand/mw-lockup-light.svg")} alt="MODELLWERK" />
-          <span className="brand-subtitle">{productConfiguration.moduleId}</span>
-        </div>
+        <a className="brand" href="../" aria-label="Volver a MODELLWERK" title="Volver a MODELLWERK">
+          <img src={assetPath("/brand/mw-lockup-light.svg?v=3")} alt="MODELLWERK" />
+          <span className="brand-subtitle">MW / CONFIGURE</span>
+          <span className="brand-home-cue" aria-hidden="true">←</span>
+        </a>
 
         <div className="header-status" aria-label="Resumen del modulo">
           <div>
@@ -579,7 +580,7 @@ function FactoryHud({
                 <small>Seleccioná la escala base</small>
               </div>
               <div className="quickstart-options module-options">
-                {PRODUCT_MODULES.map((productModule) => {
+                {AVAILABLE_PRODUCT_MODULES.map((productModule) => {
                   const selected = productConfiguration.moduleId === productModule.id;
                   return (
                     <button
@@ -633,7 +634,7 @@ function FactoryHud({
               </div>
               <div className="preset-options">
                 {[
-                  { label: "Esencial", detail: "MW40 / Oficina", module: "MW40" as const, use: "office" },
+                  { label: "Compacto", detail: "CM 4000 CV / Oficina", module: "CM4000" as const, use: "office" },
                   { label: "Profesional", detail: "MW50 / Oficina", module: "MW50" as const, use: "office" },
                   { label: "Habitat", detail: "MW50 / Vivienda", module: "MW50" as const, use: "housing" },
                 ].map((preset) => (
@@ -922,7 +923,7 @@ function FactoryHud({
               <div className="configurator-section" role="tabpanel">
                 {showModuleSelector && (
                   <div className="product-module-row" aria-label="Modelo de modulo">
-                    {PRODUCT_MODULES.map((productModule) => (
+                    {AVAILABLE_PRODUCT_MODULES.map((productModule) => (
                       <button
                         key={productModule.id}
                         className={[

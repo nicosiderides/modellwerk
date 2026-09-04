@@ -1,25 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 :root {
-  --mw-ink: #111315;
-  --mw-graphite: #24282b;
   --mw-steel: #687078;
-  --mw-concrete: #c9c4b8;
-  --mw-paper: #f5f1e8;
   --mw-paper-soft: rgba(245, 241, 232, 0.9);
   --mw-panel-dark: rgba(18, 20, 22, 0.7);
   --mw-panel: rgba(245, 241, 232, 0.86);
   --mw-panel-muted: rgba(36, 40, 43, 0.58);
-  --mw-line: rgba(245, 241, 232, 0.16);
-  --mw-line-dark: rgba(17, 19, 21, 0.14);
-  --mw-accent: #c89b3c;
-  --mw-accent-soft: #f0d38f;
+  --mw-line: var(--mw-line-light);
+  --mw-accent: var(--mw-signal);
+  --mw-accent-soft: var(--mw-signal);
   --mw-ok: #83a88b;
-  --mw-blueprint: #6c98a8;
-  --mw-radius: 6px;
   --mw-blur: blur(18px) saturate(1.08);
-  --mw-shadow-panel: 0 22px 70px rgba(0, 0, 0, 0.24);
-  --mw-transition: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  --mw-font-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --mw-font-tech: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --mw-font-ui: var(--mw-font-text);
 }
 
 * {
@@ -36,6 +28,15 @@ body {
   font-family: var(--mw-font-ui);
   font-feature-settings: "ss01", "ss02";
   letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+.brand,
+.logo-wordmark {
+  font-family: var(--mw-font-display);
 }
 
 button {
@@ -117,7 +118,7 @@ canvas {
   bottom: 28px;
   width: 64px;
   height: 36px;
-  border: 1px solid rgba(240, 211, 143, 0.48);
+  border: 1px solid rgba(200, 155, 60, 0.48);
 }
 
 .loading-module-mark::after {
@@ -125,7 +126,7 @@ canvas {
   bottom: 18px;
   width: 94px;
   height: 1px;
-  background: rgba(240, 211, 143, 0.62);
+  background: rgba(200, 155, 60, 0.62);
 }
 
 .loading-module-mark span:nth-child(1) {
@@ -241,6 +242,7 @@ canvas {
   padding: 10px 12px;
   background: linear-gradient(180deg, rgba(18, 20, 22, 0.8), rgba(18, 20, 22, 0.58));
   color: #fff;
+  text-decoration: none;
 }
 
 .brand img {
@@ -259,6 +261,20 @@ canvas {
   color: rgba(245, 241, 232, 0.68);
   font-family: var(--mw-font-tech);
   font-size: 11px;
+}
+
+.brand-home-cue {
+  margin-left: auto;
+  color: rgba(245, 241, 232, 0.5);
+  font-family: var(--mw-font-tech);
+  font-size: 10px;
+  transition: color var(--mw-transition), transform var(--mw-transition);
+}
+
+.brand:hover .brand-home-cue,
+.brand:focus-visible .brand-home-cue {
+  color: var(--mw-signal);
+  transform: translateX(-2px);
 }
 
 .header-status {
@@ -370,7 +386,7 @@ canvas {
 .soft-action:hover,
 .icon-action:hover,
 .icon-action.active {
-  border-color: rgba(240, 211, 143, 0.48);
+  border-color: rgba(200, 155, 60, 0.48);
   background: rgba(45, 43, 38, 0.82);
   color: #fff;
 }
@@ -435,7 +451,7 @@ canvas {
 }
 
 .quality-menu-item.active {
-  border-color: rgba(240, 211, 143, 0.64);
+  border-color: rgba(200, 155, 60, 0.64);
   background: rgba(245, 241, 232, 0.14);
   color: #fff;
 }
@@ -470,7 +486,7 @@ canvas {
 
 .module-summary {
   width: min(320px, calc(100vw - 40px));
-  border-left: 2px solid rgba(240, 211, 143, 0.7);
+  border-left: 2px solid rgba(200, 155, 60, 0.7);
   padding: 4px 0 5px 16px;
   color: rgba(255, 255, 255, 0.94);
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.34);
@@ -843,7 +859,7 @@ canvas {
 }
 
 .mode-button.active {
-  border-color: rgba(240, 211, 143, 0.44);
+  border-color: rgba(200, 155, 60, 0.44);
   background: rgba(245, 241, 232, 0.92);
   color: var(--mw-ink);
 }
@@ -1308,7 +1324,7 @@ canvas {
   display: inline-flex;
   min-height: 30px;
   align-items: center;
-  border: 1px solid rgba(240, 211, 143, 0.7);
+  border: 1px solid rgba(200, 155, 60, 0.7);
   border-radius: 5px;
   padding: 6px 10px;
   background: rgba(17, 19, 21, 0.78);
@@ -1820,7 +1836,7 @@ canvas {
 .hud-overview .station-panel .overview-intro p { padding: 0; color: rgba(245,241,232,.68); font-size: 12px; line-height: 1.65; }
 .overview-intro-actions { display: grid; gap: 8px; margin-top: 22px; }
 .overview-intro-actions button { display: flex; min-height: 42px; align-items: center; justify-content: center; gap: 9px; border: 1px solid rgba(200,155,60,.52); border-radius: 4px; background: transparent; color: rgba(245,241,232,.88); cursor: pointer; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
-.overview-intro-actions button.primary { background: linear-gradient(135deg, #d3aa5a, #a87928); color: #111315; }
+.overview-intro-actions button.primary { background: var(--mw-signal); color: var(--mw-ink); }
 .overview-intro-actions svg { width: 15px; height: 15px; }
 .overview-specs { display: flex; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.09); color: rgba(245,241,232,.43); font-family: var(--mw-font-tech); font-size: 8px; }
 

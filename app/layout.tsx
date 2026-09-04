@@ -1,16 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { assetPath } from "../components/environment/utils/assetPath";
+import "../assets/mw-tokens.css";
 import "./globals.css";
 import "./modellwerk-premium.css";
 import "../components/loading/loading.css";
 
 export const metadata: Metadata = {
-  title: "MODELLWERK — Configurador modular",
+  title: "MODELLWERK / CONFIGURE — Visor 1.0",
   description:
-    "Configurador 3D industrial para diseñar módulos Modellwerk listos para fabricar.",
+    "Experiencia BIM interactiva desarrollada por MODELLWERK para explorar, comprender y configurar arquitectura directamente desde la web.",
   icons: {
     icon: {
-      url: assetPath("/brand/mw-isotype.svg"),
+      url: assetPath("/brand/favicon.svg?v=5"),
       type: "image/svg+xml",
     },
   },

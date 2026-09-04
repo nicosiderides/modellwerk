@@ -13,7 +13,7 @@ export const STATIONS: FactoryStation[] = [
     description: "Lectura completa de la nave, el modulo habitable y las zonas de fabricacion.",
     productionZone: "Showroom central",
     camera: {
-      position: [7.15, 2.3, 5.75],
+      position: [7.2, 3.05, 8.15],
       target: [0, 1.42, 0],
       minDistance: 5.7,
       maxDistance: 32,
@@ -273,38 +273,11 @@ export function getStationModulePose(stationId: StationId) {
   return getStationConfig(stationId).modulePose;
 }
 
-function pushRoutePoint(points: Vec3[], point: Vec3) {
-  const previous = points[points.length - 1];
-  if (previous && previous[0] === point[0] && previous[2] === point[2]) return;
-  points.push(point);
-}
-
-export function getModuleTravelPoints(fromStationId: StationId, toStationId: StationId) {
-  const fromIndex = getStationIndex(fromStationId);
-  const toIndex = getStationIndex(toStationId);
-  const points: Vec3[] = [];
-
-  if (fromIndex === toIndex) {
-    pushRoutePoint(points, STATIONS[toIndex].modulePose.position);
-    return points;
-  }
-
-  if (toIndex > fromIndex) {
-    for (let index = fromIndex + 1; index <= toIndex; index += 1) {
-      STATIONS[index].modulePose.travelWaypoints?.forEach((point) => pushRoutePoint(points, point));
-      pushRoutePoint(points, STATIONS[index].modulePose.position);
-    }
-    return points;
-  }
-
-  for (let index = fromIndex; index > toIndex; index -= 1) {
-    [...(STATIONS[index].modulePose.travelWaypoints ?? [])]
-      .reverse()
-      .forEach((point) => pushRoutePoint(points, point));
-    pushRoutePoint(points, STATIONS[index - 1].modulePose.position);
-  }
-
-  return points;
+export function getModuleTravelPoints(_fromStationId: StationId, toStationId: StationId) {
+  // A station selection is a direct command, not a replay of the production
+  // history. The conveyor starts from its current rendered position and heads
+  // straight to the requested cell, including General and backward jumps.
+  return [getStationModulePose(toStationId).position];
 }
 
 export const MODULE_ROUTE_POINTS: Vec3[] = [
