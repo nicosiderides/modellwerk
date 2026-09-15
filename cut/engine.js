@@ -1,4 +1,7 @@
 export const PALETTE = ['#df754d','#538b97','#b6a16c','#8c91b1','#80a38b','#bf8589','#8babbc','#ab9ac1'];
+export const MAX_PIECES = 15000;
+export const MAX_PIECE_QTY = 15000;
+const LARGE_ORDER_THRESHOLD = 3000;
 export function demoProject(){return {version:1,name:'Estructura modular',reference:'OT-024',demo:true,settings:{kerf:3,trim:10,reusable:300,rotate:true},materials:[
  {id:'m1',name:'Tubo rectangular',spec:'80 × 40 × 2 mm',kind:'tube',length:6000,width:80,height:40,thickness:2,stock:16,bundle:8},
  {id:'m2',name:'Tubo cuadrado',spec:'40 × 40 × 2 mm',kind:'tube',length:6000,width:40,height:40,thickness:2,stock:10,bundle:5},
@@ -32,23 +35,44 @@ export function validateProject(p){
  }
  let total=0;ids.clear();
  for(const piece of p.pieces){
-  if(!str(piece.id)||!/^[-A-Za-z0-9_]{1,80}$/.test(piece.id)||ids.has(piece.id)||!str(piece.name)||!p.materials.some(m=>m.id===piece.material)||!num(piece.length,1,30000)||!num(piece.width,0,10000)||!num(piece.qty,1,1000)||!Number.isInteger(piece.qty))fail('Revisá las medidas, material y cantidad de cada pieza.');
+  if(!str(piece.id)||!/^[-A-Za-z0-9_]{1,80}$/.test(piece.id)||ids.has(piece.id)||!str(piece.name)||!p.materials.some(m=>m.id===piece.material)||!num(piece.length,1,30000)||!num(piece.width,0,10000)||!num(piece.qty,1,MAX_PIECE_QTY)||!Number.isInteger(piece.qty))fail('Revisá las medidas, material y cantidad de cada pieza.');
   if(p.materials.find(m=>m.id===piece.material).kind==='plate'&&piece.width<=0)fail('Las piezas de placa necesitan un ancho mayor a cero.');
   ids.add(piece.id);total+=piece.qty;
  }
- if(total>3000)fail('Esta orden admite hasta 3.000 piezas. Dividí la producción en órdenes menores.');
+ if(total>MAX_PIECES)fail('Esta orden admite hasta 15.000 piezas. Dividí la producción en órdenes menores.');
  return p;
 }
 
 export function signature(p){return JSON.stringify({materials:p.materials,pieces:p.pieces,settings:p.settings});}
 const expand=rows=>rows.flatMap((p,color)=>Array.from({length:p.qty},(_,i)=>({...p,unit:i+1,color:PALETTE[color%PALETTE.length]})));
 
+function fastTubeBins(items,capacity,s){
+ let base=1;while(base<items.length)base*=2;
+ const tree=new Float64Array(base*2),bins=[];
+ const update=(index,value)=>{let node=base+index;tree[node]=value;while(node>1){node=Math.floor(node/2);tree[node]=Math.max(tree[node*2],tree[node*2+1]);}};
+ const firstAtLeast=value=>{
+  if(tree[1]<value)return -1;
+  let node=1;while(node<base){node*=2;if(tree[node]<value)node++;}
+  return node-base;
+ };
+ for(const piece of [...items].sort((a,b)=>b.length-a.length)){
+  let index=firstAtLeast(piece.length),bin;
+  if(index<0){index=bins.length;bin={parts:[],remaining:capacity,used:0,kerf:0};bins.push(bin);}else bin=bins[index];
+  const saw=Math.min(s.kerf,bin.remaining-piece.length);
+  bin.parts.push({...piece,x:s.trim+bin.used,y:0,rotated:false,cut:saw});
+  bin.used+=piece.length+saw;bin.kerf+=saw;bin.remaining-=piece.length+saw;
+  update(index,bin.remaining);
+ }
+ return bins;
+}
+
 function tubes(items,m,s){
  const capacity=m.length-2*s.trim;
  const rejected=items.filter(p=>p.length>capacity).map(p=>({...p,reason:'Supera el largo útil de la barra'}));
  const valid=items.filter(p=>p.length<=capacity);
  let best=[];
- for(const strategy of ['best','first']){
+ if(valid.length>LARGE_ORDER_THRESHOLD)best=fastTubeBins(valid,capacity,s);
+ else for(const strategy of ['best','first']){
   const bins=[];
   for(const piece of [...valid].sort((a,b)=>b.length-a.length)){
    let candidates=bins.filter(b=>b.remaining>=piece.length);
@@ -65,10 +89,48 @@ function tubes(items,m,s){
  return {bins:best.map(b=>({...b,free:b.remaining>0?[{x:s.trim+b.used,y:0,w:b.remaining,h:m.height}]:[],area:b.parts.reduce((a,p)=>a+p.length,0)})),rejected};
 }
 
+function shelfPlateBins(items,m,s,orientation){
+ const W=m.length-2*s.trim,H=m.width-2*s.trim,right=s.trim+W,bottom=s.trim+H;
+ const orient=piece=>{
+  const variants=[{w:piece.length,h:piece.width,rotated:false},...(s.rotate&&piece.length!==piece.width?[{w:piece.width,h:piece.length,rotated:true}]:[])].filter(v=>v.w<=W&&v.h<=H);
+  variants.sort((a,b)=>orientation==='wide'?a.h-b.h||b.w-a.w:a.w-b.w||b.h-a.h);
+  return variants[0];
+ };
+ const prepared=items.map(piece=>({piece,fit:orient(piece)})).filter(v=>v.fit).map(({piece,fit})=>({...piece,...fit})).sort((a,b)=>b.h-a.h||b.w-a.w);
+ const bins=[];let bin,row;
+ const newBin=()=>{bin={parts:[],rows:[],kerf:0};bins.push(bin);row=null;};
+ const newRow=height=>{
+  const y=row?row.y+row.height+s.kerf:s.trim;
+  if(y+height>bottom)return false;
+  row={x:s.trim,y,height,count:0};bin.rows.push(row);return true;
+ };
+ for(const piece of prepared){
+  if(!bin)newBin();
+  if(!row||row.x+piece.w>right){
+   if(!newRow(piece.h)){newBin();newRow(piece.h);}
+  }
+  const firstInRow=row.count===0,region={x:row.x,y:row.y,w:right-row.x,h:firstInRow?bottom-row.y:row.height};
+  bin.parts.push({...piece,x:row.x,y:row.y,region,split:firstInRow?'horizontal':'vertical'});
+  row.x+=piece.w+s.kerf;row.count++;
+ }
+ for(const b of bins){
+  const free=b.rows.map(r=>({x:r.x,y:r.y,w:Math.max(0,right-r.x),h:r.height})).filter(r=>r.w>0&&r.h>0);
+  const last=b.rows.at(-1),y=last?last.y+last.height+s.kerf:s.trim;
+  if(y<bottom)free.push({x:s.trim,y,w:W,h:bottom-y});
+  b.free=free;b.area=b.parts.reduce((a,p)=>a+p.length*p.width,0);delete b.rows;
+ }
+ return bins;
+}
+
 function plates(items,m,s){
  const W=m.length-2*s.trim,H=m.width-2*s.trim;
  const fits=p=>(p.length<=W&&p.width<=H)||(s.rotate&&p.width<=W&&p.length<=H);
  const rejected=items.filter(p=>!fits(p)).map(p=>({...p,reason:'No entra en la placa útil'}));
+ if(items.length>LARGE_ORDER_THRESHOLD){
+  const valid=items.filter(fits),candidates=['wide','tall'].map(mode=>shelfPlateBins(valid,m,s,mode));
+  candidates.sort((a,b)=>a.length-b.length||b.reduce((n,v)=>n+Math.max(0,...v.free.map(r=>r.w*r.h)),0)-a.reduce((n,v)=>n+Math.max(0,...v.free.map(r=>r.w*r.h)),0));
+  return {bins:candidates[0],rejected};
+ }
  let best;
  for(const strategy of ['area','long','short'])for(const split of ['horizontal','vertical']){
   const bins=[];
@@ -111,7 +173,7 @@ export function optimize(p){
   const bins=result.bins.map((b,i)=>({...b,id:m.id+'-'+(i+1),material:m.id,index:i+1,utilization:100*b.area/(m.length*(m.kind==='plate'?m.width:1))}));
   groups.push({material:m.id,bins,required:bins.length,shortage:0});rejected.push(...result.rejected);
  }
- return {signature:signature(p),created:new Date().toISOString(),groups,rejected};
+ return {signature:signature(p),created:new Date().toISOString(),mode:expanded.length>LARGE_ORDER_THRESHOLD?'large':'standard',groups,rejected};
 }
 
 export function metrics(p,plan){
@@ -129,4 +191,3 @@ export function metrics(p,plan){
  }
  return {pieces:p.pieces.reduce((a,v)=>a+v.qty,0),tubes,plates,utilization:gross?useful/gross*100:0,reusable,cutPieces,weight:gross*0.00000785,shortage:0};
 }
-
