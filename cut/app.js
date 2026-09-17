@@ -144,12 +144,19 @@ function remnantGroups(b,m){
  return [...groups.values()].sort((a,b)=>Number(b.stock)-Number(a.stock)||(b.w*(b.h||1))-(a.w*(a.h||1)));
 }
 
-function operatorRemnant(pattern,m,print=false){
+function operatorRemnant(pattern,m){
  const groups=remnantGroups(pattern.representative,m),stock=groups.filter(r=>r.stock),discard=groups.filter(r=>!r.stock);
  const dims=r=>`${fmt(r.w,1)}${m.kind==='plate'?' × '+fmt(r.h,1):''} mm${r.count>1?' × '+r.count:''}`;
  const stockCode=m.kind==='tube'?`R-${esc(m.id)}-[Nº barra]-01`:`R-${esc(m.id)}-[Nº placa]-[01…]`;
- if(print)return `<div class="print-remnant"><strong>SOBRANTE POR ${m.kind==='tube'?'BARRA':'PLACA'}</strong>${groups.length?`<p>${groups.map(r=>`${dims(r)} · ${r.stock?'GUARDAR EN STOCK':'DESCARTE'}`).join('<br>')}</p>`:'<p>Sin sobrante.</p>'}${stock.length?`<p><strong>IDENTIFICAR:</strong> ${stockCode}</p>`:''}</div>`;
  return `<div class="operator-remnant"><span>${icon(stock.length?'leaf':'trash')}</span><div><small>SOBRANTE POR ${m.kind==='tube'?'BARRA':'PLACA'}</small>${groups.length?`<div class="remnant-values">${groups.map(r=>`<strong class="${r.stock?'stock':'discard'}">${dims(r)} <em>${r.stock?'Stock':'Descarte'}</em></strong>`).join('')}</div>`:'<strong>Sin sobrante</strong>'}${stock.length?`<p>Identificar para acopio: <b>${stockCode}</b></p>`:discard.length?`<p>No alcanza el mínimo recuperable de ${fmt(project.settings.reusable)} mm.</p>`:''}</div></div>`;
+}
+
+function printRemnantLine(pattern,m){
+ const groups=remnantGroups(pattern.representative,m),stock=groups.filter(r=>r.stock);
+ const dims=r=>`${fmt(r.w,1)}${m.kind==='plate'?' × '+fmt(r.h,1):''} mm${r.count>1?' × '+r.count:''}`;
+ const values=groups.length?groups.map(r=>`${dims(r)} (${r.stock?'stock':'descarte'})`).join(' · '):'Sin sobrante';
+ const code=m.kind==='tube'?`R-${esc(m.id)}-[barra]-01`:`R-${esc(m.id)}-[placa]-[01…]`;
+ return `<div class="print-remnant-line"><strong>SOBRANTE:</strong> ${values}${stock.length?` <span><b>IDENTIFICAR:</b> ${code}</span>`:''}</div>`;
 }
 
 function overviewPatternCard(pattern,m){
@@ -175,14 +182,16 @@ function platePatternCard(pattern,m){
  return `<section class="panel plan-card operator-plan ${done?'done':''}" data-pattern="${esc(pattern.id)}"><div class="operator-plan-head"><div><small>MATERIAL</small><strong>${esc(m.name)} · ${esc(m.spec)}</strong><span>${fmt(m.length)} × ${fmt(m.width)} mm</span></div><div><small>Nº DE PATRÓN</small><strong>${String(pattern.index).padStart(2,'0')}</strong></div><div class="operator-repeat"><small>HACER ESTE PATRÓN</small><strong>${status.total} ${status.total===1?'vez':'veces'}</strong></div><span class="tag ${done?'':status.completed.length?'blue':'orange'}">${done?'Completado':status.completed.length?'En proceso':'Por cortar'}</span></div><div class="plan-body operator-body"><div class="operator-diagram">${platePatternDiagram(pattern,m)}</div>${operatorRemnant(pattern,m)}<details class="operator-control" data-details="${esc(pattern.id)}-plates"><summary>Control individual · ${plateNumbers(pattern.bins)}</summary><div class="pattern-bars">${visibleBins.map(bin=>{const cut=project.completed.includes(bin.id);return `<label class="pattern-bar"><input type="checkbox" data-bin="${esc(bin.id)}" ${cut?'checked':''}><span><strong>PL${String(bin.index).padStart(2,'0')}</strong> · ${cut?'Cortada':'Pendiente'}</span></label>`;}).join('')}</div>${hidden?`<p class="details-caption">Se muestran las primeras ${BAR_DETAIL_LIMIT} placas. Continuá con “Registrar 1 placa” para las ${fmt(hidden)} restantes.</p>`:''}</details></div><div class="plan-tools"><span><strong>${status.completed.length} de ${status.total}</strong> placas cortadas</span><div class="actions">${last?btn('Deshacer 1','complete-bin','small ghost','refresh',`data-id="${esc(last.id)}"`):''}${btn('Registrar 1 placa','complete-bin','small dark','check',`data-id="${esc(next?.id||'')}" ${next?'':'disabled'}`)}</div></div></section>`;
 }
 
-function printBarPattern(pattern,m){
+function printBarPattern(pattern,m,totalPatterns){
  const status=patternProgress(pattern,project.completed);
- return `<section class="print-section operator-print"><div class="operator-print-head"><div><small>MATERIAL</small><h2>${esc(m.name)} · ${esc(m.spec)}</h2><p>${fmt(m.length)} mm</p></div><div><small>Nº DE PATRÓN</small><strong>${String(pattern.index).padStart(2,'0')}</strong></div></div><div class="print-repeat">HACER ESTE PATRÓN <strong>${status.total} ${status.total===1?'VEZ':'VECES'}</strong></div>${barPatternDiagram(pattern,m)}${operatorRemnant(pattern,m,true)}<p class="print-control">CONTROL: ______ / ${status.total} ${status.total===1?'barra cortada':'barras cortadas'} &nbsp; RESPONSABLE: __________________</p></section>`;
+ const pageBreak=pattern.index%5===0&&pattern.index<totalPatterns?' print-page-break':'';
+ return `<section class="print-section operator-print tube-print${pageBreak}"><div class="operator-print-head"><div><small>MATERIAL</small><h2>${esc(m.name)} · ${esc(m.spec)}</h2><p>${fmt(m.length)} mm</p></div><div><small>PATRÓN</small><strong>${String(pattern.index).padStart(2,'0')}</strong></div><div class="print-repeat"><small>HACER</small><strong>${status.total} ${status.total===1?'VEZ':'VECES'}</strong></div></div><div class="print-diagram">${barPatternDiagram(pattern,m)}</div>${printRemnantLine(pattern,m)}<p class="print-control">CONTROL ______ / ${status.total} &nbsp; RESPONSABLE __________________</p></section>`;
 }
 
-function printPlatePattern(pattern,m){
+function printPlatePattern(pattern,m,totalPatterns){
  const status=patternProgress(pattern,project.completed);
- return `<section class="print-section operator-print"><div class="operator-print-head"><div><small>MATERIAL</small><h2>${esc(m.name)} · ${esc(m.spec)}</h2><p>${fmt(m.length)} × ${fmt(m.width)} mm</p></div><div><small>Nº DE PATRÓN</small><strong>${String(pattern.index).padStart(2,'0')}</strong></div></div><div class="print-repeat">HACER ESTE PATRÓN <strong>${status.total} ${status.total===1?'VEZ':'VECES'}</strong></div>${platePatternDiagram(pattern,m)}${operatorRemnant(pattern,m,true)}<p class="print-control">CONTROL: ______ / ${status.total} ${status.total===1?'placa cortada':'placas cortadas'} &nbsp; RESPONSABLE: __________________</p></section>`;
+ const pageBreak=pattern.index%3===0&&pattern.index<totalPatterns?' print-page-break':'';
+ return `<section class="print-section operator-print plate-print${pageBreak}"><div class="operator-print-head"><div><small>MATERIAL</small><h2>${esc(m.name)} · ${esc(m.spec)}</h2><p>${fmt(m.length)} × ${fmt(m.width)} mm</p></div><div><small>PATRÓN</small><strong>${String(pattern.index).padStart(2,'0')}</strong></div><div class="print-repeat"><small>HACER</small><strong>${status.total} ${status.total===1?'VEZ':'VECES'}</strong></div></div><div class="print-diagram">${platePatternDiagram(pattern,m)}</div>${printRemnantLine(pattern,m)}<p class="print-control">CONTROL ______ / ${status.total} &nbsp; RESPONSABLE __________________</p></section>`;
 }
 
 function materialDivider(m,patterns){
@@ -277,7 +286,7 @@ function printDocument(type){
   for(const g of project.plan.groups){
    const m=project.materials.find(v=>v.id===g.material),patterns=m.kind==='tube'?groupBarPatterns(g.bins):groupPlatePatterns(g.bins);
    content+=`<section class="print-material-divider"><p>${m.kind==='tube'?'PERFILES / BARRAS':'PLACAS'} · NUEVO MATERIAL</p><h2>${esc(m.name)} · ${esc(m.spec)}</h2><p>${fmt(m.length)}${m.kind==='plate'?' × '+fmt(m.width):''} mm · COMENZAR EN PATRÓN 01</p></section>`;
-   content+=patterns.map(pattern=>m.kind==='tube'?printBarPattern(pattern,m):printPlatePattern(pattern,m)).join('');
+   content+=patterns.map(pattern=>m.kind==='tube'?printBarPattern(pattern,m,patterns.length):printPlatePattern(pattern,m,patterns.length)).join('');
   }
  }else{
   content=`<section class="print-section"><h2>Compra de materia prima</h2><table><thead><tr><th>Material / formato</th><th>Cantidad a comprar</th><th>Presentación del proveedor</th><th>Paquetes a pedir</th></tr></thead><tbody>${project.materials.map(m=>{const g=groupFor(m),required=g?.required||0;return `<tr><td>${esc(m.name)} · ${esc(m.spec)}<br>${fmt(m.length)}${m.kind==='plate'?' × '+fmt(m.width):''} mm</td><td>${required} ${m.kind==='tube'?(required===1?'barra':'barras'):(required===1?'placa':'placas')}</td><td>Hasta ${m.bundle} unidades</td><td>${required?Math.ceil(required/m.bundle):0}</td></tr>`;}).join('')}</tbody></table></section><section class="print-section"><h2>Remanentes recuperables</h2><table><thead><tr><th>Código</th><th>Material</th><th>Dimensiones (mm)</th><th>Estado</th></tr></thead><tbody>${project.plan.groups.map(g=>{const m=project.materials.find(v=>v.id===g.material);return g.bins.map(b=>b.free.map((r,i)=>(m.kind==='tube'?r.w>=project.settings.reusable:Math.min(r.w,r.h)>=project.settings.reusable)?`<tr><td>R-${esc(b.id)}-${i+1}</td><td>${esc(m.spec)}</td><td>${fmt(r.w,1)}${m.kind==='plate'?' × '+fmt(r.h,1):''}</td><td>${project.completed.includes(b.id)?'Disponible':'Previsto'}</td></tr>`:'').join('')).join('');}).join('')}</tbody></table></section>`;
