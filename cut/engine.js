@@ -176,6 +176,40 @@ export function optimize(p){
  return {signature:signature(p),created:new Date().toISOString(),mode:expanded.length>LARGE_ORDER_THRESHOLD?'large':'standard',groups,rejected};
 }
 
+function tubeCuts(bin,trim){
+ if(!bin.parts.length)return 0;
+ const preparedEnds=trim>0?2:0;
+ const betweenPieces=Math.max(0,bin.parts.length-1);
+ const separatesRemnant=bin.remaining>1e-9?1:0;
+ return preparedEnds+betweenPieces+separatesRemnant;
+}
+
+function plateCutMillimeters(bin,m,trim){
+ let total=trim>0?2*(m.length+m.width)-4*trim:0;
+ for(const part of bin.parts){
+  const hasRight=part.region.w-part.w>1e-9,hasBottom=part.region.h-part.h>1e-9;
+  if(part.split==='horizontal'){
+   if(hasBottom)total+=part.region.w;
+   if(hasRight)total+=part.h;
+  }else{
+   if(hasRight)total+=part.region.h;
+   if(hasBottom)total+=part.w;
+  }
+ }
+ return total;
+}
+
+export function cutReport(p,plan){
+ if(!plan)return [];
+ return plan.groups.map(group=>{
+  const material=p.materials.find(m=>m.id===group.material);
+  const pieces=group.bins.reduce((n,bin)=>n+bin.parts.length,0);
+  const cuts=material.kind==='tube'?group.bins.reduce((n,bin)=>n+tubeCuts(bin,p.settings.trim),0):null;
+  const cutMeters=material.kind==='plate'?group.bins.reduce((n,bin)=>n+plateCutMillimeters(bin,material,p.settings.trim),0)/1000:null;
+  return {material:material.id,name:material.name,spec:material.spec,kind:material.kind,length:material.length,width:material.width,units:group.bins.length,pieces,cuts,cutMeters};
+ });
+}
+
 export function metrics(p,plan){
  let useful=0,gross=0,reusable=0,tubes=0,plates=0,cutPieces=0;
  for(const g of plan?.groups||[]){
