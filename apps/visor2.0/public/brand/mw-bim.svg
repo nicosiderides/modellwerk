@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 72" role="img" aria-labelledby="title">
+  <title id="title">MODELLWERK - MW / BIM</title>
+  <g transform="scale(.5)"><path fill="#111315" d="M0 0h26l29 64L84 0h111v130h-26l-29-64-29 64H0V0Z"/></g>
+  <text x="116" y="31" fill="#111315" font-family="'Space Grotesk',Arial,sans-serif" font-size="24" font-weight="700">MW / BIM</text>
+  <text x="116" y="54" fill="#C89B3C" font-family="'JetBrains Mono',Consolas,monospace" font-size="9" font-weight="500" letter-spacing="1.1">MODEL · DOCUMENT · DATA</text>
+</svg>

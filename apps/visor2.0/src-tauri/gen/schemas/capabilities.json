@@ -1,0 +1,1 @@
+{"desktop-main":{"identifier":"desktop-main","description":"Permisos mínimos de la ventana principal de MODELLWERK","local":true,"windows":["main"],"permissions":["core:default","dialog:allow-open","dialog:allow-save","sql:default","sql:allow-execute"]}}

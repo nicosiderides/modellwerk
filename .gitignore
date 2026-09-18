@@ -17,6 +17,9 @@ next-env.d.ts
 dist/
 coverage/
 *.tsbuildinfo
+
+# Keep every generated runtime asset in the published Visor 2.0 export.
+!/visor2.0/**
 .dotnet-cli/
 
 # Intermedios generados por la conversión Revit -> GLB

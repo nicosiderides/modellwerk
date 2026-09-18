@@ -1,0 +1,3156 @@
+{
+  "schemaVersion": 1,
+  "id": "MW900",
+  "version": "configurable-1",
+  "units": "m",
+  "source": "MW900_MASTER_v002.blend",
+  "designStatus": "concept-not-engineered",
+  "dimensions": {
+    "length": 9.0,
+    "width": 3.0,
+    "height": 2.8
+  },
+  "coordinates": {
+    "origin": "center-structure-bottom",
+    "blenderToWeb": "[X,Z,-Y]",
+    "floorDatum": 0.222,
+    "structureDatum": 0.0,
+    "ceilingDatum": 2.6
+  },
+  "proposedLayers": {
+    "wallThickness": 0.08,
+    "partitionThickness": 0.08,
+    "floorBoard": 0.018,
+    "floorFinish": 0.004,
+    "ceilingBoard": 0.012,
+    "ceilingVoid": 0.028,
+    "roofPanel": 0.02
+  },
+  "layerStatus": "Propuesta editable; pendiente de especificaci\u00f3n constructiva",
+  "walls": [
+    {
+      "id": "north",
+      "face": "north",
+      "kind": "external",
+      "start": [
+        -4.34,
+        -1.34
+      ],
+      "end": [
+        4.34,
+        -1.34
+      ],
+      "thickness": 0.08,
+      "height": 2.378,
+      "material": "panel-light"
+    },
+    {
+      "id": "south",
+      "face": "south",
+      "kind": "external",
+      "start": [
+        -4.34,
+        1.34
+      ],
+      "end": [
+        4.34,
+        1.34
+      ],
+      "thickness": 0.08,
+      "height": 2.378,
+      "material": "panel-light"
+    },
+    {
+      "id": "west",
+      "face": "west",
+      "kind": "external",
+      "start": [
+        -4.34,
+        -1.34
+      ],
+      "end": [
+        -4.34,
+        1.34
+      ],
+      "thickness": 0.08,
+      "height": 2.378,
+      "material": "panel-light"
+    },
+    {
+      "id": "east",
+      "face": "east",
+      "kind": "external",
+      "start": [
+        4.34,
+        -1.34
+      ],
+      "end": [
+        4.34,
+        1.34
+      ],
+      "thickness": 0.08,
+      "height": 2.378,
+      "material": "panel-light"
+    }
+  ],
+  "structureUrl": "/models/mw900/configurable/structure.glb",
+  "sockets": {
+    "east": [
+      4.5,
+      1.4,
+      0
+    ],
+    "west": [
+      -4.5,
+      1.4,
+      0
+    ],
+    "north": [
+      0,
+      1.4,
+      -1.5
+    ],
+    "south": [
+      0,
+      1.4,
+      1.5
+    ],
+    "above": [
+      0,
+      2.8,
+      0
+    ],
+    "below": [
+      0,
+      0,
+      0
+    ]
+  },
+  "obstacles": [
+    {
+      "id": "col-x1-s1",
+      "role": "portal-column",
+      "min": [
+        -4.5,
+        0.2,
+        1.38
+      ],
+      "max": [
+        -4.38,
+        2.64,
+        1.5
+      ]
+    },
+    {
+      "id": "col-x1-s2",
+      "role": "portal-column",
+      "min": [
+        -4.5,
+        0.2,
+        -1.5
+      ],
+      "max": [
+        -4.38,
+        2.64,
+        -1.38
+      ]
+    },
+    {
+      "id": "col-x2-s1",
+      "role": "portal-column",
+      "min": [
+        -1.54,
+        0.2,
+        1.38
+      ],
+      "max": [
+        -1.42,
+        2.64,
+        1.5
+      ]
+    },
+    {
+      "id": "col-x2-s2",
+      "role": "portal-column",
+      "min": [
+        -1.54,
+        0.2,
+        -1.5
+      ],
+      "max": [
+        -1.42,
+        2.64,
+        -1.38
+      ]
+    },
+    {
+      "id": "col-x3-s1",
+      "role": "portal-column",
+      "min": [
+        1.42,
+        0.2,
+        1.38
+      ],
+      "max": [
+        1.54,
+        2.64,
+        1.5
+      ]
+    },
+    {
+      "id": "col-x3-s2",
+      "role": "portal-column",
+      "min": [
+        1.42,
+        0.2,
+        -1.5
+      ],
+      "max": [
+        1.54,
+        2.64,
+        -1.38
+      ]
+    },
+    {
+      "id": "col-x4-s1",
+      "role": "portal-column",
+      "min": [
+        4.38,
+        0.2,
+        1.38
+      ],
+      "max": [
+        4.5,
+        2.64,
+        1.5
+      ]
+    },
+    {
+      "id": "col-x4-s2",
+      "role": "portal-column",
+      "min": [
+        4.38,
+        0.2,
+        -1.5
+      ],
+      "max": [
+        4.5,
+        2.64,
+        -1.38
+      ]
+    },
+    {
+      "id": "floor-side-b1-s1",
+      "role": "segmented-longitudinal-floor-rail",
+      "min": [
+        -4.38,
+        0.0,
+        1.39
+      ],
+      "max": [
+        -1.54,
+        0.2,
+        1.49
+      ]
+    },
+    {
+      "id": "roof-side-b1-s1",
+      "role": "segmented-longitudinal-roof-rail",
+      "min": [
+        -4.38,
+        2.64,
+        1.39
+      ],
+      "max": [
+        -1.54,
+        2.8,
+        1.49
+      ]
+    },
+    {
+      "id": "floor-side-b1-s2",
+      "role": "segmented-longitudinal-floor-rail",
+      "min": [
+        -4.38,
+        0.0,
+        -1.49
+      ],
+      "max": [
+        -1.54,
+        0.2,
+        -1.39
+      ]
+    },
+    {
+      "id": "roof-side-b1-s2",
+      "role": "segmented-longitudinal-roof-rail",
+      "min": [
+        -4.38,
+        2.64,
+        -1.49
+      ],
+      "max": [
+        -1.54,
+        2.8,
+        -1.39
+      ]
+    },
+    {
+      "id": "floor-side-b2-s1",
+      "role": "segmented-longitudinal-floor-rail",
+      "min": [
+        -1.42,
+        0.0,
+        1.39
+      ],
+      "max": [
+        1.42,
+        0.2,
+        1.49
+      ]
+    },
+    {
+      "id": "roof-side-b2-s1",
+      "role": "segmented-longitudinal-roof-rail",
+      "min": [
+        -1.42,
+        2.64,
+        1.39
+      ],
+      "max": [
+        1.42,
+        2.8,
+        1.49
+      ]
+    },
+    {
+      "id": "floor-side-b2-s2",
+      "role": "segmented-longitudinal-floor-rail",
+      "min": [
+        -1.42,
+        0.0,
+        -1.49
+      ],
+      "max": [
+        1.42,
+        0.2,
+        -1.39
+      ]
+    },
+    {
+      "id": "roof-side-b2-s2",
+      "role": "segmented-longitudinal-roof-rail",
+      "min": [
+        -1.42,
+        2.64,
+        -1.49
+      ],
+      "max": [
+        1.42,
+        2.8,
+        -1.39
+      ]
+    },
+    {
+      "id": "floor-side-b3-s1",
+      "role": "segmented-longitudinal-floor-rail",
+      "min": [
+        1.54,
+        0.0,
+        1.39
+      ],
+      "max": [
+        4.38,
+        0.2,
+        1.49
+      ]
+    },
+    {
+      "id": "roof-side-b3-s1",
+      "role": "segmented-longitudinal-roof-rail",
+      "min": [
+        1.54,
+        2.64,
+        1.39
+      ],
+      "max": [
+        4.38,
+        2.8,
+        1.49
+      ]
+    },
+    {
+      "id": "floor-side-b3-s2",
+      "role": "segmented-longitudinal-floor-rail",
+      "min": [
+        1.54,
+        0.0,
+        -1.49
+      ],
+      "max": [
+        4.38,
+        0.2,
+        -1.39
+      ]
+    },
+    {
+      "id": "roof-side-b3-s2",
+      "role": "segmented-longitudinal-roof-rail",
+      "min": [
+        1.54,
+        2.64,
+        -1.49
+      ],
+      "max": [
+        4.38,
+        2.8,
+        -1.39
+      ]
+    },
+    {
+      "id": "floor-end-e1",
+      "role": "end-floor-rail",
+      "min": [
+        -4.49,
+        0.0,
+        -1.38
+      ],
+      "max": [
+        -4.39,
+        0.2,
+        1.38
+      ]
+    },
+    {
+      "id": "roof-end-e1",
+      "role": "end-roof-rail",
+      "min": [
+        -4.49,
+        2.64,
+        -1.38
+      ],
+      "max": [
+        -4.39,
+        2.8,
+        1.38
+      ]
+    },
+    {
+      "id": "floor-end-e2",
+      "role": "end-floor-rail",
+      "min": [
+        4.39,
+        0.0,
+        -1.38
+      ],
+      "max": [
+        4.49,
+        0.2,
+        1.38
+      ]
+    },
+    {
+      "id": "roof-end-e2",
+      "role": "end-roof-rail",
+      "min": [
+        4.39,
+        2.64,
+        -1.38
+      ],
+      "max": [
+        4.49,
+        2.8,
+        1.38
+      ]
+    },
+    {
+      "id": "floor-portal-x2",
+      "role": "transverse-floor-portal",
+      "min": [
+        -1.52,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -1.44,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-portal-x3",
+      "role": "transverse-floor-portal",
+      "min": [
+        1.44,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        1.52,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-01",
+      "role": "floor-joist",
+      "min": [
+        -3.878,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -3.818,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-02",
+      "role": "floor-joist",
+      "min": [
+        -3.286,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -3.226,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-03",
+      "role": "floor-joist",
+      "min": [
+        -2.694,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -2.634,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-04",
+      "role": "floor-joist",
+      "min": [
+        -2.102,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -2.042,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-05",
+      "role": "floor-joist",
+      "min": [
+        -0.918,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -0.858,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-06",
+      "role": "floor-joist",
+      "min": [
+        -0.326,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        -0.266,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-07",
+      "role": "floor-joist",
+      "min": [
+        0.266,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        0.326,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-08",
+      "role": "floor-joist",
+      "min": [
+        0.858,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        0.918,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-09",
+      "role": "floor-joist",
+      "min": [
+        2.042,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        2.102,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-10",
+      "role": "floor-joist",
+      "min": [
+        2.634,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        2.694,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-11",
+      "role": "floor-joist",
+      "min": [
+        3.226,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        3.286,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "floor-joist-12",
+      "role": "floor-joist",
+      "min": [
+        3.818,
+        0.01,
+        -1.39
+      ],
+      "max": [
+        3.878,
+        0.19,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-portal-x2",
+      "role": "transverse-roof-portal",
+      "min": [
+        -1.52,
+        2.65,
+        -1.39
+      ],
+      "max": [
+        -1.44,
+        2.79,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-portal-x3",
+      "role": "transverse-roof-portal",
+      "min": [
+        1.44,
+        2.65,
+        -1.39
+      ],
+      "max": [
+        1.52,
+        2.79,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-01",
+      "role": "roof-joist",
+      "min": [
+        -3.873,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        -3.823,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-02",
+      "role": "roof-joist",
+      "min": [
+        -3.281,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        -3.231,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-03",
+      "role": "roof-joist",
+      "min": [
+        -2.689,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        -2.639,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-04",
+      "role": "roof-joist",
+      "min": [
+        -2.097,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        -2.047,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-05",
+      "role": "roof-joist",
+      "min": [
+        -0.913,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        -0.863,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-06",
+      "role": "roof-joist",
+      "min": [
+        -0.321,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        -0.271,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-07",
+      "role": "roof-joist",
+      "min": [
+        0.271,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        0.321,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-08",
+      "role": "roof-joist",
+      "min": [
+        0.863,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        0.913,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-09",
+      "role": "roof-joist",
+      "min": [
+        2.047,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        2.097,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-10",
+      "role": "roof-joist",
+      "min": [
+        2.639,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        2.689,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-11",
+      "role": "roof-joist",
+      "min": [
+        3.231,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        3.281,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "roof-joist-12",
+      "role": "roof-joist",
+      "min": [
+        3.823,
+        2.66,
+        -1.39
+      ],
+      "max": [
+        3.873,
+        2.78,
+        1.39
+      ]
+    },
+    {
+      "id": "end-brace-e1-a",
+      "role": "optional-stability-brace",
+      "min": [
+        -4.375,
+        0.352619,
+        -1.285997
+      ],
+      "max": [
+        -4.355,
+        2.447381,
+        1.285997
+      ]
+    },
+    {
+      "id": "end-brace-e1-b",
+      "role": "optional-stability-brace",
+      "min": [
+        -4.375,
+        0.352619,
+        -1.285997
+      ],
+      "max": [
+        -4.355,
+        2.447381,
+        1.285997
+      ]
+    },
+    {
+      "id": "end-brace-e2-a",
+      "role": "optional-stability-brace",
+      "min": [
+        4.355,
+        0.352619,
+        -1.285997
+      ],
+      "max": [
+        4.375,
+        2.447381,
+        1.285997
+      ]
+    },
+    {
+      "id": "end-brace-e2-b",
+      "role": "optional-stability-brace",
+      "min": [
+        4.355,
+        0.352619,
+        -1.285997
+      ],
+      "max": [
+        4.375,
+        2.447381,
+        1.285997
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        -1.63,
+        0.1,
+        1.368
+      ],
+      "max": [
+        -1.33,
+        0.38,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -1.538,
+        0.196,
+        1.382
+      ],
+      "max": [
+        -1.422,
+        0.204,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bolt-1",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        -1.565,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bolt-2",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        -1.565,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bolt-3",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        -1.465,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bolt-4",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        -1.465,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bolt-5",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        -1.365,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l1-bolt-6",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        -1.365,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        -1.63,
+        2.44,
+        1.368
+      ],
+      "max": [
+        -1.33,
+        2.72,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -1.538,
+        2.636,
+        1.382
+      ],
+      "max": [
+        -1.422,
+        2.644,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bolt-1",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        -1.565,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bolt-2",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        -1.565,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bolt-3",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        -1.465,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bolt-4",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        -1.465,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bolt-5",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        -1.365,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s1-l2-bolt-6",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        -1.365,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        -1.63,
+        0.1,
+        -1.38
+      ],
+      "max": [
+        -1.33,
+        0.38,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -1.538,
+        0.196,
+        -1.498
+      ],
+      "max": [
+        -1.422,
+        0.204,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bolt-1",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        -1.565,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bolt-2",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        -1.565,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bolt-3",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        -1.465,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bolt-4",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        -1.465,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bolt-5",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        -1.365,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l1-bolt-6",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        -1.365,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        -1.63,
+        2.44,
+        -1.38
+      ],
+      "max": [
+        -1.33,
+        2.72,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -1.538,
+        2.636,
+        -1.498
+      ],
+      "max": [
+        -1.422,
+        2.644,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bolt-1",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        -1.565,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bolt-2",
+      "role": "fastener",
+      "min": [
+        -1.595,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        -1.565,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bolt-3",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        -1.465,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bolt-4",
+      "role": "fastener",
+      "min": [
+        -1.495,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        -1.465,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bolt-5",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        -1.365,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x2-s2-l2-bolt-6",
+      "role": "fastener",
+      "min": [
+        -1.395,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        -1.365,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        1.33,
+        0.1,
+        1.368
+      ],
+      "max": [
+        1.63,
+        0.38,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        1.422,
+        0.196,
+        1.382
+      ],
+      "max": [
+        1.538,
+        0.204,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bolt-1",
+      "role": "fastener",
+      "min": [
+        1.365,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        1.395,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bolt-2",
+      "role": "fastener",
+      "min": [
+        1.365,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        1.395,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bolt-3",
+      "role": "fastener",
+      "min": [
+        1.465,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        1.495,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bolt-4",
+      "role": "fastener",
+      "min": [
+        1.465,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        1.495,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bolt-5",
+      "role": "fastener",
+      "min": [
+        1.565,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        1.595,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l1-bolt-6",
+      "role": "fastener",
+      "min": [
+        1.565,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        1.595,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        1.33,
+        2.44,
+        1.368
+      ],
+      "max": [
+        1.63,
+        2.72,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        1.422,
+        2.636,
+        1.382
+      ],
+      "max": [
+        1.538,
+        2.644,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bolt-1",
+      "role": "fastener",
+      "min": [
+        1.365,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        1.395,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bolt-2",
+      "role": "fastener",
+      "min": [
+        1.365,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        1.395,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bolt-3",
+      "role": "fastener",
+      "min": [
+        1.465,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        1.495,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bolt-4",
+      "role": "fastener",
+      "min": [
+        1.465,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        1.495,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bolt-5",
+      "role": "fastener",
+      "min": [
+        1.565,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        1.595,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s1-l2-bolt-6",
+      "role": "fastener",
+      "min": [
+        1.565,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        1.595,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        1.33,
+        0.1,
+        -1.38
+      ],
+      "max": [
+        1.63,
+        0.38,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        1.422,
+        0.196,
+        -1.498
+      ],
+      "max": [
+        1.538,
+        0.204,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bolt-1",
+      "role": "fastener",
+      "min": [
+        1.365,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        1.395,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bolt-2",
+      "role": "fastener",
+      "min": [
+        1.365,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        1.395,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bolt-3",
+      "role": "fastener",
+      "min": [
+        1.465,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        1.495,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bolt-4",
+      "role": "fastener",
+      "min": [
+        1.465,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        1.495,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bolt-5",
+      "role": "fastener",
+      "min": [
+        1.565,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        1.595,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l1-bolt-6",
+      "role": "fastener",
+      "min": [
+        1.565,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        1.595,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-plate",
+      "role": "longitudinal-splice-node-plate",
+      "min": [
+        1.33,
+        2.44,
+        -1.38
+      ],
+      "max": [
+        1.63,
+        2.72,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        1.422,
+        2.636,
+        -1.498
+      ],
+      "max": [
+        1.538,
+        2.644,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bolt-1",
+      "role": "fastener",
+      "min": [
+        1.365,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        1.395,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bolt-2",
+      "role": "fastener",
+      "min": [
+        1.365,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        1.395,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bolt-3",
+      "role": "fastener",
+      "min": [
+        1.465,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        1.495,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bolt-4",
+      "role": "fastener",
+      "min": [
+        1.465,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        1.495,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bolt-5",
+      "role": "fastener",
+      "min": [
+        1.565,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        1.595,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-ni6-x3-s2-l2-bolt-6",
+      "role": "fastener",
+      "min": [
+        1.565,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        1.595,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        -4.5,
+        0.1,
+        1.368
+      ],
+      "max": [
+        -4.26,
+        0.38,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        -4.38,
+        0.1,
+        1.29
+      ],
+      "max": [
+        -4.368,
+        0.38,
+        1.49
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        -4.38,
+        0.1,
+        1.368
+      ],
+      "max": [
+        -4.368,
+        0.38,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -4.498,
+        0.196,
+        1.382
+      ],
+      "max": [
+        -4.382,
+        0.204,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        -4.435,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        -4.435,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        -4.295,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        -4.295,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.14,
+        1.43201
+      ],
+      "max": [
+        -4.338,
+        0.17,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.31,
+        1.43201
+      ],
+      "max": [
+        -4.338,
+        0.34,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.14,
+        1.32201
+      ],
+      "max": [
+        -4.338,
+        0.17,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l1-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.31,
+        1.32201
+      ],
+      "max": [
+        -4.338,
+        0.34,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        -4.5,
+        2.44,
+        1.368
+      ],
+      "max": [
+        -4.26,
+        2.72,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        -4.38,
+        2.44,
+        1.29
+      ],
+      "max": [
+        -4.368,
+        2.72,
+        1.49
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        -4.38,
+        2.44,
+        1.368
+      ],
+      "max": [
+        -4.368,
+        2.72,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -4.498,
+        2.636,
+        1.382
+      ],
+      "max": [
+        -4.382,
+        2.644,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        -4.435,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        -4.435,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        -4.295,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        -4.295,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.48,
+        1.43201
+      ],
+      "max": [
+        -4.338,
+        2.51,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.65,
+        1.43201
+      ],
+      "max": [
+        -4.338,
+        2.68,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.48,
+        1.32201
+      ],
+      "max": [
+        -4.338,
+        2.51,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s1-l2-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.65,
+        1.32201
+      ],
+      "max": [
+        -4.338,
+        2.68,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        -4.5,
+        0.1,
+        -1.38
+      ],
+      "max": [
+        -4.26,
+        0.38,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        -4.38,
+        0.1,
+        -1.49
+      ],
+      "max": [
+        -4.368,
+        0.38,
+        -1.29
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        -4.38,
+        0.1,
+        -1.38
+      ],
+      "max": [
+        -4.368,
+        0.38,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -4.498,
+        0.196,
+        -1.498
+      ],
+      "max": [
+        -4.382,
+        0.204,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        -4.435,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        -4.435,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        -4.295,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        -4.295,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.14,
+        -1.34799
+      ],
+      "max": [
+        -4.338,
+        0.17,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.31,
+        -1.34799
+      ],
+      "max": [
+        -4.338,
+        0.34,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.14,
+        -1.45799
+      ],
+      "max": [
+        -4.338,
+        0.17,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l1-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        0.31,
+        -1.45799
+      ],
+      "max": [
+        -4.338,
+        0.34,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        -4.5,
+        2.44,
+        -1.38
+      ],
+      "max": [
+        -4.26,
+        2.72,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        -4.38,
+        2.44,
+        -1.49
+      ],
+      "max": [
+        -4.368,
+        2.72,
+        -1.29
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        -4.38,
+        2.44,
+        -1.38
+      ],
+      "max": [
+        -4.368,
+        2.72,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        -4.498,
+        2.636,
+        -1.498
+      ],
+      "max": [
+        -4.382,
+        2.644,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        -4.435,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        -4.465,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        -4.435,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        -4.295,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        -4.325,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        -4.295,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.48,
+        -1.34799
+      ],
+      "max": [
+        -4.338,
+        2.51,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.65,
+        -1.34799
+      ],
+      "max": [
+        -4.338,
+        2.68,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.48,
+        -1.45799
+      ],
+      "max": [
+        -4.338,
+        2.51,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e1-s2-l2-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        -4.409,
+        2.65,
+        -1.45799
+      ],
+      "max": [
+        -4.338,
+        2.68,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        4.26,
+        0.1,
+        1.368
+      ],
+      "max": [
+        4.5,
+        0.38,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        4.368,
+        0.1,
+        1.29
+      ],
+      "max": [
+        4.38,
+        0.38,
+        1.49
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        4.368,
+        0.1,
+        1.368
+      ],
+      "max": [
+        4.38,
+        0.38,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        4.382,
+        0.196,
+        1.382
+      ],
+      "max": [
+        4.498,
+        0.204,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        4.295,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        4.325,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        4.295,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        4.325,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        4.435,
+        0.14201,
+        1.338
+      ],
+      "max": [
+        4.465,
+        0.16799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        4.435,
+        0.31201,
+        1.338
+      ],
+      "max": [
+        4.465,
+        0.33799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.14,
+        1.43201
+      ],
+      "max": [
+        4.409,
+        0.17,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.31,
+        1.43201
+      ],
+      "max": [
+        4.409,
+        0.34,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.14,
+        1.32201
+      ],
+      "max": [
+        4.409,
+        0.17,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l1-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.31,
+        1.32201
+      ],
+      "max": [
+        4.409,
+        0.34,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        4.26,
+        2.44,
+        1.368
+      ],
+      "max": [
+        4.5,
+        2.72,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        4.368,
+        2.44,
+        1.29
+      ],
+      "max": [
+        4.38,
+        2.72,
+        1.49
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        4.368,
+        2.44,
+        1.368
+      ],
+      "max": [
+        4.38,
+        2.72,
+        1.38
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        4.382,
+        2.636,
+        1.382
+      ],
+      "max": [
+        4.498,
+        2.644,
+        1.498
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        4.295,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        4.325,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        4.295,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        4.325,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        4.435,
+        2.482009,
+        1.338
+      ],
+      "max": [
+        4.465,
+        2.50799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        4.435,
+        2.652009,
+        1.338
+      ],
+      "max": [
+        4.465,
+        2.67799,
+        1.409
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.48,
+        1.43201
+      ],
+      "max": [
+        4.409,
+        2.51,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.65,
+        1.43201
+      ],
+      "max": [
+        4.409,
+        2.68,
+        1.45799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.48,
+        1.32201
+      ],
+      "max": [
+        4.409,
+        2.51,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s1-l2-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.65,
+        1.32201
+      ],
+      "max": [
+        4.409,
+        2.68,
+        1.34799
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        4.26,
+        0.1,
+        -1.38
+      ],
+      "max": [
+        4.5,
+        0.38,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        4.368,
+        0.1,
+        -1.49
+      ],
+      "max": [
+        4.38,
+        0.38,
+        -1.29
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        4.368,
+        0.1,
+        -1.38
+      ],
+      "max": [
+        4.38,
+        0.38,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        4.382,
+        0.196,
+        -1.498
+      ],
+      "max": [
+        4.498,
+        0.204,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        4.295,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        4.325,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        4.295,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        4.325,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        4.435,
+        0.14201,
+        -1.409
+      ],
+      "max": [
+        4.465,
+        0.16799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        4.435,
+        0.31201,
+        -1.409
+      ],
+      "max": [
+        4.465,
+        0.33799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.14,
+        -1.34799
+      ],
+      "max": [
+        4.409,
+        0.17,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.31,
+        -1.34799
+      ],
+      "max": [
+        4.409,
+        0.34,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.14,
+        -1.45799
+      ],
+      "max": [
+        4.409,
+        0.17,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l1-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        4.338,
+        0.31,
+        -1.45799
+      ],
+      "max": [
+        4.409,
+        0.34,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-side-leg",
+      "role": "corner-node-side-leg",
+      "min": [
+        4.26,
+        2.44,
+        -1.38
+      ],
+      "max": [
+        4.5,
+        2.72,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-end-leg",
+      "role": "corner-node-end-leg",
+      "min": [
+        4.368,
+        2.44,
+        -1.49
+      ],
+      "max": [
+        4.38,
+        2.72,
+        -1.29
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-spine",
+      "role": "corner-node-fold-spine",
+      "min": [
+        4.368,
+        2.44,
+        -1.38
+      ],
+      "max": [
+        4.38,
+        2.72,
+        -1.368
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-bearing-cap",
+      "role": "column-bearing-cap",
+      "min": [
+        4.382,
+        2.636,
+        -1.498
+      ],
+      "max": [
+        4.498,
+        2.644,
+        -1.382
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-side-bolt-1",
+      "role": "fastener",
+      "min": [
+        4.295,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        4.325,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-side-bolt-2",
+      "role": "fastener",
+      "min": [
+        4.295,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        4.325,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-side-bolt-3",
+      "role": "fastener",
+      "min": [
+        4.435,
+        2.482009,
+        -1.409
+      ],
+      "max": [
+        4.465,
+        2.50799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-side-bolt-4",
+      "role": "fastener",
+      "min": [
+        4.435,
+        2.652009,
+        -1.409
+      ],
+      "max": [
+        4.465,
+        2.67799,
+        -1.338
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-end-bolt-5",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.48,
+        -1.34799
+      ],
+      "max": [
+        4.409,
+        2.51,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-end-bolt-6",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.65,
+        -1.34799
+      ],
+      "max": [
+        4.409,
+        2.68,
+        -1.32201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-end-bolt-7",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.48,
+        -1.45799
+      ],
+      "max": [
+        4.409,
+        2.51,
+        -1.43201
+      ]
+    },
+    {
+      "id": "mwlock-nc8-e2-s2-l2-end-bolt-8",
+      "role": "fastener",
+      "min": [
+        4.338,
+        2.65,
+        -1.45799
+      ],
+      "max": [
+        4.409,
+        2.68,
+        -1.43201
+      ]
+    }
+  ],
+  "structureParts": 216
+}

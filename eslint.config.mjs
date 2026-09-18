@@ -20,6 +20,8 @@ export default defineConfig([
     "assets/**",
     "visor/**",
     "visor1.0/**",
+    "visor2.0/**",
+    "apps/visor2.0/**",
     "build/**",
     "tools/**",
     "descargas/**",

@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
+    "apps/visor2.0",
     "MW Mod 1.0"
   ]
 }

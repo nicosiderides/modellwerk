@@ -1,0 +1,46 @@
+{
+  "name": "modellwerk-project-viewer-2",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "MODELLWERK Visor 2.0 for composing and planning multi-module architecture.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build",
+    "desktop:icon": "tauri icon public/brand/favicon.svg",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test:core": "node --experimental-strip-types --test core/configurator/engine.test.mts core/building/engine.test.mts",
+    "test:assets": "node scripts/validate-mw900-assets.mjs",
+    "example:mw900": "node scripts/create-acceptance-project.mjs",
+    "catalog:import": "node scripts/import-catalog-workbook.mjs",
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "postinstall": "node scripts/prepare-assets.mjs"
+  },
+  "dependencies": {
+    "@react-three/drei": "10.7.7",
+    "@react-three/fiber": "9.6.1",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-dialog": "^2.7.3",
+    "@tauri-apps/plugin-sql": "^2.4.1",
+    "fflate": "0.8.3",
+    "leva": "0.10.1",
+    "lucide-react": "1.23.0",
+    "next": "16.3.5",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4",
+    "@types/node": "^26.1.0",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "16.2.10",
+    "typescript": "6.0.3"
+  }
+}

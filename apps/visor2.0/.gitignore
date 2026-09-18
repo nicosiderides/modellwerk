@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+dist/
+src-tauri/target*/
+*.log
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,35 @@
+:root {
+  --mw-ink: #111315;
+  --mw-graphite: #24282b;
+  --mw-paper: #f5f1e8;
+  --mw-concrete: #c9c4b8;
+  --mw-signal: #c89b3c;
+  --mw-blueprint: #6c98a8;
+  --mw-white: #ffffff;
+  --mw-night: #090b0c;
+  --mw-night-raised: #141719;
+  --mw-night-soft: #1b1f21;
+  --mw-line-dark: rgba(17, 19, 21, 0.16);
+  --mw-line-light: rgba(245, 241, 232, 0.16);
+  --mw-space-1: 0.25rem;
+  --mw-space-2: 0.5rem;
+  --mw-space-3: 0.75rem;
+  --mw-space-4: 1rem;
+  --mw-space-5: 1.5rem;
+  --mw-space-6: 2rem;
+  --mw-space-7: 3rem;
+  --mw-space-8: 4rem;
+  --mw-radius-xs: 2px;
+  --mw-radius-sm: 4px;
+  --mw-radius: 4px;
+  --mw-shadow-sm: 0 8px 24px rgba(17, 19, 21, 0.08);
+  --mw-shadow-panel: 0 18px 54px rgba(0, 0, 0, 0.24);
+  --mw-duration-fast: 180ms;
+  --mw-duration-base: 300ms;
+  --mw-ease-precision: cubic-bezier(0.2, 0.72, 0.24, 1);
+  --mw-transition: var(--mw-duration-fast) var(--mw-ease-precision);
+  --mw-font-display: "Space Grotesk", Arial, sans-serif;
+  --mw-font-heading: "Space Grotesk", Arial, sans-serif;
+  --mw-font-tech: "JetBrains Mono", Consolas, monospace;
+  --mw-font-text: "Manrope", Arial, sans-serif;
+}

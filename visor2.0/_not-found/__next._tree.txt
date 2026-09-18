@@ -1,0 +1,2 @@
+:HL["/modellwerk/visor2.0/_next/static/css/f7319c0640e46dce.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"_not-found","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"1OdUv3t7i6a1snSL2C2Fz"}
