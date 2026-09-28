@@ -1,0 +1,7 @@
+1:"$Sreact.fragment"
+2:I[18420,["/modellwerk/assembly/_next/static/chunks/368reha_yvn2z.js","/modellwerk/assembly/_next/static/chunks/22-c61edi7i47.js","/modellwerk/assembly/_next/static/chunks/3xxyamdipua64.js"],"default"]
+3:I[97367,["/modellwerk/assembly/_next/static/chunks/368reha_yvn2z.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+:HL["/modellwerk/assembly/_next/static/chunks/0x-f_7ntao47y.css","style"]
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","link","0",{"rel":"stylesheet","href":"/modellwerk/assembly/_next/static/chunks/0x-f_7ntao47y.css","precedence":"next"}],["$","script","script-0",{"src":"/modellwerk/assembly/_next/static/chunks/22-c61edi7i47.js","async":true}],["$","script","script-1",{"src":"/modellwerk/assembly/_next/static/chunks/3xxyamdipua64.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"3-nmq4yxNJB9VHkxr_pV5"}
+5:null

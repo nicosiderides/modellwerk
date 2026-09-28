@@ -1,0 +1,1123 @@
+{
+  "id": "mw-campamento-24",
+  "name": "Campamento modular",
+  "system": "MW900",
+  "modules": [
+    {
+      "id": "M01",
+      "name": "Habitación 01",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        0,
+        -7.75
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [],
+      "truckId": "T01",
+      "crewId": "S01",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M02",
+      "name": "Habitación 02",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        0,
+        -7.75
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M01"
+      ],
+      "truckId": "T02",
+      "crewId": "S02",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M03",
+      "name": "Habitación 03",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        0,
+        -4.65
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [],
+      "truckId": "T03",
+      "crewId": "S01",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M04",
+      "name": "Habitación 04",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        0,
+        -4.65
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M03"
+      ],
+      "truckId": "T04",
+      "crewId": "S02",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M05",
+      "name": "Servicios 05",
+      "type": "MW900 Services",
+      "position": [
+        -4.65,
+        0,
+        -1.5499999999999998
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 9.2,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0.3,
+        1.4,
+        0
+      ],
+      "liftMinutes": 14,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [],
+      "truckId": "T05",
+      "crewId": "S01",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M06",
+      "name": "Servicios 06",
+      "type": "MW900 Services",
+      "position": [
+        4.65,
+        0,
+        -1.5499999999999998
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 9.2,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0.3,
+        1.4,
+        0
+      ],
+      "liftMinutes": 14,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M05"
+      ],
+      "truckId": "T06",
+      "crewId": "S02",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M07",
+      "name": "Habitación 07",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        0,
+        1.5500000000000007
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [],
+      "truckId": "T07",
+      "crewId": "S01",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M08",
+      "name": "Habitación 08",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        0,
+        1.5500000000000007
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M07"
+      ],
+      "truckId": "T08",
+      "crewId": "S02",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M09",
+      "name": "Habitación 09",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        0,
+        4.65
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [],
+      "truckId": "T09",
+      "crewId": "S01",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M10",
+      "name": "Habitación 10",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        0,
+        4.65
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M09"
+      ],
+      "truckId": "T10",
+      "crewId": "S02",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M11",
+      "name": "Habitación 11",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        0,
+        7.75
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 7.8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [],
+      "truckId": "T11",
+      "crewId": "S01",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M12",
+      "name": "Habitación 12",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        0,
+        7.75
+      ],
+      "rotation": 0,
+      "level": 0,
+      "weight": 8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 14,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M11"
+      ],
+      "truckId": "T12",
+      "crewId": "S02",
+      "notes": "Verificar replanteo, apoyos y nivelación antes de liberar la grúa."
+    },
+    {
+      "id": "M13",
+      "name": "Habitación 13",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        2.8,
+        -7.75
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M01"
+      ],
+      "truckId": "T01",
+      "crewId": "S01",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M14",
+      "name": "Habitación 14",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        2.8,
+        -7.75
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M02",
+        "M13"
+      ],
+      "truckId": "T02",
+      "crewId": "S02",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M15",
+      "name": "Habitación 15",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        2.8,
+        -4.65
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M03"
+      ],
+      "truckId": "T03",
+      "crewId": "S01",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M16",
+      "name": "Habitación 16",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        2.8,
+        -4.65
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M04",
+        "M15"
+      ],
+      "truckId": "T04",
+      "crewId": "S02",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M17",
+      "name": "Servicios 17",
+      "type": "MW900 Services",
+      "position": [
+        -4.65,
+        2.8,
+        -1.5499999999999998
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 9.2,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0.3,
+        1.4,
+        0
+      ],
+      "liftMinutes": 14,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M05"
+      ],
+      "truckId": "T05",
+      "crewId": "S01",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M18",
+      "name": "Servicios 18",
+      "type": "MW900 Services",
+      "position": [
+        4.65,
+        2.8,
+        -1.5499999999999998
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 9.2,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0.3,
+        1.4,
+        0
+      ],
+      "liftMinutes": 14,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M06",
+        "M17"
+      ],
+      "truckId": "T06",
+      "crewId": "S02",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M19",
+      "name": "Habitación 19",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        2.8,
+        1.5500000000000007
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M07"
+      ],
+      "truckId": "T07",
+      "crewId": "S01",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M20",
+      "name": "Habitación 20",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        2.8,
+        1.5500000000000007
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M08",
+        "M19"
+      ],
+      "truckId": "T08",
+      "crewId": "S02",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M21",
+      "name": "Habitación 21",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        2.8,
+        4.65
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M09"
+      ],
+      "truckId": "T09",
+      "crewId": "S01",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M22",
+      "name": "Habitación 22",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        2.8,
+        4.65
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.6,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M10",
+        "M21"
+      ],
+      "truckId": "T10",
+      "crewId": "S02",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M23",
+      "name": "Habitación 23",
+      "type": "MW900 Bedroom",
+      "position": [
+        -4.65,
+        2.8,
+        7.75
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 7.8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M11"
+      ],
+      "truckId": "T11",
+      "crewId": "S01",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    },
+    {
+      "id": "M24",
+      "name": "Habitación 24",
+      "type": "MW900 Bedroom",
+      "position": [
+        4.65,
+        2.8,
+        7.75
+      ],
+      "rotation": 0,
+      "level": 1,
+      "weight": 8,
+      "dimensions": [
+        9,
+        2.8,
+        3
+      ],
+      "centerOfGravity": [
+        0,
+        1.4,
+        0
+      ],
+      "liftMinutes": 12,
+      "fixMinutes": 16,
+      "connections": [
+        "4 apoyos estructurales",
+        "Unión lateral",
+        "MEP",
+        "Sellado"
+      ],
+      "dependencies": [
+        "M12",
+        "M23"
+      ],
+      "truckId": "T12",
+      "crewId": "S02",
+      "notes": "Izar después de fijar el módulo de apoyo. Verificar unión vertical."
+    }
+  ],
+  "cranes": [
+    {
+      "id": "C01",
+      "name": "Grúa 01 · telescópica",
+      "position": [
+        15,
+        0,
+        10
+      ],
+      "radius": 32,
+      "capacity": 12,
+      "height": 22
+    }
+  ],
+  "trucks": [
+    {
+      "id": "T01",
+      "name": "Camión 01",
+      "moduleIds": [
+        "M01",
+        "M13"
+      ],
+      "arrival": 0
+    },
+    {
+      "id": "T02",
+      "name": "Camión 02",
+      "moduleIds": [
+        "M02",
+        "M14"
+      ],
+      "arrival": 40
+    },
+    {
+      "id": "T03",
+      "name": "Camión 03",
+      "moduleIds": [
+        "M03",
+        "M15"
+      ],
+      "arrival": 80
+    },
+    {
+      "id": "T04",
+      "name": "Camión 04",
+      "moduleIds": [
+        "M04",
+        "M16"
+      ],
+      "arrival": 120
+    },
+    {
+      "id": "T05",
+      "name": "Camión 05",
+      "moduleIds": [
+        "M05",
+        "M17"
+      ],
+      "arrival": 160
+    },
+    {
+      "id": "T06",
+      "name": "Camión 06",
+      "moduleIds": [
+        "M06",
+        "M18"
+      ],
+      "arrival": 200
+    },
+    {
+      "id": "T07",
+      "name": "Camión 07",
+      "moduleIds": [
+        "M07",
+        "M19"
+      ],
+      "arrival": 240
+    },
+    {
+      "id": "T08",
+      "name": "Camión 08",
+      "moduleIds": [
+        "M08",
+        "M20"
+      ],
+      "arrival": 280
+    },
+    {
+      "id": "T09",
+      "name": "Camión 09",
+      "moduleIds": [
+        "M09",
+        "M21"
+      ],
+      "arrival": 320
+    },
+    {
+      "id": "T10",
+      "name": "Camión 10",
+      "moduleIds": [
+        "M10",
+        "M22"
+      ],
+      "arrival": 360
+    },
+    {
+      "id": "T11",
+      "name": "Camión 11",
+      "moduleIds": [
+        "M11",
+        "M23"
+      ],
+      "arrival": 400
+    },
+    {
+      "id": "T12",
+      "name": "Camión 12",
+      "moduleIds": [
+        "M12",
+        "M24"
+      ],
+      "arrival": 440
+    }
+  ],
+  "crews": [
+    {
+      "id": "S01",
+      "name": "Estructura 01",
+      "type": "STRUCTURE CREW"
+    },
+    {
+      "id": "S02",
+      "name": "Estructura 02",
+      "type": "STRUCTURE CREW"
+    }
+  ],
+  "zones": [
+    {
+      "id": "Z-ACCESS",
+      "name": "Ingreso / egreso",
+      "type": "ACCESS",
+      "position": [
+        0,
+        0,
+        30
+      ],
+      "size": [
+        9,
+        16
+      ]
+    },
+    {
+      "id": "Z-UNLOAD",
+      "name": "Descarga",
+      "type": "UNLOADING",
+      "position": [
+        0,
+        0,
+        16
+      ],
+      "size": [
+        12,
+        7
+      ]
+    },
+    {
+      "id": "Z-WAIT",
+      "name": "Espera de camiones",
+      "type": "WAITING",
+      "position": [
+        -15,
+        0,
+        21
+      ],
+      "size": [
+        11,
+        9
+      ]
+    },
+    {
+      "id": "Z-STORAGE",
+      "name": "Acopio temporal",
+      "type": "STORAGE",
+      "position": [
+        -16,
+        0,
+        5
+      ],
+      "size": [
+        10,
+        10
+      ]
+    },
+    {
+      "id": "Z-RESTRICTED",
+      "name": "Área restringida",
+      "type": "NO CRANE",
+      "position": [
+        24,
+        0,
+        -11
+      ],
+      "size": [
+        7,
+        10
+      ]
+    }
+  ],
+  "sequence": [
+    "M01",
+    "M02",
+    "M03",
+    "M04",
+    "M05",
+    "M06",
+    "M07",
+    "M08",
+    "M09",
+    "M10",
+    "M11",
+    "M12",
+    "M13",
+    "M14",
+    "M15",
+    "M16",
+    "M17",
+    "M18",
+    "M19",
+    "M20",
+    "M21",
+    "M22",
+    "M23",
+    "M24"
+  ]
+}
