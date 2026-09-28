@@ -10,12 +10,12 @@
 .mw-tl-root .mw-tl-position{ background: #728eaa; }
 .mw-tl-root .mw-tl-fix{ background: #588f80; }
 .mw-tl-root .mw-tl-check{ background: #8a809b; }
-.mw-tl-root .mw-tl-progress{ font-size: 10px; white-space: nowrap; font-family: var(--font-geist-mono, "SFMono-Regular", Consolas, monospace); color: #7d8987; }
+.mw-tl-root .mw-tl-progress{ font-size: 10px; white-space: nowrap; font-family: 'DM Sans', sans-serif; color: #7d8987; }
 .mw-tl-root .mw-tl-progress strong{ color: #a6b9ac; font-weight: 500; }
 .mw-tl-root .mw-tl-axis{ display: flex; height: 26px; flex: none; padding-right: 27px; background: #1b1f20; border-bottom: 1px solid #303637; }
-.mw-tl-root .mw-tl-label-heading{ flex: 0 0 180px; padding: 10px 11px 0 18px; font: 9px var(--font-geist-mono, "SFMono-Regular", Consolas, monospace); letter-spacing: .7px; color: #798584; display: flex; justify-content: space-between; }
+.mw-tl-root .mw-tl-label-heading{ flex: 0 0 180px; padding: 10px 11px 0 18px; font: 9px 'DM Sans', sans-serif; letter-spacing: .7px; color: #798584; display: flex; justify-content: space-between; }
 .mw-tl-root .mw-tl-axis-track{ position: relative; flex: 1; margin-left: 13px; }
-.mw-tl-root .mw-tl-tick{ position: absolute; top: 10px; transform: translateX(-50%); white-space: nowrap; font: 9px var(--font-geist-mono, "SFMono-Regular", Consolas, monospace); color: #85908e; }
+.mw-tl-root .mw-tl-tick{ position: absolute; top: 10px; transform: translateX(-50%); white-space: nowrap; font: 9px 'DM Sans', sans-serif; color: #85908e; }
 .mw-tl-root .mw-tl-tick:first-child{ transform: none; }
 .mw-tl-root .mw-tl-cursor-head{ position: absolute; bottom: -1px; z-index: 3; width: 7px; height: 5px; background: #e8bb45; clip-path: polygon(0 0, 100% 0, 50% 100%); transform: translateX(-50%); }
 .mw-tl-root .mw-tl-rows{ position: relative; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable; scrollbar-color: #495251 #1b1f20; scrollbar-width: thin; }
@@ -30,7 +30,7 @@
 .mw-tl-root .mw-tl-dot-active{ background: #e8bb45; box-shadow: 0 0 5px #e8bb4538; }
 .mw-tl-root .mw-tl-dot-done{ background: #6ba58a; }
 .mw-tl-root .mw-tl-dot-waiting{ background: #819ea8; }
-.mw-tl-root .mw-tl-module-id{ font: 10px var(--font-geist-mono, "SFMono-Regular", Consolas, monospace); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+.mw-tl-root .mw-tl-module-id{ font: 10px 'DM Sans', sans-serif; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 .mw-tl-root .mw-tl-row-selected .mw-tl-module-id{ color: #e6c774; }
 .mw-tl-root .mw-tl-level{ margin-left: auto; color: #788481; font: 9px var(--font-geist-mono, Consolas, monospace); }
 .mw-tl-root .mw-tl-track{ position: relative; flex: 1; min-width: 0; margin-left: 13px; }
