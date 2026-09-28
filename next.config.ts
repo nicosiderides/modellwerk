@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
-const githubPagesBasePath = "/modellwerk/visor1.0";
-const isGithubPagesExport = process.env.NEXT_PUBLIC_DEPLOY_TARGET === "github-pages";
+const deployTarget = process.env.NEXT_PUBLIC_DEPLOY_TARGET;
+const isGithubPagesExport = deployTarget === "github-pages" || deployTarget === "github-pages-assembly";
+const githubPagesBasePath = deployTarget === "github-pages-assembly" ? "/modellwerk/assembly" : "/modellwerk/visor1.0";
 
 const nextConfig: NextConfig = {
   ...(isGithubPagesExport
@@ -10,9 +11,7 @@ const nextConfig: NextConfig = {
         basePath: githubPagesBasePath,
         assetPrefix: githubPagesBasePath,
         trailingSlash: true,
-        images: {
-          unoptimized: true,
-        },
+        images: { unoptimized: true },
       }
     : {}),
   reactStrictMode: true,

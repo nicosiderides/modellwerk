@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[97367,["/modellwerk/assembly/_next/static/chunks/368reha_yvn2z.js"],"ViewportBoundary"]
+3:I[97367,["/modellwerk/assembly/_next/static/chunks/368reha_yvn2z.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[27201,["/modellwerk/assembly/_next/static/chunks/368reha_yvn2z.js"],"IconMark"]
+0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"MW Assembly Planner — MODELLWERK"}],["$","meta","1",{"name":"description","content":"Planificación de montaje modular: modelo, secuencia, grúa, logística y simulación 4D."}],["$","link","2",{"rel":"icon","href":"/modellwerk/assembly/brand/favicon.svg?v=5","type":"image/svg+xml"}],["$","$L5","3",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"3-nmq4yxNJB9VHkxr_pV5"}

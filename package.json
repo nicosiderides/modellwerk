@@ -11,6 +11,7 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "test:core": "node --experimental-strip-types --test core/configurator/engine.test.mts",
+    "test:assembly": "node --experimental-strip-types --test core/assembly/engine.test.mts",
     "catalog:import": "node scripts/import-catalog-workbook.mjs",
     "prepare:assets": "node scripts/prepare-assets.mjs",
     "postinstall": "node scripts/prepare-assets.mjs"
@@ -24,7 +25,8 @@
     "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "three": "0.185.1"
+    "three": "0.185.1",
+    "zustand": "5.0.14"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
