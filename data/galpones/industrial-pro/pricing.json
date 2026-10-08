@@ -1,0 +1,14 @@
+{
+  "status": "demo",
+  "currency": "USD",
+  "disclaimer": "Valores de referencia para la demo. No constituyen una cotización.",
+  "steelKgPerM2": [
+    24,
+    32
+  ],
+  "costPerM2": null,
+  "constructionDays": {
+    "base": 45,
+    "perThousandM2": 22
+  }
+}

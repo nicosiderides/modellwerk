@@ -1,0 +1,51 @@
+{
+  "default": "truss",
+  "systems": [
+    {
+      "id": "truss",
+      "name": "Reticulado",
+      "summary": "Columnas y cerchas reticuladas para grandes luces.",
+      "bullets": [
+        "Cubre luces mayores con menos acero",
+        "Permite pasar instalaciones entre barras",
+        "Mayor cantidad de nudos a fabricar"
+      ],
+      "memoryText": "columnas y cerchas reticuladas de acero",
+      "availability": "available"
+    }
+  ],
+  "finishes": [
+    {
+      "id": "primerGrey",
+      "name": "Antióxido + esmalte gris",
+      "hex": "#5d666d",
+      "memoryText": "La estructura lleva antióxido y esmalte sintético gris."
+    },
+    {
+      "id": "epoxyPrimer",
+      "name": "Imprimación epoxi",
+      "hex": "#8a8f8c",
+      "memoryText": "La estructura lleva imprimación epoxi."
+    },
+    {
+      "id": "galvanized",
+      "name": "Galvanizado en caliente",
+      "hex": "#9ca3a6",
+      "memoryText": "La estructura se entrega galvanizada en caliente."
+    },
+    {
+      "id": "epoxyWhite",
+      "name": "Epoxi blanco",
+      "hex": "#d9dad5",
+      "memoryText": "La estructura lleva terminación epoxi blanca."
+    }
+  ],
+  "defaultFinish": "galvanized",
+  "profileLabels": {
+    "columns": "Perfil soldado — a definir por ingeniería",
+    "rafters": "Perfil soldado — a definir por ingeniería",
+    "purlins": "Perfil C galvanizado (referencial)",
+    "girts": "Perfil C galvanizado (referencial)",
+    "bracing": "Barra redonda (referencial)"
+  }
+}

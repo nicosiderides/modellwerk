@@ -1,0 +1,142 @@
+{
+  "strategy": "discreteVariant",
+  "defaultVariant": "LG-30x72",
+  "note": "Variantes exportadas como GLB + metadata (pipeline Revit/IFC demostrativo). Dimensiones y aberturas vienen del modelo; terminaciones y colores se aplican en la web.",
+  "variants": [
+    {
+      "id": "LG-30x72",
+      "label": "30 × 72 m · alero 10 m",
+      "model": {
+        "id": "LG-30x72",
+        "type": "glb",
+        "src": "/galpones/logistics/LG-30x72.glb",
+        "metadataSrc": "/galpones/logistics/LG-30x72.metadata.json",
+        "scale": 1,
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "center": true
+      },
+      "dimensions": {
+        "width": 30,
+        "length": 72,
+        "eaveHeight": 10,
+        "roofSlope": 8,
+        "baySpacing": 8,
+        "bayCount": 9
+      },
+      "structure": "truss",
+      "includes": {
+        "options": {
+          "skylights": true,
+          "canopy": true,
+          "crane": false
+        },
+        "openings": {
+          "doorsFront": 3,
+          "doorsBack": 0,
+          "doorsSide": 3,
+          "personDoors": 2,
+          "windowsPerSide": 0
+        }
+      }
+    },
+    {
+      "id": "LG-36x96",
+      "label": "36 × 96 m · alero 12 m",
+      "model": {
+        "id": "LG-36x96",
+        "type": "glb",
+        "src": "/galpones/logistics/LG-36x96.glb",
+        "metadataSrc": "/galpones/logistics/LG-36x96.metadata.json",
+        "scale": 1,
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "center": true
+      },
+      "dimensions": {
+        "width": 36,
+        "length": 96,
+        "eaveHeight": 12,
+        "roofSlope": 8,
+        "baySpacing": 8,
+        "bayCount": 12
+      },
+      "structure": "truss",
+      "includes": {
+        "options": {
+          "skylights": true,
+          "canopy": true,
+          "crane": false
+        },
+        "openings": {
+          "doorsFront": 4,
+          "doorsBack": 2,
+          "doorsSide": 4,
+          "personDoors": 2,
+          "windowsPerSide": 0
+        }
+      }
+    },
+    {
+      "id": "LG-45x120",
+      "label": "45 × 120 m · alero 13 m",
+      "model": {
+        "id": "LG-45x120",
+        "type": "glb",
+        "src": "/galpones/logistics/LG-45x120.glb",
+        "metadataSrc": "/galpones/logistics/LG-45x120.metadata.json",
+        "scale": 1,
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "center": true
+      },
+      "dimensions": {
+        "width": 45,
+        "length": 120,
+        "eaveHeight": 13,
+        "roofSlope": 7,
+        "baySpacing": 8,
+        "bayCount": 15
+      },
+      "structure": "truss",
+      "includes": {
+        "options": {
+          "skylights": true,
+          "canopy": false,
+          "crane": false
+        },
+        "openings": {
+          "doorsFront": 4,
+          "doorsBack": 4,
+          "doorsSide": 5,
+          "personDoors": 3,
+          "windowsPerSide": 0
+        }
+      }
+    }
+  ]
+}

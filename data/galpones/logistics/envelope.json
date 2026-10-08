@@ -1,0 +1,166 @@
+{
+  "roof": [
+    {
+      "id": "trapezoidalSheet",
+      "name": "Chapa trapezoidal",
+      "summary": "Chapa de acero prepintada de onda trapezoidal. Liviana y económica.",
+      "memoryText": "chapa trapezoidal de acero prepintada",
+      "finish": "trapezoidal",
+      "thicknessMm": 40,
+      "insulation": [
+        "none",
+        "EPS",
+        "mineralWool"
+      ]
+    },
+    {
+      "id": "sandwichPanel",
+      "name": "Panel sándwich",
+      "summary": "Dos chapas con núcleo aislante. Cubierta y aislación en una sola pieza.",
+      "memoryText": "panel sándwich autoportante de doble chapa con núcleo aislante",
+      "finish": "sandwich",
+      "thicknessMm": 80,
+      "insulation": [
+        "EPS",
+        "PIR",
+        "mineralWool"
+      ]
+    },
+    {
+      "id": "standingSeam",
+      "name": "Junta alzada",
+      "summary": "Chapa engrafada sin perforaciones a la vista. Máxima estanqueidad.",
+      "memoryText": "chapa de junta alzada engrafada, sin fijaciones pasantes",
+      "finish": "standingSeam",
+      "thicknessMm": 50,
+      "insulation": [
+        "none",
+        "EPS",
+        "PIR",
+        "mineralWool"
+      ]
+    }
+  ],
+  "walls": [
+    {
+      "id": "trapezoidalSheet",
+      "name": "Chapa trapezoidal",
+      "summary": "Cerramiento liviano de chapa prepintada.",
+      "memoryText": "chapa trapezoidal prepintada sobre largueros metálicos",
+      "finish": "trapezoidal",
+      "thicknessMm": 40,
+      "insulation": [
+        "none",
+        "EPS",
+        "PIR",
+        "mineralWool"
+      ]
+    },
+    {
+      "id": "sandwichPanel",
+      "name": "Panel sándwich",
+      "summary": "Panel aislante de fachada con juntas horizontales.",
+      "memoryText": "panel sándwich de fachada con juntas horizontales",
+      "finish": "sandwich",
+      "thicknessMm": 80,
+      "insulation": [
+        "EPS",
+        "PIR",
+        "mineralWool"
+      ]
+    },
+    {
+      "id": "precastBase",
+      "name": "Zócalo premoldeado + chapa",
+      "summary": "Base de hormigón resistente a impactos y chapa por encima.",
+      "memoryText": "zócalo de paneles premoldeados de hormigón y chapa trapezoidal por encima",
+      "finish": "precastSheet",
+      "thicknessMm": 40,
+      "insulation": [
+        "none",
+        "EPS",
+        "PIR",
+        "mineralWool"
+      ]
+    }
+  ],
+  "insulation": [
+    {
+      "id": "none",
+      "name": "Sin aislación",
+      "summary": "Envolvente simple, para depósitos sin climatizar.",
+      "memoryText": "sin aislación térmica",
+      "level": 0,
+      "thicknessMm": 0
+    },
+    {
+      "id": "EPS",
+      "name": "EPS",
+      "summary": "Poliestireno expandido. Buena relación costo / aislación.",
+      "memoryText": "poliestireno expandido (EPS) de 50 mm",
+      "level": 1,
+      "thicknessMm": 50
+    },
+    {
+      "id": "mineralWool",
+      "name": "Lana mineral",
+      "summary": "Incombustible. Mejora el comportamiento acústico y frente al fuego.",
+      "memoryText": "lana mineral de 75 mm, incombustible",
+      "level": 2,
+      "thicknessMm": 75
+    },
+    {
+      "id": "PIR",
+      "name": "PIR",
+      "summary": "Espuma de poliisocianurato. Máxima aislación en poco espesor.",
+      "memoryText": "espuma de poliisocianurato (PIR) de 50 mm",
+      "level": 3,
+      "thicknessMm": 50
+    }
+  ],
+  "colors": [
+    {
+      "id": "silver",
+      "name": "Gris perla",
+      "hex": "#c4c6c3"
+    },
+    {
+      "id": "white",
+      "name": "Blanco industrial",
+      "hex": "#e4e3dd"
+    },
+    {
+      "id": "graphite",
+      "name": "Grafito",
+      "hex": "#4d5458"
+    },
+    {
+      "id": "steelblue",
+      "name": "Azul acero",
+      "hex": "#3e566a"
+    },
+    {
+      "id": "sage",
+      "name": "Verde salvia",
+      "hex": "#77867c"
+    },
+    {
+      "id": "sand",
+      "name": "Arena",
+      "hex": "#bfb197"
+    },
+    {
+      "id": "oxide",
+      "name": "Rojo óxido",
+      "hex": "#8b4a3b"
+    }
+  ],
+  "defaults": {
+    "roof": "standingSeam",
+    "walls": "precastBase",
+    "insulation": "mineralWool",
+    "roofColor": "white",
+    "wallColor": "graphite"
+  },
+  "precastBaseHeight": 2.4
+}

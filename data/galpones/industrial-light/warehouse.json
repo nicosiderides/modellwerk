@@ -1,0 +1,74 @@
+{
+  "id": "industrial-light",
+  "code": "GP01",
+  "name": "Industrial Light",
+  "tagline": "Lo esencial, bien resuelto.",
+  "description": "Nave compacta de pórticos de alma llena para depósitos, talleres y pymes que empiezan.",
+  "use": "Depósito / taller",
+  "structuralSystemLabel": "Pórtico metálico",
+  "thumbnail": "/galpones/industrial-light/thumb.webp",
+  "insulationLevel": {
+    "label": "Básica",
+    "score": 1
+  },
+  "relativePrice": 1,
+  "highlights": [
+    "Montaje rápido",
+    "Pocas piezas",
+    "Ampliable por módulos"
+  ],
+  "dimensions": {
+    "width": {
+      "min": 12,
+      "max": 24,
+      "step": 1
+    },
+    "length": {
+      "min": 18,
+      "max": 72,
+      "step": 0.5
+    },
+    "eaveHeight": {
+      "min": 5,
+      "max": 8,
+      "step": 0.5
+    },
+    "roofSlope": {
+      "min": 8,
+      "max": 20,
+      "step": 1
+    },
+    "baySpacing": {
+      "min": 5,
+      "max": 7,
+      "step": 0.5
+    },
+    "bayCount": {
+      "min": 3,
+      "max": 12
+    }
+  },
+  "defaults": {
+    "width": 18,
+    "eaveHeight": 6,
+    "roofSlope": 12,
+    "baySpacing": 6,
+    "bayCount": 6
+  },
+  "rules": [
+    {
+      "id": "light-wide",
+      "level": "info",
+      "message": "Por encima de 20 m de luz conviene evaluar Industrial Pro o un sistema mixto.",
+      "when": {
+        "widthAbove": 20,
+        "structureIn": [
+          "portalFrame"
+        ]
+      },
+      "suggest": {
+        "structure": "mixed"
+      }
+    }
+  ]
+}

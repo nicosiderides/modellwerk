@@ -1,0 +1,3 @@
+:HL["/modellwerk/galpones/_next/static/chunks/14yft5v8we2s-.css","style"]
+:HL["/modellwerk/galpones/_next/static/chunks/22okb-oyd3pk-.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"galpones","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"ygiiWn2hmWqwjodCtVk-z"}
