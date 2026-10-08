@@ -1,0 +1,16 @@
+{
+  "description": [
+    "{name}: nave industrial de {width} m de luz libre y {length} m de longitud, con {area} m² cubiertos y un volumen interior de {volume} m³. Altura de alero {eaveHeight} m y de cumbrera {ridgeHeight} m, con cubierta a dos aguas de {slope} % de pendiente ({slopeDeg}°).",
+    "La estructura se resuelve mediante {structure}: {frames} pórticos separados cada {spacing} m, que conforman {bays} módulos. {finish}",
+    "La cubierta se ejecuta con {roof}, color {roofColor}. Aislación térmica: {insulation}.",
+    "Los cerramientos laterales y testeros se resuelven con {walls}, color {wallColor}.",
+    "Aberturas: {openings}.",
+    "Opcionales incluidos: {options}."
+  ],
+  "note": "Catálogo demostrativo. Las dimensiones de perfiles, fundaciones y cargas se definen con ingeniería antes de construir.",
+  "constructionNotes": [
+    "Platea y bases de hormigón según estudio de suelos.",
+    "Estructura fabricada en taller y montada en obra con uniones abulonadas.",
+    "Desagües pluviales con canaletas y bajadas en ambos laterales."
+  ]
+}

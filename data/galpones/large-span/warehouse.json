@@ -1,0 +1,74 @@
+{
+  "id": "large-span",
+  "code": "GP04",
+  "name": "Large Span",
+  "tagline": "Grandes luces sin columnas intermedias.",
+  "description": "Estructura reticulada para luces de 30 a 60 m: hangares, plantas industriales y depósitos de gran escala.",
+  "use": "Hangares / gran industria",
+  "structuralSystemLabel": "Estructura reticulada",
+  "thumbnail": "/galpones/large-span/thumb.webp",
+  "insulationLevel": {
+    "label": "Alta",
+    "score": 3
+  },
+  "relativePrice": 4,
+  "highlights": [
+    "Hasta 60 m de luz",
+    "Sin columnas interiores",
+    "Cerchas de gran canto"
+  ],
+  "dimensions": {
+    "width": {
+      "min": 30,
+      "max": 60,
+      "step": 1
+    },
+    "length": {
+      "min": 36,
+      "max": 120,
+      "step": 0.5
+    },
+    "eaveHeight": {
+      "min": 7,
+      "max": 14,
+      "step": 0.5
+    },
+    "roofSlope": {
+      "min": 5,
+      "max": 15,
+      "step": 1
+    },
+    "baySpacing": {
+      "min": 6,
+      "max": 10,
+      "step": 0.5
+    },
+    "bayCount": {
+      "min": 4,
+      "max": 16
+    }
+  },
+  "defaults": {
+    "width": 40,
+    "eaveHeight": 10,
+    "roofSlope": 8,
+    "baySpacing": 7.5,
+    "bayCount": 8
+  },
+  "rules": [
+    {
+      "id": "large-mixed",
+      "level": "info",
+      "message": "Con más de 45 m de luz, el reticulado completo suele aprovechar mejor el acero que el sistema mixto.",
+      "when": {
+        "widthAbove": 45,
+        "structureIn": [
+          "mixed"
+        ]
+      },
+      "suggest": {
+        "structure": "truss"
+      }
+    }
+  ]
+}

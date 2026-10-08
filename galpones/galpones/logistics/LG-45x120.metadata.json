@@ -1,0 +1,4776 @@
+{
+ "schema": "mw.product-metadata/1",
+ "model": {
+  "id": "LG-45x120",
+  "name": "Logistics 45 × 120 m · alero 13 m",
+  "source": "demo",
+  "units": "m",
+  "tool": "Demo export (simula Revit → GLB + metadata)",
+  "exportedAt": "2026-10-08T00:00:00.000Z",
+  "revision": "R1"
+ },
+ "elements": [
+  {
+   "elementId": "400007",
+   "nodeName": "GP03_FOUNDATIONS_SLAB",
+   "category": "foundations",
+   "bimCategory": "Floors",
+   "family": "Contrapiso de hormigón",
+   "type": "Hormigón armado — espesor a definir",
+   "material": "Hormigón",
+   "materialKey": "slab",
+   "level": "Nivel 0",
+   "label": "Platea / contrapiso",
+   "parameters": {
+    "area_m2": 5400
+   }
+  },
+  {
+   "elementId": "400014",
+   "nodeName": "GP03_COLUMNS_COL-A-01",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-01",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-01",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400021",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-01",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-01",
+   "parameters": {
+    "grilla": "A-01"
+   }
+  },
+  {
+   "elementId": "400028",
+   "nodeName": "GP03_COLUMNS_COL-B-01",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-01",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-01",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400035",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-01",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-01",
+   "parameters": {
+    "grilla": "B-01"
+   }
+  },
+  {
+   "elementId": "400042",
+   "nodeName": "GP03_RAFTERS_TR-01",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 01",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "01",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400049",
+   "nodeName": "GP03_COLUMNS_COL-A-02",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-02",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-02",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400056",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-02",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-02",
+   "parameters": {
+    "grilla": "A-02"
+   }
+  },
+  {
+   "elementId": "400063",
+   "nodeName": "GP03_COLUMNS_COL-B-02",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-02",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-02",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400070",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-02",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-02",
+   "parameters": {
+    "grilla": "B-02"
+   }
+  },
+  {
+   "elementId": "400077",
+   "nodeName": "GP03_RAFTERS_TR-02",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 02",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "02",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400084",
+   "nodeName": "GP03_COLUMNS_COL-A-03",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-03",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-03",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400091",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-03",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-03",
+   "parameters": {
+    "grilla": "A-03"
+   }
+  },
+  {
+   "elementId": "400098",
+   "nodeName": "GP03_COLUMNS_COL-B-03",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-03",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-03",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400105",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-03",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-03",
+   "parameters": {
+    "grilla": "B-03"
+   }
+  },
+  {
+   "elementId": "400112",
+   "nodeName": "GP03_RAFTERS_TR-03",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 03",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "03",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400119",
+   "nodeName": "GP03_COLUMNS_COL-A-04",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-04",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-04",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400126",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-04",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-04",
+   "parameters": {
+    "grilla": "A-04"
+   }
+  },
+  {
+   "elementId": "400133",
+   "nodeName": "GP03_COLUMNS_COL-B-04",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-04",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-04",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400140",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-04",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-04",
+   "parameters": {
+    "grilla": "B-04"
+   }
+  },
+  {
+   "elementId": "400147",
+   "nodeName": "GP03_RAFTERS_TR-04",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 04",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "04",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400154",
+   "nodeName": "GP03_COLUMNS_COL-A-05",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-05",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-05",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400161",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-05",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-05",
+   "parameters": {
+    "grilla": "A-05"
+   }
+  },
+  {
+   "elementId": "400168",
+   "nodeName": "GP03_COLUMNS_COL-B-05",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-05",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-05",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400175",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-05",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-05",
+   "parameters": {
+    "grilla": "B-05"
+   }
+  },
+  {
+   "elementId": "400182",
+   "nodeName": "GP03_RAFTERS_TR-05",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 05",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "05",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400189",
+   "nodeName": "GP03_COLUMNS_COL-A-06",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-06",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-06",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400196",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-06",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-06",
+   "parameters": {
+    "grilla": "A-06"
+   }
+  },
+  {
+   "elementId": "400203",
+   "nodeName": "GP03_COLUMNS_COL-B-06",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-06",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-06",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400210",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-06",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-06",
+   "parameters": {
+    "grilla": "B-06"
+   }
+  },
+  {
+   "elementId": "400217",
+   "nodeName": "GP03_RAFTERS_TR-06",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 06",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "06",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400224",
+   "nodeName": "GP03_COLUMNS_COL-A-07",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-07",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-07",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400231",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-07",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-07",
+   "parameters": {
+    "grilla": "A-07"
+   }
+  },
+  {
+   "elementId": "400238",
+   "nodeName": "GP03_COLUMNS_COL-B-07",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-07",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-07",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400245",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-07",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-07",
+   "parameters": {
+    "grilla": "B-07"
+   }
+  },
+  {
+   "elementId": "400252",
+   "nodeName": "GP03_RAFTERS_TR-07",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 07",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "07",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400259",
+   "nodeName": "GP03_COLUMNS_COL-A-08",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-08",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-08",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400266",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-08",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-08",
+   "parameters": {
+    "grilla": "A-08"
+   }
+  },
+  {
+   "elementId": "400273",
+   "nodeName": "GP03_COLUMNS_COL-B-08",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-08",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-08",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400280",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-08",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-08",
+   "parameters": {
+    "grilla": "B-08"
+   }
+  },
+  {
+   "elementId": "400287",
+   "nodeName": "GP03_RAFTERS_TR-08",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 08",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "08",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400294",
+   "nodeName": "GP03_COLUMNS_COL-A-09",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-09",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-09",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400301",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-09",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-09",
+   "parameters": {
+    "grilla": "A-09"
+   }
+  },
+  {
+   "elementId": "400308",
+   "nodeName": "GP03_COLUMNS_COL-B-09",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-09",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-09",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400315",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-09",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-09",
+   "parameters": {
+    "grilla": "B-09"
+   }
+  },
+  {
+   "elementId": "400322",
+   "nodeName": "GP03_RAFTERS_TR-09",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 09",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "09",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400329",
+   "nodeName": "GP03_COLUMNS_COL-A-10",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-10",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-10",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400336",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-10",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-10",
+   "parameters": {
+    "grilla": "A-10"
+   }
+  },
+  {
+   "elementId": "400343",
+   "nodeName": "GP03_COLUMNS_COL-B-10",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-10",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-10",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400350",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-10",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-10",
+   "parameters": {
+    "grilla": "B-10"
+   }
+  },
+  {
+   "elementId": "400357",
+   "nodeName": "GP03_RAFTERS_TR-10",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 10",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "10",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400364",
+   "nodeName": "GP03_COLUMNS_COL-A-11",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-11",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-11",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400371",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-11",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-11",
+   "parameters": {
+    "grilla": "A-11"
+   }
+  },
+  {
+   "elementId": "400378",
+   "nodeName": "GP03_COLUMNS_COL-B-11",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-11",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-11",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400385",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-11",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-11",
+   "parameters": {
+    "grilla": "B-11"
+   }
+  },
+  {
+   "elementId": "400392",
+   "nodeName": "GP03_RAFTERS_TR-11",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 11",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "11",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400399",
+   "nodeName": "GP03_COLUMNS_COL-A-12",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-12",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-12",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400406",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-12",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-12",
+   "parameters": {
+    "grilla": "A-12"
+   }
+  },
+  {
+   "elementId": "400413",
+   "nodeName": "GP03_COLUMNS_COL-B-12",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-12",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-12",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400420",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-12",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-12",
+   "parameters": {
+    "grilla": "B-12"
+   }
+  },
+  {
+   "elementId": "400427",
+   "nodeName": "GP03_RAFTERS_TR-12",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 12",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "12",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400434",
+   "nodeName": "GP03_COLUMNS_COL-A-13",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-13",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-13",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400441",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-13",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-13",
+   "parameters": {
+    "grilla": "A-13"
+   }
+  },
+  {
+   "elementId": "400448",
+   "nodeName": "GP03_COLUMNS_COL-B-13",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-13",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-13",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400455",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-13",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-13",
+   "parameters": {
+    "grilla": "B-13"
+   }
+  },
+  {
+   "elementId": "400462",
+   "nodeName": "GP03_RAFTERS_TR-13",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 13",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "13",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400469",
+   "nodeName": "GP03_COLUMNS_COL-A-14",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-14",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-14",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400476",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-14",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-14",
+   "parameters": {
+    "grilla": "A-14"
+   }
+  },
+  {
+   "elementId": "400483",
+   "nodeName": "GP03_COLUMNS_COL-B-14",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-14",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-14",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400490",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-14",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-14",
+   "parameters": {
+    "grilla": "B-14"
+   }
+  },
+  {
+   "elementId": "400497",
+   "nodeName": "GP03_RAFTERS_TR-14",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 14",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "14",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400504",
+   "nodeName": "GP03_COLUMNS_COL-A-15",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-15",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-15",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400511",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-15",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-15",
+   "parameters": {
+    "grilla": "A-15"
+   }
+  },
+  {
+   "elementId": "400518",
+   "nodeName": "GP03_COLUMNS_COL-B-15",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-15",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-15",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400525",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-15",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-15",
+   "parameters": {
+    "grilla": "B-15"
+   }
+  },
+  {
+   "elementId": "400532",
+   "nodeName": "GP03_RAFTERS_TR-15",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 15",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "15",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400539",
+   "nodeName": "GP03_COLUMNS_COL-A-16",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna A-16",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "A-16",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400546",
+   "nodeName": "GP03_FOUNDATIONS_FD-A-16",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base A-16",
+   "parameters": {
+    "grilla": "A-16"
+   }
+  },
+  {
+   "elementId": "400553",
+   "nodeName": "GP03_COLUMNS_COL-B-16",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna B-16",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "B-16",
+    "altura_m": 12.717
+   }
+  },
+  {
+   "elementId": "400560",
+   "nodeName": "GP03_FOUNDATIONS_FD-B-16",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base B-16",
+   "parameters": {
+    "grilla": "B-16"
+   }
+  },
+  {
+   "elementId": "400567",
+   "nodeName": "GP03_RAFTERS_TR-16",
+   "category": "rafters",
+   "bimCategory": "Structural Trusses",
+   "family": "Viga reticulada",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Cercha pórtico 16",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "portico": "16",
+    "luz_m": 45,
+    "altura_apoyo_m": 1.88
+   }
+  },
+  {
+   "elementId": "400574",
+   "nodeName": "GP03_COLUMNS_GC-F1",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna de testero",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna de testero F1",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "F1",
+    "altura_m": 10.85
+   }
+  },
+  {
+   "elementId": "400581",
+   "nodeName": "GP03_FOUNDATIONS_FD-GF1",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base testero F1",
+   "parameters": {
+    "grilla": "testero F1"
+   }
+  },
+  {
+   "elementId": "400588",
+   "nodeName": "GP03_COLUMNS_GC-F4",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna de testero",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna de testero F4",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "F4",
+    "altura_m": 10.85
+   }
+  },
+  {
+   "elementId": "400595",
+   "nodeName": "GP03_FOUNDATIONS_FD-GF4",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base testero F4",
+   "parameters": {
+    "grilla": "testero F4"
+   }
+  },
+  {
+   "elementId": "400602",
+   "nodeName": "GP03_COLUMNS_GC-F7",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna de testero",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna de testero F7",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "F7",
+    "altura_m": 10.85
+   }
+  },
+  {
+   "elementId": "400609",
+   "nodeName": "GP03_FOUNDATIONS_FD-GF7",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base testero F7",
+   "parameters": {
+    "grilla": "testero F7"
+   }
+  },
+  {
+   "elementId": "400616",
+   "nodeName": "GP03_COLUMNS_GC-C1",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna de testero",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna de testero C1",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "C1",
+    "altura_m": 10.85
+   }
+  },
+  {
+   "elementId": "400623",
+   "nodeName": "GP03_FOUNDATIONS_FD-GC1",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base testero C1",
+   "parameters": {
+    "grilla": "testero C1"
+   }
+  },
+  {
+   "elementId": "400630",
+   "nodeName": "GP03_COLUMNS_GC-C4",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna de testero",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna de testero C4",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "C4",
+    "altura_m": 10.85
+   }
+  },
+  {
+   "elementId": "400637",
+   "nodeName": "GP03_FOUNDATIONS_FD-GC4",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base testero C4",
+   "parameters": {
+    "grilla": "testero C4"
+   }
+  },
+  {
+   "elementId": "400644",
+   "nodeName": "GP03_COLUMNS_GC-C7",
+   "category": "columns",
+   "bimCategory": "Structural Columns",
+   "family": "Columna de testero",
+   "type": "Perfil soldado — a definir por ingeniería",
+   "material": "Acero estructural",
+   "materialKey": "structure",
+   "level": "Nivel 0",
+   "label": "Columna de testero C7",
+   "parameters": {
+    "sistema": "Reticulado",
+    "terminacion": "Galvanizado en caliente",
+    "grilla": "C7",
+    "altura_m": 10.85
+   }
+  },
+  {
+   "elementId": "400651",
+   "nodeName": "GP03_FOUNDATIONS_FD-GC7",
+   "category": "foundations",
+   "bimCategory": "Structural Foundations",
+   "family": "Base aislada",
+   "type": "A definir por ingeniería",
+   "material": "Hormigón armado",
+   "materialKey": "footing",
+   "level": "Nivel 0",
+   "label": "Base testero C7",
+   "parameters": {
+    "grilla": "testero C7"
+   }
+  },
+  {
+   "elementId": "400658",
+   "nodeName": "GP03_PURLINS_PU-O01",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-01",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400665",
+   "nodeName": "GP03_PURLINS_PU-O02",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-02",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400672",
+   "nodeName": "GP03_PURLINS_PU-O03",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-03",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400679",
+   "nodeName": "GP03_PURLINS_PU-O04",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-04",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400686",
+   "nodeName": "GP03_PURLINS_PU-O05",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-05",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400693",
+   "nodeName": "GP03_PURLINS_PU-O06",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-06",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400700",
+   "nodeName": "GP03_PURLINS_PU-O07",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-07",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400707",
+   "nodeName": "GP03_PURLINS_PU-O08",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-08",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400714",
+   "nodeName": "GP03_PURLINS_PU-O09",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-09",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400721",
+   "nodeName": "GP03_PURLINS_PU-O10",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-10",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400728",
+   "nodeName": "GP03_PURLINS_PU-O11",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-11",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400735",
+   "nodeName": "GP03_PURLINS_PU-O12",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-12",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400742",
+   "nodeName": "GP03_PURLINS_PU-O13",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-13",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400749",
+   "nodeName": "GP03_PURLINS_PU-O14",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-14",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400756",
+   "nodeName": "GP03_PURLINS_PU-O15",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-15",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400763",
+   "nodeName": "GP03_PURLINS_PU-O16",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-16",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400770",
+   "nodeName": "GP03_PURLINS_PU-O17",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa O-17",
+   "parameters": {
+    "faldon": "Oeste",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400777",
+   "nodeName": "GP03_PURLINS_PU-E01",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-01",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400784",
+   "nodeName": "GP03_PURLINS_PU-E02",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-02",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400791",
+   "nodeName": "GP03_PURLINS_PU-E03",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-03",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400798",
+   "nodeName": "GP03_PURLINS_PU-E04",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-04",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400805",
+   "nodeName": "GP03_PURLINS_PU-E05",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-05",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400812",
+   "nodeName": "GP03_PURLINS_PU-E06",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-06",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400819",
+   "nodeName": "GP03_PURLINS_PU-E07",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-07",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400826",
+   "nodeName": "GP03_PURLINS_PU-E08",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-08",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400833",
+   "nodeName": "GP03_PURLINS_PU-E09",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-09",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400840",
+   "nodeName": "GP03_PURLINS_PU-E10",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-10",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400847",
+   "nodeName": "GP03_PURLINS_PU-E11",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-11",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400854",
+   "nodeName": "GP03_PURLINS_PU-E12",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-12",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400861",
+   "nodeName": "GP03_PURLINS_PU-E13",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-13",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400868",
+   "nodeName": "GP03_PURLINS_PU-E14",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-14",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400875",
+   "nodeName": "GP03_PURLINS_PU-E15",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-15",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400882",
+   "nodeName": "GP03_PURLINS_PU-E16",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-16",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400889",
+   "nodeName": "GP03_PURLINS_PU-E17",
+   "category": "purlins",
+   "bimCategory": "Structural Framing",
+   "family": "Correa C conformada",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Correa E-17",
+   "parameters": {
+    "faldon": "Este",
+    "longitud_m": 120.4
+   }
+  },
+  {
+   "elementId": "400896",
+   "nodeName": "GP03_GIRTS_GI-O01",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral O-01",
+   "parameters": {
+    "altura_m": 2.8
+   }
+  },
+  {
+   "elementId": "400903",
+   "nodeName": "GP03_GIRTS_GI-O02",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral O-02",
+   "parameters": {
+    "altura_m": 4.6
+   }
+  },
+  {
+   "elementId": "400910",
+   "nodeName": "GP03_GIRTS_GI-O03",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral O-03",
+   "parameters": {
+    "altura_m": 6.4
+   }
+  },
+  {
+   "elementId": "400917",
+   "nodeName": "GP03_GIRTS_GI-O04",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral O-04",
+   "parameters": {
+    "altura_m": 8.2
+   }
+  },
+  {
+   "elementId": "400924",
+   "nodeName": "GP03_GIRTS_GI-O05",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral O-05",
+   "parameters": {
+    "altura_m": 10
+   }
+  },
+  {
+   "elementId": "400931",
+   "nodeName": "GP03_GIRTS_GI-O06",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral O-06",
+   "parameters": {
+    "altura_m": 11.8
+   }
+  },
+  {
+   "elementId": "400938",
+   "nodeName": "GP03_GIRTS_GI-E01",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral E-01",
+   "parameters": {
+    "altura_m": 2.8
+   }
+  },
+  {
+   "elementId": "400945",
+   "nodeName": "GP03_GIRTS_GI-E02",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral E-02",
+   "parameters": {
+    "altura_m": 4.6
+   }
+  },
+  {
+   "elementId": "400952",
+   "nodeName": "GP03_GIRTS_GI-E03",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral E-03",
+   "parameters": {
+    "altura_m": 6.4
+   }
+  },
+  {
+   "elementId": "400959",
+   "nodeName": "GP03_GIRTS_GI-E04",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral E-04",
+   "parameters": {
+    "altura_m": 8.2
+   }
+  },
+  {
+   "elementId": "400966",
+   "nodeName": "GP03_GIRTS_GI-E05",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral E-05",
+   "parameters": {
+    "altura_m": 10
+   }
+  },
+  {
+   "elementId": "400973",
+   "nodeName": "GP03_GIRTS_GI-E06",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero lateral E-06",
+   "parameters": {
+    "altura_m": 11.8
+   }
+  },
+  {
+   "elementId": "400980",
+   "nodeName": "GP03_GIRTS_GI-F01",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-01",
+   "parameters": {
+    "altura_m": 2.8
+   }
+  },
+  {
+   "elementId": "400987",
+   "nodeName": "GP03_GIRTS_GI-F02",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-02",
+   "parameters": {
+    "altura_m": 4.6
+   }
+  },
+  {
+   "elementId": "400994",
+   "nodeName": "GP03_GIRTS_GI-F03",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-03",
+   "parameters": {
+    "altura_m": 6.4
+   }
+  },
+  {
+   "elementId": "401001",
+   "nodeName": "GP03_GIRTS_GI-F04",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-04",
+   "parameters": {
+    "altura_m": 8.2
+   }
+  },
+  {
+   "elementId": "401008",
+   "nodeName": "GP03_GIRTS_GI-F05",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-05",
+   "parameters": {
+    "altura_m": 10
+   }
+  },
+  {
+   "elementId": "401015",
+   "nodeName": "GP03_GIRTS_GI-F06",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-06",
+   "parameters": {
+    "altura_m": 11.8
+   }
+  },
+  {
+   "elementId": "401022",
+   "nodeName": "GP03_GIRTS_GI-F07",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero F-07",
+   "parameters": {
+    "altura_m": 13.711
+   }
+  },
+  {
+   "elementId": "401029",
+   "nodeName": "GP03_GIRTS_GI-C01",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-01",
+   "parameters": {
+    "altura_m": 2.8
+   }
+  },
+  {
+   "elementId": "401036",
+   "nodeName": "GP03_GIRTS_GI-C02",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-02",
+   "parameters": {
+    "altura_m": 4.6
+   }
+  },
+  {
+   "elementId": "401043",
+   "nodeName": "GP03_GIRTS_GI-C03",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-03",
+   "parameters": {
+    "altura_m": 6.4
+   }
+  },
+  {
+   "elementId": "401050",
+   "nodeName": "GP03_GIRTS_GI-C04",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-04",
+   "parameters": {
+    "altura_m": 8.2
+   }
+  },
+  {
+   "elementId": "401057",
+   "nodeName": "GP03_GIRTS_GI-C05",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-05",
+   "parameters": {
+    "altura_m": 10
+   }
+  },
+  {
+   "elementId": "401064",
+   "nodeName": "GP03_GIRTS_GI-C06",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-06",
+   "parameters": {
+    "altura_m": 11.8
+   }
+  },
+  {
+   "elementId": "401071",
+   "nodeName": "GP03_GIRTS_GI-C07",
+   "category": "girts",
+   "bimCategory": "Structural Framing",
+   "family": "Larguero C conformado",
+   "type": "Perfil C galvanizado (referencial)",
+   "material": "Acero galvanizado",
+   "materialKey": "secondary",
+   "level": "Nivel 0",
+   "label": "Larguero testero C-07",
+   "parameters": {
+    "altura_m": 13.711
+   }
+  },
+  {
+   "elementId": "401078",
+   "nodeName": "GP03_BRACING_BR-RO01",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento de cubierta O-01",
+   "parameters": {
+    "modulo": 1
+   }
+  },
+  {
+   "elementId": "401085",
+   "nodeName": "GP03_BRACING_BR-WO01",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento lateral O-01",
+   "parameters": {
+    "modulo": 1
+   }
+  },
+  {
+   "elementId": "401092",
+   "nodeName": "GP03_BRACING_BR-RE01",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento de cubierta E-01",
+   "parameters": {
+    "modulo": 1
+   }
+  },
+  {
+   "elementId": "401099",
+   "nodeName": "GP03_BRACING_BR-WE01",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento lateral E-01",
+   "parameters": {
+    "modulo": 1
+   }
+  },
+  {
+   "elementId": "401106",
+   "nodeName": "GP03_BRACING_BR-RO15",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento de cubierta O-15",
+   "parameters": {
+    "modulo": 15
+   }
+  },
+  {
+   "elementId": "401113",
+   "nodeName": "GP03_BRACING_BR-WO15",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento lateral O-15",
+   "parameters": {
+    "modulo": 15
+   }
+  },
+  {
+   "elementId": "401120",
+   "nodeName": "GP03_BRACING_BR-RE15",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento de cubierta E-15",
+   "parameters": {
+    "modulo": 15
+   }
+  },
+  {
+   "elementId": "401127",
+   "nodeName": "GP03_BRACING_BR-WE15",
+   "category": "bracing",
+   "bimCategory": "Structural Framing",
+   "family": "Cruz de San Andrés",
+   "type": "Barra redonda (referencial)",
+   "material": "Acero",
+   "materialKey": "bracing",
+   "level": "Nivel 0",
+   "label": "Arriostramiento lateral E-15",
+   "parameters": {
+    "modulo": 15
+   }
+  },
+  {
+   "elementId": "401134",
+   "nodeName": "GP03_ROOF_RF-O01",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-01",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 1,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401141",
+   "nodeName": "GP03_ROOF_RF-E01",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-01",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 1,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401148",
+   "nodeName": "GP03_ROOF_RF-O02",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-02",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 2,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401155",
+   "nodeName": "GP03_SKYLIGHTS_SK-O02",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-02",
+   "parameters": {
+    "modulo": 2,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401162",
+   "nodeName": "GP03_ROOF_RF-E02",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-02",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 2,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401169",
+   "nodeName": "GP03_SKYLIGHTS_SK-E02",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-02",
+   "parameters": {
+    "modulo": 2,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401176",
+   "nodeName": "GP03_ROOF_RF-O03",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-03",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 3,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401183",
+   "nodeName": "GP03_ROOF_RF-E03",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-03",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 3,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401190",
+   "nodeName": "GP03_ROOF_RF-O04",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-04",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 4,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401197",
+   "nodeName": "GP03_SKYLIGHTS_SK-O04",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-04",
+   "parameters": {
+    "modulo": 4,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401204",
+   "nodeName": "GP03_ROOF_RF-E04",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-04",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 4,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401211",
+   "nodeName": "GP03_SKYLIGHTS_SK-E04",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-04",
+   "parameters": {
+    "modulo": 4,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401218",
+   "nodeName": "GP03_ROOF_RF-O05",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-05",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 5,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401225",
+   "nodeName": "GP03_ROOF_RF-E05",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-05",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 5,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401232",
+   "nodeName": "GP03_ROOF_RF-O06",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-06",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 6,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401239",
+   "nodeName": "GP03_SKYLIGHTS_SK-O06",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-06",
+   "parameters": {
+    "modulo": 6,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401246",
+   "nodeName": "GP03_ROOF_RF-E06",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-06",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 6,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401253",
+   "nodeName": "GP03_SKYLIGHTS_SK-E06",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-06",
+   "parameters": {
+    "modulo": 6,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401260",
+   "nodeName": "GP03_ROOF_RF-O07",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-07",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 7,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401267",
+   "nodeName": "GP03_ROOF_RF-E07",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-07",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 7,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401274",
+   "nodeName": "GP03_ROOF_RF-O08",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-08",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 8,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401281",
+   "nodeName": "GP03_SKYLIGHTS_SK-O08",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-08",
+   "parameters": {
+    "modulo": 8,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401288",
+   "nodeName": "GP03_ROOF_RF-E08",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-08",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 8,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401295",
+   "nodeName": "GP03_SKYLIGHTS_SK-E08",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-08",
+   "parameters": {
+    "modulo": 8,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401302",
+   "nodeName": "GP03_ROOF_RF-O09",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-09",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 9,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401309",
+   "nodeName": "GP03_ROOF_RF-E09",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-09",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 9,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401316",
+   "nodeName": "GP03_ROOF_RF-O10",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-10",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 10,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401323",
+   "nodeName": "GP03_SKYLIGHTS_SK-O10",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-10",
+   "parameters": {
+    "modulo": 10,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401330",
+   "nodeName": "GP03_ROOF_RF-E10",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-10",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 10,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401337",
+   "nodeName": "GP03_SKYLIGHTS_SK-E10",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-10",
+   "parameters": {
+    "modulo": 10,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401344",
+   "nodeName": "GP03_ROOF_RF-O11",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-11",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 11,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401351",
+   "nodeName": "GP03_ROOF_RF-E11",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-11",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 11,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401358",
+   "nodeName": "GP03_ROOF_RF-O12",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-12",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 12,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401365",
+   "nodeName": "GP03_SKYLIGHTS_SK-O12",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-12",
+   "parameters": {
+    "modulo": 12,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401372",
+   "nodeName": "GP03_ROOF_RF-E12",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-12",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 12,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401379",
+   "nodeName": "GP03_SKYLIGHTS_SK-E12",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-12",
+   "parameters": {
+    "modulo": 12,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401386",
+   "nodeName": "GP03_ROOF_RF-O13",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-13",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 13,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401393",
+   "nodeName": "GP03_ROOF_RF-E13",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-13",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 13,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401400",
+   "nodeName": "GP03_ROOF_RF-O14",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-14",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 14,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401407",
+   "nodeName": "GP03_SKYLIGHTS_SK-O14",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario O-14",
+   "parameters": {
+    "modulo": 14,
+    "faldon": "Oeste"
+   }
+  },
+  {
+   "elementId": "401414",
+   "nodeName": "GP03_ROOF_RF-E14",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-14",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 14,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401421",
+   "nodeName": "GP03_SKYLIGHTS_SK-E14",
+   "category": "skylights",
+   "bimCategory": "Roofs",
+   "family": "Lucernario policarbonato",
+   "type": "Policarbonato alveolar",
+   "material": "Policarbonato",
+   "materialKey": "skylight",
+   "level": "Nivel 0",
+   "label": "Lucernario E-14",
+   "parameters": {
+    "modulo": 14,
+    "faldon": "Este"
+   }
+  },
+  {
+   "elementId": "401428",
+   "nodeName": "GP03_ROOF_RF-O15",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta O-15",
+   "parameters": {
+    "faldon": "Oeste",
+    "modulo": 15,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401435",
+   "nodeName": "GP03_ROOF_RF-E15",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Junta alzada",
+   "type": "Junta alzada",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cubierta E-15",
+   "parameters": {
+    "faldon": "Este",
+    "modulo": 15,
+    "pendiente_pct": 7,
+    "espesor_mm": 50
+   }
+  },
+  {
+   "elementId": "401442",
+   "nodeName": "GP03_ROOF_RF-RIDGE",
+   "category": "roof",
+   "bimCategory": "Roofs",
+   "family": "Cumbrera",
+   "type": "Babeta de cumbrera",
+   "material": "Junta alzada",
+   "materialKey": "roofSheet",
+   "level": "Nivel 0",
+   "label": "Cumbrera"
+  },
+  {
+   "elementId": "401449",
+   "nodeName": "GP03_GUTTERS_GU-O",
+   "category": "gutters",
+   "bimCategory": "Gutters",
+   "family": "Canaleta de chapa",
+   "type": "Desarrollo a definir",
+   "material": "Chapa galvanizada",
+   "materialKey": "gutter",
+   "level": "Nivel 0",
+   "label": "Canaleta oeste",
+   "parameters": {
+    "longitud_m": 120.9,
+    "bajadas": 3
+   }
+  },
+  {
+   "elementId": "401456",
+   "nodeName": "GP03_GUTTERS_GU-E",
+   "category": "gutters",
+   "bimCategory": "Gutters",
+   "family": "Canaleta de chapa",
+   "type": "Desarrollo a definir",
+   "material": "Chapa galvanizada",
+   "materialKey": "gutter",
+   "level": "Nivel 0",
+   "label": "Canaleta este",
+   "parameters": {
+    "longitud_m": 120.9,
+    "bajadas": 3
+   }
+  },
+  {
+   "elementId": "401463",
+   "nodeName": "GP03_WALLS_WL-O01",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-01",
+   "parameters": {
+    "modulo": 1,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401470",
+   "nodeName": "GP03_WALLS_PC-O01",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-01",
+   "parameters": {
+    "modulo": 1,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401477",
+   "nodeName": "GP03_WALLS_WL-O02",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-02",
+   "parameters": {
+    "modulo": 2,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401484",
+   "nodeName": "GP03_WALLS_PC-O02",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-02",
+   "parameters": {
+    "modulo": 2,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401491",
+   "nodeName": "GP03_WALLS_WL-O03",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-03",
+   "parameters": {
+    "modulo": 3,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401498",
+   "nodeName": "GP03_WALLS_PC-O03",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-03",
+   "parameters": {
+    "modulo": 3,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401505",
+   "nodeName": "GP03_WALLS_WL-O04",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-04",
+   "parameters": {
+    "modulo": 4,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401512",
+   "nodeName": "GP03_WALLS_PC-O04",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-04",
+   "parameters": {
+    "modulo": 4,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401519",
+   "nodeName": "GP03_WALLS_WL-O05",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-05",
+   "parameters": {
+    "modulo": 5,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401526",
+   "nodeName": "GP03_WALLS_PC-O05",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-05",
+   "parameters": {
+    "modulo": 5,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401533",
+   "nodeName": "GP03_WALLS_WL-O06",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-06",
+   "parameters": {
+    "modulo": 6,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401540",
+   "nodeName": "GP03_WALLS_PC-O06",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-06",
+   "parameters": {
+    "modulo": 6,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401547",
+   "nodeName": "GP03_WALLS_WL-O07",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-07",
+   "parameters": {
+    "modulo": 7,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401554",
+   "nodeName": "GP03_WALLS_PC-O07",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-07",
+   "parameters": {
+    "modulo": 7,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401561",
+   "nodeName": "GP03_WALLS_WL-O08",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-08",
+   "parameters": {
+    "modulo": 8,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401568",
+   "nodeName": "GP03_WALLS_PC-O08",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-08",
+   "parameters": {
+    "modulo": 8,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401575",
+   "nodeName": "GP03_WALLS_WL-O09",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-09",
+   "parameters": {
+    "modulo": 9,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401582",
+   "nodeName": "GP03_WALLS_PC-O09",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-09",
+   "parameters": {
+    "modulo": 9,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401589",
+   "nodeName": "GP03_WALLS_WL-O10",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-10",
+   "parameters": {
+    "modulo": 10,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401596",
+   "nodeName": "GP03_WALLS_PC-O10",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-10",
+   "parameters": {
+    "modulo": 10,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401603",
+   "nodeName": "GP03_WALLS_WL-O11",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-11",
+   "parameters": {
+    "modulo": 11,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401610",
+   "nodeName": "GP03_WALLS_PC-O11",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-11",
+   "parameters": {
+    "modulo": 11,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401617",
+   "nodeName": "GP03_WALLS_WL-O12",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-12",
+   "parameters": {
+    "modulo": 12,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401624",
+   "nodeName": "GP03_WALLS_PC-O12",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-12",
+   "parameters": {
+    "modulo": 12,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401631",
+   "nodeName": "GP03_WALLS_WL-O13",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-13",
+   "parameters": {
+    "modulo": 13,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401638",
+   "nodeName": "GP03_WALLS_PC-O13",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-13",
+   "parameters": {
+    "modulo": 13,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401645",
+   "nodeName": "GP03_WALLS_WL-O14",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-14",
+   "parameters": {
+    "modulo": 14,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401652",
+   "nodeName": "GP03_WALLS_PC-O14",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-14",
+   "parameters": {
+    "modulo": 14,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401659",
+   "nodeName": "GP03_WALLS_WL-O15",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento O-15",
+   "parameters": {
+    "modulo": 15,
+    "lado": "Oeste",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401666",
+   "nodeName": "GP03_WALLS_PC-O15",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado O-15",
+   "parameters": {
+    "modulo": 15,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401673",
+   "nodeName": "GP03_WALLS_WL-E01",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-01",
+   "parameters": {
+    "modulo": 1,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401680",
+   "nodeName": "GP03_WALLS_PC-E01",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-01",
+   "parameters": {
+    "modulo": 1,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401687",
+   "nodeName": "GP03_WALLS_WL-E02",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-02",
+   "parameters": {
+    "modulo": 2,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401694",
+   "nodeName": "GP03_WALLS_PC-E02",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-02",
+   "parameters": {
+    "modulo": 2,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401701",
+   "nodeName": "GP03_WALLS_WL-E03",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-03",
+   "parameters": {
+    "modulo": 3,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401708",
+   "nodeName": "GP03_WALLS_PC-E03",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-03",
+   "parameters": {
+    "modulo": 3,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401715",
+   "nodeName": "GP03_WALLS_WL-E04",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-04",
+   "parameters": {
+    "modulo": 4,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401722",
+   "nodeName": "GP03_WALLS_PC-E04",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-04",
+   "parameters": {
+    "modulo": 4,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401729",
+   "nodeName": "GP03_WALLS_WL-E05",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-05",
+   "parameters": {
+    "modulo": 5,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401736",
+   "nodeName": "GP03_WALLS_PC-E05",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-05",
+   "parameters": {
+    "modulo": 5,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401743",
+   "nodeName": "GP03_WALLS_WL-E06",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-06",
+   "parameters": {
+    "modulo": 6,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401750",
+   "nodeName": "GP03_WALLS_PC-E06",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-06",
+   "parameters": {
+    "modulo": 6,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401757",
+   "nodeName": "GP03_WALLS_WL-E07",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-07",
+   "parameters": {
+    "modulo": 7,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401764",
+   "nodeName": "GP03_WALLS_PC-E07",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-07",
+   "parameters": {
+    "modulo": 7,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401771",
+   "nodeName": "GP03_WALLS_WL-E08",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-08",
+   "parameters": {
+    "modulo": 8,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401778",
+   "nodeName": "GP03_WALLS_PC-E08",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-08",
+   "parameters": {
+    "modulo": 8,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401785",
+   "nodeName": "GP03_WALLS_WL-E09",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-09",
+   "parameters": {
+    "modulo": 9,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401792",
+   "nodeName": "GP03_WALLS_PC-E09",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-09",
+   "parameters": {
+    "modulo": 9,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401799",
+   "nodeName": "GP03_WALLS_WL-E10",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-10",
+   "parameters": {
+    "modulo": 10,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401806",
+   "nodeName": "GP03_WALLS_PC-E10",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-10",
+   "parameters": {
+    "modulo": 10,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401813",
+   "nodeName": "GP03_WALLS_WL-E11",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-11",
+   "parameters": {
+    "modulo": 11,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401820",
+   "nodeName": "GP03_WALLS_PC-E11",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-11",
+   "parameters": {
+    "modulo": 11,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401827",
+   "nodeName": "GP03_WALLS_WL-E12",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-12",
+   "parameters": {
+    "modulo": 12,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401834",
+   "nodeName": "GP03_WALLS_PC-E12",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-12",
+   "parameters": {
+    "modulo": 12,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401841",
+   "nodeName": "GP03_WALLS_WL-E13",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-13",
+   "parameters": {
+    "modulo": 13,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401848",
+   "nodeName": "GP03_WALLS_PC-E13",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-13",
+   "parameters": {
+    "modulo": 13,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401855",
+   "nodeName": "GP03_WALLS_WL-E14",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-14",
+   "parameters": {
+    "modulo": 14,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401862",
+   "nodeName": "GP03_WALLS_PC-E14",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-14",
+   "parameters": {
+    "modulo": 14,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401869",
+   "nodeName": "GP03_WALLS_WL-E15",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento E-15",
+   "parameters": {
+    "modulo": 15,
+    "lado": "Este",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401876",
+   "nodeName": "GP03_WALLS_PC-E15",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado E-15",
+   "parameters": {
+    "modulo": 15,
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401883",
+   "nodeName": "GP03_WALLS_WL-F",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento frente",
+   "parameters": {
+    "testero": "Frente",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401890",
+   "nodeName": "GP03_WALLS_PC-F",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado frente",
+   "parameters": {
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401897",
+   "nodeName": "GP03_DOORS_DR-F1",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón frente 1",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Frente"
+   }
+  },
+  {
+   "elementId": "401904",
+   "nodeName": "GP03_DOORS_DR-F2",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón frente 2",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Frente"
+   }
+  },
+  {
+   "elementId": "401911",
+   "nodeName": "GP03_DOORS_DR-F3",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón frente 3",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Frente"
+   }
+  },
+  {
+   "elementId": "401918",
+   "nodeName": "GP03_DOORS_DR-F4",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón frente 4",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Frente"
+   }
+  },
+  {
+   "elementId": "401925",
+   "nodeName": "GP03_WALLS_WL-C",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Zócalo premoldeado + chapa",
+   "type": "Zócalo premoldeado + chapa",
+   "material": "Zócalo premoldeado + chapa",
+   "materialKey": "wallSheet",
+   "level": "Nivel 0",
+   "label": "Cerramiento contrafrente",
+   "parameters": {
+    "testero": "Contrafrente",
+    "espesor_mm": 40
+   }
+  },
+  {
+   "elementId": "401932",
+   "nodeName": "GP03_WALLS_PC-C",
+   "category": "walls",
+   "bimCategory": "Walls",
+   "family": "Panel premoldeado",
+   "type": "Hormigón premoldeado h=2.4 m",
+   "material": "Hormigón",
+   "materialKey": "precast",
+   "level": "Nivel 0",
+   "label": "Zócalo premoldeado contrafrente",
+   "parameters": {
+    "altura_m": 2.4
+   }
+  },
+  {
+   "elementId": "401939",
+   "nodeName": "GP03_DOORS_DR-C1",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón contrafrente 1",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Contrafrente"
+   }
+  },
+  {
+   "elementId": "401946",
+   "nodeName": "GP03_DOORS_DR-C2",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón contrafrente 2",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Contrafrente"
+   }
+  },
+  {
+   "elementId": "401953",
+   "nodeName": "GP03_DOORS_DR-C3",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón contrafrente 3",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Contrafrente"
+   }
+  },
+  {
+   "elementId": "401960",
+   "nodeName": "GP03_DOORS_DR-C4",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón contrafrente 4",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "testero": "Contrafrente"
+   }
+  },
+  {
+   "elementId": "401967",
+   "nodeName": "GP03_DOORS_DR-E1",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón lateral 1",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "modulo": 3
+   }
+  },
+  {
+   "elementId": "401974",
+   "nodeName": "GP03_DOORS_DR-E2",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón lateral 2",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "modulo": 5
+   }
+  },
+  {
+   "elementId": "401981",
+   "nodeName": "GP03_DOORS_DR-E3",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón lateral 3",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "modulo": 8
+   }
+  },
+  {
+   "elementId": "401988",
+   "nodeName": "GP03_DOORS_DR-E4",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón lateral 4",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "modulo": 11
+   }
+  },
+  {
+   "elementId": "401995",
+   "nodeName": "GP03_DOORS_DR-E5",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Portón seccional",
+   "type": "4.5 × 5 m",
+   "material": "Panel de acero con aislación",
+   "materialKey": "sectionalDoor",
+   "level": "Nivel 0",
+   "label": "Portón lateral 5",
+   "parameters": {
+    "ancho_m": 4.5,
+    "alto_m": 5,
+    "modulo": 13
+   }
+  },
+  {
+   "elementId": "402002",
+   "nodeName": "GP03_DOORS_PD-O1",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Puerta peatonal",
+   "type": "0.9 × 2.1 m",
+   "material": "Chapa doble",
+   "materialKey": "personDoor",
+   "level": "Nivel 0",
+   "label": "Puerta peatonal 1",
+   "parameters": {
+    "ancho_m": 0.9,
+    "alto_m": 2.1,
+    "modulo": 4
+   }
+  },
+  {
+   "elementId": "402009",
+   "nodeName": "GP03_DOORS_PD-O2",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Puerta peatonal",
+   "type": "0.9 × 2.1 m",
+   "material": "Chapa doble",
+   "materialKey": "personDoor",
+   "level": "Nivel 0",
+   "label": "Puerta peatonal 2",
+   "parameters": {
+    "ancho_m": 0.9,
+    "alto_m": 2.1,
+    "modulo": 8
+   }
+  },
+  {
+   "elementId": "402016",
+   "nodeName": "GP03_DOORS_PD-O3",
+   "category": "doors",
+   "bimCategory": "Doors",
+   "family": "Puerta peatonal",
+   "type": "0.9 × 2.1 m",
+   "material": "Chapa doble",
+   "materialKey": "personDoor",
+   "level": "Nivel 0",
+   "label": "Puerta peatonal 3",
+   "parameters": {
+    "ancho_m": 0.9,
+    "alto_m": 2.1,
+    "modulo": 12
+   }
+  }
+ ],
+ "categoryMap": {
+  "Structural Framing": "rafters"
+ }
+}

@@ -1,0 +1,190 @@
+{
+  "categories": {
+    "structure": {
+      "label": "Estructura",
+      "plural": "Estructura",
+      "explanation": "Conjunto de piezas metálicas que sostienen la nave."
+    },
+    "columns": {
+      "label": "Columna",
+      "plural": "Columnas",
+      "explanation": "Llevan las cargas de la cubierta hasta las fundaciones."
+    },
+    "rafters": {
+      "label": "Viga / cercha",
+      "plural": "Vigas y cerchas",
+      "explanation": "Salvan la luz libre y forman, junto con las columnas, cada pórtico."
+    },
+    "purlins": {
+      "label": "Correa",
+      "plural": "Correas",
+      "explanation": "Perfiles livianos que apoyan sobre las vigas y sostienen la chapa de cubierta."
+    },
+    "bracing": {
+      "label": "Arriostramiento",
+      "plural": "Arriostramientos",
+      "explanation": "Cruces que rigidizan la nave frente al viento en sentido longitudinal."
+    },
+    "girts": {
+      "label": "Larguero",
+      "plural": "Largueros",
+      "explanation": "Perfiles horizontales que sostienen los cerramientos laterales."
+    },
+    "roof": {
+      "label": "Cubierta",
+      "plural": "Cubierta",
+      "explanation": "Envolvente superior: protege de la lluvia y aporta aislación."
+    },
+    "walls": {
+      "label": "Cerramiento",
+      "plural": "Cerramientos",
+      "explanation": "Envolvente lateral y testeros de la nave."
+    },
+    "doors": {
+      "label": "Portón / puerta",
+      "plural": "Portones y puertas",
+      "explanation": "Accesos vehiculares y peatonales."
+    },
+    "windows": {
+      "label": "Ventana",
+      "plural": "Ventanas",
+      "explanation": "Iluminación y ventilación natural en los laterales."
+    },
+    "skylights": {
+      "label": "Lucernario",
+      "plural": "Lucernarios",
+      "explanation": "Franjas translúcidas que aportan luz cenital."
+    },
+    "gutters": {
+      "label": "Canaleta",
+      "plural": "Canaletas y bajadas",
+      "explanation": "Recolectan y conducen el agua de lluvia."
+    },
+    "foundations": {
+      "label": "Fundación",
+      "plural": "Fundaciones",
+      "explanation": "Platea y bases de hormigón que reciben la estructura."
+    },
+    "canopy": {
+      "label": "Marquesina",
+      "plural": "Marquesina",
+      "explanation": "Alero en voladizo que protege el acceso principal."
+    },
+    "equipment": {
+      "label": "Equipamiento",
+      "plural": "Equipamiento",
+      "explanation": "Equipos incorporados a la nave, como el puente grúa."
+    }
+  },
+  "groups": [
+    {
+      "id": "structure",
+      "label": "Estructura",
+      "categories": [
+        "structure",
+        "columns",
+        "rafters",
+        "purlins",
+        "girts",
+        "bracing"
+      ]
+    },
+    {
+      "id": "foundations",
+      "label": "Fundaciones",
+      "categories": [
+        "foundations"
+      ]
+    },
+    {
+      "id": "roof",
+      "label": "Cubierta",
+      "categories": [
+        "roof",
+        "skylights",
+        "gutters"
+      ]
+    },
+    {
+      "id": "walls",
+      "label": "Cerramientos",
+      "categories": [
+        "walls"
+      ]
+    },
+    {
+      "id": "openings",
+      "label": "Aberturas",
+      "categories": [
+        "doors",
+        "windows"
+      ]
+    },
+    {
+      "id": "extras",
+      "label": "Opcionales",
+      "categories": [
+        "canopy",
+        "equipment"
+      ]
+    }
+  ],
+  "explodeOffsets": {
+    "foundations": {
+      "up": -1.6,
+      "out": 0
+    },
+    "columns": {
+      "up": 0,
+      "out": 0
+    },
+    "rafters": {
+      "up": 2.2,
+      "out": 0
+    },
+    "bracing": {
+      "up": 3.2,
+      "out": 0.8
+    },
+    "purlins": {
+      "up": 4.6,
+      "out": 0
+    },
+    "girts": {
+      "up": 0,
+      "out": 2.6
+    },
+    "roof": {
+      "up": 8.0,
+      "out": 0
+    },
+    "skylights": {
+      "up": 8.6,
+      "out": 0
+    },
+    "gutters": {
+      "up": 8.0,
+      "out": 2.0
+    },
+    "walls": {
+      "up": 0,
+      "out": 6.0
+    },
+    "doors": {
+      "up": 0,
+      "out": 7.2
+    },
+    "windows": {
+      "up": 0,
+      "out": 7.2
+    },
+    "canopy": {
+      "up": 1.0,
+      "out": 9.0
+    },
+    "equipment": {
+      "up": 0.6,
+      "out": 0
+    }
+  }
+}

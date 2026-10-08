@@ -1,0 +1,80 @@
+{
+  "options": [
+    {
+      "id": "skylights",
+      "name": "Lucernarios",
+      "summary": "Franjas de policarbonato en módulos alternados para luz natural.",
+      "status": "available"
+    },
+    {
+      "id": "canopy",
+      "name": "Marquesina",
+      "summary": "Alero en voladizo de 4 m sobre el acceso principal.",
+      "status": "available"
+    },
+    {
+      "id": "crane",
+      "name": "Puente grúa",
+      "summary": "Representación conceptual con vigas carrileras. Capacidad a definir.",
+      "status": "available",
+      "minEaveHeight": 6
+    },
+    {
+      "id": "mezzanine",
+      "name": "Entrepiso",
+      "summary": "Entrepiso metálico para oficinas o depósito.",
+      "status": "planned"
+    },
+    {
+      "id": "officeBlock",
+      "name": "Bloque de oficinas",
+      "summary": "Módulo de oficinas y sanitarios adosado.",
+      "status": "planned"
+    },
+    {
+      "id": "ventilation",
+      "name": "Ventilación",
+      "summary": "Extractores eólicos y ventilación de cumbrera.",
+      "status": "planned"
+    },
+    {
+      "id": "fireSystem",
+      "name": "Sistema contra incendio",
+      "summary": "Red de hidrantes y detección.",
+      "status": "planned"
+    },
+    {
+      "id": "solarPanels",
+      "name": "Paneles solares",
+      "summary": "Generación fotovoltaica sobre cubierta.",
+      "status": "planned"
+    }
+  ],
+  "openings": {
+    "sectionalDoor": {
+      "name": "Portón seccional",
+      "width": 4.0,
+      "height": 4.0,
+      "memoryText": "portón seccional"
+    },
+    "personDoor": {
+      "name": "Puerta peatonal",
+      "width": 0.9,
+      "height": 2.1,
+      "memoryText": "puerta peatonal de chapa doble"
+    },
+    "window": {
+      "name": "Ventana corrediza",
+      "width": 3.0,
+      "height": 1.2,
+      "memoryText": "ventanas de aluminio"
+    },
+    "defaults": {
+      "doorsFront": 1,
+      "doorsBack": 0,
+      "doorsSide": 0,
+      "personDoors": 1,
+      "windowsPerSide": 2
+    }
+  }
+}
