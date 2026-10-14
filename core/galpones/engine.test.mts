@@ -184,3 +184,70 @@ test("solicitud de presupuesto adjunta la configuración completa", async () => 
   const { result } = await submitWarehouseQuote(contact, c, def, localDraftTransport({ getItem: (k) => memory.get(k) ?? null, setItem: (k, v) => void memory.set(k, v) }));
   assert.ok(result.ok && result.mode === "local-draft");
 });
+
+test("lámina de planos: todas las tipologías, sin valores inválidos", async () => {
+  const { buildDrawingSheet } = await import("./drawings.ts");
+  for (const id of IDS) {
+    const def = load(id);
+    for (const structure of def.structure.systems.map((s) => s.id)) {
+      for (const options of [{ skylights: true, canopy: true, crane: true }, { skylights: false, canopy: false, crane: false }]) {
+        const config = normalizeConfig(def, { ...createDefaultConfig(def), structure, options, openings: { doorsFront: 2, doorsBack: 1, doorsSide: 2, personDoors: 2, windowsPerSide: 3 } });
+        const { svg, scale } = buildDrawingSheet(config, def, { date: "01/01/2026" });
+        assert.ok(scale >= 100 && scale <= 2000, `${id}/${structure}: escala ${scale}`);
+        assert.ok(!/NaN|Infinity|undefined/.test(svg), `${id}/${structure}: valores inválidos en el SVG`);
+        for (const name of ["PLANTA", "VISTA FRENTE", "VISTA LATERAL OESTE", "VISTA LATERAL ESTE", "CORTE X-X", "CORTE Y-Y"]) assert.ok(svg.includes(name), `${id}: falta ${name}`);
+        assert.equal(svg.includes("VISTA CONTRAFRENTE"), config.openings.doorsBack > 0, `${id}: contrafrente sólo si tiene portones`);
+      }
+    }
+  }
+});
+
+test("entorno: veredas, estacionamiento y vehículos sin geometría inválida", async () => {
+  const { buildSite, disposeSite } = await import("./site.ts");
+  const sites = [
+    { sidewalk: 1.5, parking: 16, parkingSide: "west", truckYard: true, landscape: true },
+    { sidewalk: 0, parking: 0, parkingSide: "west", truckYard: false, landscape: false },
+    { sidewalk: 3, parking: 80, parkingSide: "back", truckYard: true, landscape: true },
+  ] as const;
+  for (const id of IDS) {
+    const def = load(id);
+    for (const site of sites) {
+      const config = normalizeConfig(def, { ...createDefaultConfig(def), site: { ...site }, openings: { doorsFront: 2, doorsBack: 1, doorsSide: 1, personDoors: 2, windowsPerSide: 2 } });
+      const { root, box } = buildSite(config, def, { vehicles: true });
+      assert.ok(Number.isFinite(box.min.x) && Number.isFinite(box.max.z), `${id}: caja del entorno inválida`);
+      root.traverse((o) => {
+        const mesh = o as Mesh;
+        if (!mesh.isMesh) return;
+        mesh.geometry.computeBoundingBox();
+        const b = mesh.geometry.boundingBox!;
+        assert.ok(Number.isFinite(b.min.x) && Number.isFinite(b.max.y), `${id}: ${mesh.name} inválido`);
+      });
+      disposeSite(root);
+    }
+  }
+});
+
+test("implantación: el lote mínimo cumple y un lote chico se detecta", async () => {
+  const { verifySite } = await import("./siteCheck.ts");
+  for (const id of IDS) {
+    const def = load(id);
+    const auto = verifySite(createDefaultConfig(def), def);
+    assert.equal(auto.summary.fail, 0, `${id}: el lote mínimo no debería tener incumplimientos (${auto.checks.filter((c) => c.status === "fail").map((c) => c.label).join(", ")})`);
+    assert.ok(auto.lot && auto.lot.area >= 2500, `${id}: lote mínimo del parque`);
+    const tight = createDefaultConfig(def);
+    tight.lot = { ...tight.lot, mode: "manual", width: 30, depth: 40, front: 2, left: 1 };
+    const bad = verifySite(normalizeConfig(def, tight), def);
+    assert.ok(bad.summary.fail > 0, `${id}: un lote chico debería fallar`);
+  }
+});
+
+test("implantación: configuraciones viejas sin lote se completan", () => {
+  const def = load("industrial-pro");
+  const legacy = structuredClone(createDefaultConfig(def)) as Partial<WarehouseConfigShape>;
+  delete legacy.lot;
+  delete legacy.site;
+  const fixed = normalizeConfig(def, legacy as never);
+  assert.equal(fixed.lot.preset, "ecoparque");
+  assert.equal(fixed.site.sidewalk, 1.5);
+});
+type WarehouseConfigShape = ReturnType<typeof createDefaultConfig>;

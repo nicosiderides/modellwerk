@@ -16,6 +16,8 @@ export function NumberField({
   decimals = 1,
   locked,
   hint,
+  cap,
+  capNote,
   onChange,
 }: {
   label: string;
@@ -27,8 +29,14 @@ export function NumberField({
   decimals?: number;
   locked?: boolean;
   hint?: string;
+  /** Tope que pone el lote / la normativa (por debajo de `max`). */
+  cap?: number | null;
+  capNote?: string;
   onChange: (value: number) => void;
 }) {
+  const capped = cap !== null && cap !== undefined && cap < max - 1e-6;
+  const atCap = capped && value >= cap - 1e-6;
+  const pctOf = (v: number) => `${((v - min) / Math.max(1e-6, max - min)) * 100}%`;
   const [draft, setDraft] = useState<string | null>(null);
   const shown = draft ?? formatNumber(value, decimals);
   const commit = () => {
@@ -38,7 +46,7 @@ export function NumberField({
     setDraft(null);
   };
   return (
-    <div className={`gp-field ${locked ? "is-locked" : ""}`}>
+    <div className={`gp-field ${locked ? "is-locked" : ""} ${atCap ? "is-at-cap" : ""}`}>
       <div className="gp-field__head">
         <label className="gp-label">{label}</label>
         {locked && (
@@ -78,8 +86,14 @@ export function NumberField({
           value={value}
           aria-label={`${label} (deslizador)`}
           onChange={(e) => onChange(Number(e.target.value))}
-          style={{ ["--gp-fill" as string]: `${((value - min) / Math.max(1e-6, max - min)) * 100}%` }}
+          style={{ ["--gp-fill" as string]: pctOf(value), ["--gp-cap" as string]: capped ? pctOf(cap) : "100%" }}
         />
+      )}
+      {capped && !locked && (
+        <p className="gp-field__cap">
+          <span>Tope del lote {formatNumber(cap, decimals)}{unit ? ` ${unit}` : ""}</span>
+          {capNote && <em>{capNote}</em>}
+        </p>
       )}
       {hint && <p className="gp-field__hint">{hint}</p>}
     </div>

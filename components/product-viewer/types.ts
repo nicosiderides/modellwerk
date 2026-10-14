@@ -1,4 +1,4 @@
-import type { Material, Object3D } from "three";
+import type { Box3, Material, Object3D } from "three";
 import type { MetadataIndex, ResolvedElement } from "@/core/product-engine/metadata";
 import type { CategoryGroup, ModelCategory, ModelDefinition, ModelMetadataDocument } from "@/core/product-engine/types";
 
@@ -59,7 +59,19 @@ export type ProductViewerProps = {
   groups?: CategoryGroup[];
   /** Modo captura (miniaturas): sin interacción y con buffer preservado. */
   captureMode?: boolean;
+  /**
+   * Entorno del producto (veredas, estacionamiento, vehículos…), en las mismas
+   * coordenadas que el modelo. No se selecciona, no se explota y no entra en
+   * el encuadre; sí recibe y proyecta sombras.
+   */
+  surroundings?: ViewerSurroundings | null;
   /** Recibe una función que devuelve una imagen PNG (data URL) de la vista actual. */
   onSnapshotReady?: (capture: () => string | null) => void;
   className?: string;
+};
+
+export type ViewerSurroundings = {
+  key: string;
+  build: () => { root: Object3D; box: Box3 };
+  dispose?: (root: Object3D) => void;
 };

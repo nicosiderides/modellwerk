@@ -226,6 +226,130 @@ export type WarehouseConfig = {
   envelope: { roof: string; walls: string; insulation: string; roofColor: string; wallColor: string };
   openings: Openings;
   options: Record<string, boolean>;
+  /** Entorno del galpón: veredas, estacionamiento, playón y parquizado. */
+  site: SiteConfig;
+  /** Lote, normativa y vehículo de diseño (implantación). */
+  lot: LotConfig;
+};
+
+/** Parámetros normativos del lote. null = sin dato / no se exige. */
+export type LotRules = {
+  /** Superficie mínima del lote (m²). */
+  minArea: number | null;
+  /** Frente mínimo del lote (m). */
+  minFront: number | null;
+  /** Factor de ocupación del suelo (0–1). */
+  fos: number | null;
+  /** Factor de ocupación total. */
+  fot: number | null;
+  /** Altura máxima de edificación (m). */
+  maxHeight: number | null;
+  setbackFront: number | null;
+  setbackSide: number | null;
+  /** En cuántos laterales rige el retiro lateral (null = en los dos). */
+  sideCount: 0 | 1 | 2 | null;
+  setbackBack: number | null;
+  /** Parte de la superficie libre no edificable que debe forestarse (0–1). */
+  forestOfFree: number | null;
+  /** Superficie de lote a partir de la cual rige la forestación (m²). */
+  forestThreshold: number | null;
+  /** Distancia mínima del ingreso vehicular a la esquina (m). */
+  accessFromCorner: number | null;
+};
+
+export type DesignVehicleId = "semi" | "rigid";
+
+export type LotConfig = {
+  /** Verificar la implantación en un lote. */
+  enabled: boolean;
+  /** Normativa de partida (preset). */
+  preset: string;
+  /** auto = lote mínimo que cumple; manual = medidas propias. */
+  mode: "auto" | "manual";
+  /** Frente del lote (m, a lo ancho del galpón). */
+  width: number;
+  /** Fondo del lote (m). */
+  depth: number;
+  /** Distancia de la fachada de portones a la línea municipal (m). */
+  front: number;
+  /** Distancia del galpón al lindero oeste (m). */
+  left: number;
+  /**
+   * Ubicación del galpón dentro del lote propio.
+   * auto = la app lo acomoda (retiros, playón, estacionamiento);
+   * manual = respeta front/left, pero siempre dentro del lote y fuera de los retiros.
+   */
+  placement: "auto" | "manual";
+  /** Lote en esquina: calle lateral al este u oeste. */
+  corner: "none" | "east" | "west";
+  /** Copia editable de la normativa del preset. */
+  rules: LotRules;
+  vehicle: DesignVehicleId;
+  /** Lote real ubicado en el mapa (catastro). null = medidas cargadas a mano. */
+  location: LotLocation | null;
+};
+
+/** Zona normativa del lote real (Córdoba capital: Ord. 8256 y 8133). */
+export type LotZone = {
+  /** Perfil o zona de la Ord. 8256 (ej. "L"). */
+  perfil: string;
+  /** Texto corto para mostrar (ej. "Zona L · Zona industrial"). */
+  label: string;
+  /** Patrón de uso del suelo de la Ord. 8133 (ej. "IVb"). */
+  patron: string | null;
+  /** Qué tan compatible es la zona con un galpón industrial. */
+  uso: "industrial" | "condicionado" | "no" | "desconocido";
+  usoTexto: string;
+  /** Aclaraciones a confirmar (reglas que vienen como texto). */
+  notes: string[];
+  /** Valores que trajo la zona (para saber si el usuario los cambió). */
+  rules: Partial<LotRules>;
+  /** Fuente de cada parámetro cargado desde la zona. */
+  sources: Partial<Record<keyof LotRules, { text: string; url?: string; verified: boolean }>>;
+};
+
+/** Lote real elegido en el mapa (datos de catastro de IDECOR / Mapas Córdoba). */
+export type LotLocation = {
+  source: "idecor";
+  /** Fecha de la consulta (ISO). */
+  fetchedAt: string;
+  /** Centro del lote [lon, lat]. */
+  center: [number, number];
+  /** Contorno real del lote [lon, lat] (sin repetir el primer punto). */
+  ring: [number, number][];
+  /** Lado del contorno que se toma como frente (índice del vértice inicial). */
+  frontEdge: number;
+  /** Lados que dan a la calle. */
+  streetEdges: number[];
+  nomenclatura: string;
+  cuenta: string | null;
+  designacion: string;
+  /** Superficie según catastro (m²). */
+  superficie: number;
+  estado: string;
+  localidad: string;
+  /**
+   * Rectángulo útil (el lote del configurador) dentro del lote real.
+   * origin = esquina frente-oeste [lon, lat]; s y t = direcciones (este, norte)
+   * de sus lados: s a lo largo del frente hacia el este, t hacia el fondo.
+   */
+  fit: { width: number; depth: number; coverage: number; origin: [number, number]; s: [number, number]; t: [number, number] };
+  zone: LotZone | null;
+};
+
+export type ParkingSide = "west" | "back";
+
+export type SiteConfig = {
+  /** Ancho de la vereda perimetral en metros (0 = sin vereda). */
+  sidewalk: number;
+  /** Cantidad de cocheras (0 = sin estacionamiento). */
+  parking: number;
+  /** Dónde va el estacionamiento: lateral oeste (puertas peatonales) o contrafrente. */
+  parkingSide: ParkingSide;
+  /** Playón de maniobras de hormigón frente a los portones. */
+  truckYard: boolean;
+  /** Césped, arbolado, luminarias y calle de acceso. */
+  landscape: boolean;
 };
 
 export type ConfigIssue = {

@@ -89,7 +89,10 @@ export function CameraDirector({ bounds, fitToken, request, insets, interactive 
     if (!box || box.isEmpty() || !control) return;
     const pose = computePose(preset, box, camera, viewport, insetsRef.current);
     const radius = box.getSize(new Vector3()).length() / 2;
-    camera.near = Math.max(0.05, radius / 2000);
+    // Plano cercano: cuanto más chico, peor distingue la placa de video qué
+    // superficie está delante cuando dos están muy juntas (cumbrera, babetas,
+    // marcos). Afuera alcanza con ~1/80 del tamaño del modelo; adentro, cerca.
+    camera.near = preset === "interior" ? 0.05 : Math.min(1, Math.max(0.1, radius / 80));
     camera.far = Math.max(600, radius * 30);
     camera.updateProjectionMatrix();
     control.minDistance = preset === "interior" ? 0.5 : Math.max(2, radius * 0.15);
