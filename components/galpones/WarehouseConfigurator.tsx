@@ -1,19 +1,42 @@
 "use client";
 
-import { ArrowRight, ChevronDown, Info, RotateCcw, TriangleAlert, X } from "lucide-react";
+import { useMemo } from "react";
+import { ArrowRight, ChevronDown, CircleX, Info, MapPin, RotateCcw, TriangleAlert, X } from "lucide-react";
 import { evaluateRules, getVariant, isDiscrete, openingLimits, ridgeHeight, slopeDegrees } from "@/core/galpones/configuration";
 import { calculateMetrics, formatNumber } from "@/core/galpones/metrics";
 import type { WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
 import { ChoiceCard, NumberField, Stepper, Swatches, Toggle, useRemembered } from "./controls";
 import { definitionOf, useGalpones, type ConfigTab } from "./store";
+import { LotPanel } from "./LotPanel";
+import { blockingIssues, dimensionLimit, fitToLot, lotIssues, variantFits } from "@/core/galpones/lotLimits";
+import { presetById } from "@/core/galpones/lotRules";
 
+// El lote y la normativa van primero: ponen los topes de todo lo que sigue.
 const TABS: { id: ConfigTab; label: string }[] = [
+  { id: "site", label: "Lote" },
   { id: "dimensions", label: "Medidas" },
   { id: "structure", label: "Estructura" },
   { id: "envelope", label: "Envolvente" },
   { id: "openings", label: "Aberturas" },
   { id: "options", label: "Opcionales" },
 ];
+
+/** Recordatorio del lote elegido, arriba de las medidas. */
+function LotChip({ config }: { config: WarehouseConfig }) {
+  const setTab = useGalpones((s) => s.setTab);
+  const lot = config.lot;
+  const preset = presetById(lot.preset);
+  const text = !lot.enabled ? "Sin lote: el galpón no tiene topes de normativa" : lot.mode === "manual" ? `Lote ${formatNumber(lot.width, 1)} × ${formatNumber(lot.depth, 1)} m · ${preset.name}` : `Lote mínimo (todavía sin lote) · ${preset.name}`;
+  return (
+    <div className="gp-lotchip">
+      <MapPin aria-hidden />
+      <span>{text}</span>
+      <button type="button" onClick={() => setTab("site")}>
+        Cambiar
+      </button>
+    </div>
+  );
+}
 
 function DimensionsPanel({ definition, config }: { definition: WarehouseDefinition; config: WarehouseConfig }) {
   const setDimension = useGalpones((s) => s.setDimension);
@@ -24,9 +47,20 @@ function DimensionsPanel({ definition, config }: { definition: WarehouseDefiniti
   const locked = isDiscrete(definition);
   const variant = getVariant(definition, config.variant);
   const ridge = ridgeHeight(d);
+  // Topes que pone el lote (null = el lote no limita esa medida).
+  const caps = useMemo(() => {
+    const keys = ["width", "length", "eaveHeight", "ridgeHeight", "roofSlope"] as const;
+    return Object.fromEntries(keys.map((k) => [k, dimensionLimit(definition, config, k)])) as Record<(typeof keys)[number], ReturnType<typeof dimensionLimit>>;
+  }, [definition, config]);
+  const capNote = (k: keyof typeof caps) => caps[k].reason?.label;
+  const variantIssues = useMemo(
+    () => (definition.model.strategy === "discreteVariant" ? Object.fromEntries(definition.model.variants.map((v) => [v.id, variantFits(definition, config, v.id)])) : {}),
+    [definition, config]
+  );
 
   return (
     <div className="gp-section">
+      <LotChip config={config} />
       {locked && definition.model.strategy === "discreteVariant" && (
         <>
           <p className="gp-note">
@@ -34,23 +68,31 @@ function DimensionsPanel({ definition, config }: { definition: WarehouseDefiniti
           </p>
           <div className="gp-variants" role="radiogroup" aria-label="Variantes del modelo">
             {definition.model.variants.map((v) => (
-              <ChoiceCard key={v.id} selected={v.id === variant?.id} title={`${v.dimensions.width} × ${v.dimensions.length} m`} summary={`Alero ${formatNumber(v.dimensions.eaveHeight, 1)} m · ${v.dimensions.bayCount} módulos de ${v.dimensions.baySpacing} m`} badge={v.id} onSelect={() => setVariant(v.id)} />
+              <ChoiceCard
+                key={v.id}
+                selected={v.id === variant?.id}
+                title={`${v.dimensions.width} × ${v.dimensions.length} m`}
+                summary={variantIssues[v.id] && v.id !== variant?.id ? `No entra en el lote · ${variantIssues[v.id]!.label.toLowerCase()}` : `Alero ${formatNumber(v.dimensions.eaveHeight, 1)} m · ${v.dimensions.bayCount} módulos de ${v.dimensions.baySpacing} m`}
+                badge={variantIssues[v.id] && v.id !== variant?.id ? "No entra" : v.id}
+                disabled={Boolean(variantIssues[v.id]) && v.id !== variant?.id}
+                onSelect={() => setVariant(v.id)}
+              />
             ))}
           </div>
         </>
       )}
       <div className="gp-grid-2">
-        <NumberField label="Ancho / luz" value={d.width} min={r.width.min} max={r.width.max} step={r.width.step} unit="m" locked={locked} onChange={(v) => setDimension("width", v)} />
-        <NumberField label="Largo" value={d.length} min={r.length.min} max={r.length.max} step={d.baySpacing} unit="m" locked={locked} onChange={(v) => setDimension("length", v)} hint={locked ? undefined : `${d.bayCount} módulos × ${formatNumber(d.baySpacing, 1)} m`} />
+        <NumberField label="Ancho / luz" value={d.width} min={r.width.min} max={r.width.max} step={r.width.step} unit="m" locked={locked} cap={caps.width.max} capNote={capNote("width")} onChange={(v) => setDimension("width", v)} />
+        <NumberField label="Largo" value={d.length} min={r.length.min} max={r.length.max} step={d.baySpacing} unit="m" locked={locked} cap={caps.length.max} capNote={capNote("length")} onChange={(v) => setDimension("length", v)} hint={locked ? undefined : `${d.bayCount} módulos × ${formatNumber(d.baySpacing, 1)} m`} />
       </div>
-      <NumberField label="Altura de alero" value={d.eaveHeight} min={r.eaveHeight.min} max={r.eaveHeight.max} step={r.eaveHeight.step} unit="m" locked={locked} onChange={(v) => setDimension("eaveHeight", v)} />
+      <NumberField label="Altura de alero" value={d.eaveHeight} min={r.eaveHeight.min} max={r.eaveHeight.max} step={r.eaveHeight.step} unit="m" locked={locked} cap={caps.eaveHeight.max} capNote={capNote("eaveHeight")} onChange={(v) => setDimension("eaveHeight", v)} />
       <button type="button" className={`gp-disclosure ${advanced ? "is-open" : ""}`} onClick={() => setAdvanced(!advanced)} aria-expanded={advanced}>
         Pendiente, cumbrera y módulos <ChevronDown aria-hidden />
       </button>
       {advanced && (
         <div className="gp-advanced">
           <div className="gp-grid-2">
-            <NumberField label="Pendiente" value={d.roofSlope} min={r.roofSlope.min} max={r.roofSlope.max} step={r.roofSlope.step} unit="%" decimals={0} locked={locked} hint={`${formatNumber(slopeDegrees(d.roofSlope), 1)}°`} onChange={(v) => setDimension("roofSlope", v)} />
+            <NumberField label="Pendiente" value={d.roofSlope} min={r.roofSlope.min} max={r.roofSlope.max} step={r.roofSlope.step} unit="%" decimals={0} locked={locked} cap={caps.roofSlope.max} capNote={capNote("roofSlope")} hint={`${formatNumber(slopeDegrees(d.roofSlope), 1)}°`} onChange={(v) => setDimension("roofSlope", v)} />
             <NumberField
               label="Cumbrera"
               value={ridge}
@@ -60,6 +102,8 @@ function DimensionsPanel({ definition, config }: { definition: WarehouseDefiniti
               unit="m"
               decimals={2}
               locked={locked}
+              cap={caps.ridgeHeight.max}
+              capNote={capNote("ridgeHeight")}
               onChange={(v) => setDimension("ridgeHeight", v)}
             />
           </div>
@@ -231,6 +275,46 @@ function OptionsPanel({ definition, config }: { definition: WarehouseDefinition;
   );
 }
 
+/** Cartel fijo cuando el galpón queda fuera de norma (por ejemplo, después de achicar el lote). */
+function NormBanner({ definition, config }: { definition: WarehouseDefinition; config: WarehouseConfig }) {
+  const fit = useGalpones((s) => s.fitToLot);
+  const setTab = useGalpones((s) => s.setTab);
+  const tab = useGalpones((s) => s.ui.tab);
+  const issues = useMemo(() => blockingIssues(config, definition), [definition, config]);
+  const lotProblems = useMemo(() => lotIssues(config, definition), [definition, config]);
+  // ¿Se puede arreglar achicando el galpón? (si ni al mínimo entra, hay que cambiar el lote)
+  const fixable = useMemo(() => issues.length > 0 && blockingIssues(fitToLot(definition, config), definition).length === 0, [issues, definition, config]);
+  if (!issues.length && !lotProblems.length) return null;
+  return (
+    <div className="gp-norm" role="alert">
+      <div className="gp-norm__head">
+        <CircleX aria-hidden />
+        <strong>{issues.length ? "Fuera de norma" : "El lote no cumple la normativa"}</strong>
+      </div>
+      <ul>
+        {[...issues, ...lotProblems].slice(0, 4).map((c) => (
+          <li key={c.id}>
+            {c.label}: <span>{c.detail}</span>
+          </li>
+        ))}
+      </ul>
+      {issues.length > 0 && !fixable && <p className="gp-norm__hint">Ni con las medidas más chicas de esta tipología entra en el lote: agrandá el lote, corré el galpón o elegí otra normativa o tipología.</p>}
+      <div className="gp-norm__actions">
+        {fixable && (
+          <button type="button" className="gp-button gp-button--primary" onClick={fit}>
+            Ajustar el galpón al lote
+          </button>
+        )}
+        {tab !== "site" && (
+          <button type="button" className="gp-button" onClick={() => setTab("site")}>
+            Ver lote
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Issues({ definition, config }: { definition: WarehouseDefinition; config: WarehouseConfig }) {
   const setStructure = useGalpones((s) => s.setStructure);
   const issues = evaluateRules(definition, config);
@@ -293,11 +377,13 @@ export function WarehouseConfigurator() {
         ))}
       </nav>
       <div className="gp-panel__body" role="tabpanel">
+        <NormBanner definition={definition} config={config} />
         {tab === "dimensions" && <DimensionsPanel definition={definition} config={config} />}
         {tab === "structure" && <StructurePanel definition={definition} config={config} />}
         {tab === "envelope" && <EnvelopePanel definition={definition} config={config} />}
         {tab === "openings" && <OpeningsPanel definition={definition} config={config} />}
         {tab === "options" && <OptionsPanel definition={definition} config={config} />}
+        {tab === "site" && <LotPanel definition={definition} config={config} />}
         <Issues definition={definition} config={config} />
       </div>
       <div className="gp-panel__foot">

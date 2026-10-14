@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Link, Printer, Save, Send } from "lucide-react";
+import { DraftingCompass, Download, Link, Printer, Save, Send } from "lucide-react";
 import { generateTechnicalDescription } from "@/core/galpones/description";
 import { getVariant, ridgeHeight, structureLabel } from "@/core/galpones/configuration";
 import { calculateMetrics, formatNumber } from "@/core/galpones/metrics";
 import { configToShareCode, serializeConfig } from "@/core/galpones/storage";
 import { TechnicalPanel } from "./TechnicalPanel";
 import { captureViewerSnapshot } from "./WarehouseViewer";
+import { printDrawingSheet } from "./drawingSheetPrint";
+import { SiteChecksList } from "./LotPanel";
+import { verifySite } from "@/core/galpones/siteCheck";
+import { blockingIssues } from "@/core/galpones/lotLimits";
+import { presetById } from "@/core/galpones/lotRules";
 import { definitionOf, useGalpones } from "./store";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -38,6 +43,7 @@ export function WarehouseSummary() {
   const setModal = useGalpones((s) => s.setModal);
   const toast = useGalpones((s) => s.toast);
   const [image, setImage] = useState<string | null>(null);
+  const [drawing, setDrawing] = useState(false);
   if (!definition || !config) return null;
 
   const m = calculateMetrics(config, definition);
@@ -66,12 +72,39 @@ export function WarehouseSummary() {
     ["Colores", `Cubierta ${roofColor?.name.toLowerCase()} · cerramientos ${wallColor?.name.toLowerCase()}`],
     ["Aberturas", openingsLabel(o)],
     ["Opcionales", options.length ? options.join(", ") : "—"],
+    [
+      "Entorno",
+      [
+        config.site.sidewalk > 0 ? `vereda ${formatNumber(config.site.sidewalk, 1)} m` : "",
+        config.site.parking > 0 ? `${config.site.parking} cocheras (${config.site.parkingSide === "west" ? "lateral oeste" : "contrafrente"})` : "",
+        config.site.truckYard ? "playón de maniobras" : "",
+        config.site.landscape ? "parquizado" : "",
+      ]
+        .filter(Boolean)
+        .join(" · ") || "—",
+    ],
     ["Modelo", variant ? `BIM / GLB · ${variant.id}` : "Paramétrico"],
   ];
 
   const print = () => {
     setImage(captureViewerSnapshot());
     window.setTimeout(() => window.print(), 120);
+  };
+  // Lámina A3 de planos (planta, cortes, vistas y perspectiva) → diálogo de impresión / PDF.
+  const drawingSheet = async () => {
+    if (drawing) return;
+    setDrawing(true);
+    try {
+      useGalpones.getState().requestCamera("perspective");
+      await new Promise((resolve) => window.setTimeout(resolve, 1300));
+      const shot = captureViewerSnapshot();
+      toast("En el diálogo elegí «Guardar como PDF» (A3 apaisado)");
+      await printDrawingSheet(config, definition, shot);
+    } catch {
+      toast("No se pudo generar la lámina de planos");
+    } finally {
+      setDrawing(false);
+    }
   };
   const copyLink = async () => {
     const url = shareUrl(configToShareCode(config));
@@ -118,6 +151,9 @@ export function WarehouseSummary() {
             <button type="button" className="gp-button" onClick={print}>
               <Printer aria-hidden /> Ficha PDF
             </button>
+            <button type="button" className="gp-button" onClick={drawingSheet} disabled={drawing} aria-busy={drawing}>
+              <DraftingCompass aria-hidden /> {drawing ? "Armando…" : "Planos PDF"}
+            </button>
             <button type="button" className="gp-button" onClick={() => setModal("saved")}>
               <Save aria-hidden /> Guardar
             </button>
@@ -140,6 +176,31 @@ export function WarehouseSummary() {
             ))}
           </dl>
         </section>
+        {config.lot.enabled && (() => {
+          const v = verifySite(config, definition);
+          return (
+            <section>
+              <h2 className="gp-sheet__title">Implantación y normativa</h2>
+              <p className="gp-sheet__lot">
+                {presetById(config.lot.preset).name}
+                {v.lot && ` · lote ${formatNumber(v.lot.width, 1)} × ${formatNumber(v.lot.depth, 1)} m (${formatNumber(Math.round(v.lot.area))} m²)`} · {v.summary.ok} cumple · {v.summary.warn} revisar · {v.summary.fail} no cumple
+              </p>
+              {config.lot.location && (
+                <p className="gp-sheet__lot">
+                  Lote real: {config.lot.location.designacion || "parcela"}
+                  {config.lot.location.nomenclatura ? ` · nomenclatura ${config.lot.location.nomenclatura}` : ""} · {formatNumber(config.lot.location.superficie)} m² según catastro
+                  {config.lot.location.zone ? ` · ${config.lot.location.zone.label}` : ""}. Datos de IDECOR (CC BY-SA 4.0), de referencia.
+                </p>
+              )}
+              {blockingIssues(config, definition).length > 0 && (
+                <p className="gp-sheet__alert">
+                  Fuera de norma: {blockingIssues(config, definition).map((c) => c.label.toLowerCase()).join(", ")}. Revisá el lote o ajustá el galpón antes de pedir presupuesto.
+                </p>
+              )}
+              <SiteChecksList checks={v.checks} compact />
+            </section>
+          );
+        })()}
         <section>
           <h2 className="gp-sheet__title">Memoria descriptiva</h2>
           <div className="gp-sheet__memory">

@@ -1,5 +1,6 @@
 import {
   BoxGeometry,
+  BufferAttribute,
   BufferGeometry,
   CylinderGeometry,
   ExtrudeGeometry,
@@ -16,8 +17,8 @@ import {
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { buildNodeName } from "../product-engine/naming.ts";
 import type { BimElementMetadata, ModelCategory, ModelMetadataDocument, ModelSource } from "../product-engine/types.ts";
-import { ridgeHeight } from "./configuration.ts";
-import { EAVE_OVERHANG, GIRT_SPACING, PURLIN_SPACING, columnDepth, rafterDepth, trussEndDepth } from "./geometry-rules.ts";
+import { EAVE_OVERHANG, GIRT_SPACING, PURLIN_SPACING } from "./geometry-rules.ts";
+import { PURLIN_H, warehouseLayout } from "./layout.ts";
 import type { WarehouseConfig, WarehouseDefinition } from "./types.ts";
 
 /**
@@ -144,6 +145,38 @@ function iSection(depth: number, flange: number, height: number): BufferGeometry
  * UV planares en METROS por cara (para normal maps de chapa con período real).
  * Caras horizontales: u = z (o x), v = la otra. Caras verticales: u = horizontal, v = y.
  */
+/**
+ * Quita las caras planas que caen sobre un plano dado (eje = valor).
+ * Se usa en las uniones entre piezas vecinas: esas caras quedan ocultas
+ * dentro del cerramiento, pero la placa de video no sabe si van delante o
+ * detrás de la chapa vecina y dibuja una línea punteada oscura en la unión.
+ */
+function dropFacesOnPlanes(geometry: BufferGeometry, axis: "x" | "y" | "z", values: number[]) {
+  if (!values.length) return geometry;
+  const g = geometry.index ? geometry.toNonIndexed() : geometry;
+  const position = g.getAttribute("position");
+  const read = axis === "x" ? (i: number) => position.getX(i) : axis === "y" ? (i: number) => position.getY(i) : (i: number) => position.getZ(i);
+  // Un triángulo se quita sólo si sus tres vértices están sobre el MISMO plano.
+  const onPlane = (t: number) => values.some((v) => [t, t + 1, t + 2].every((i) => Math.abs(read(i) - v) < 1e-4));
+  const keep: number[] = [];
+  for (let t = 0; t < position.count; t += 3) if (!onPlane(t)) keep.push(t);
+  if (keep.length * 3 === position.count) return g;
+  const out = new BufferGeometry();
+  for (const [name, attribute] of Object.entries(g.attributes)) {
+    const size = attribute.itemSize;
+    const data = new (attribute.array.constructor as Float32ArrayConstructor)(keep.length * 3 * size);
+    keep.forEach((t, k) => data.set((attribute.array as Float32Array).subarray(t * size, (t + 3) * size), k * 3 * size));
+    out.setAttribute(name, new BufferAttribute(data, size));
+  }
+  // Grupos de materiales: se recalculan contando los triángulos que quedan.
+  for (const group of g.groups) {
+    const start = keep.findIndex((t) => t >= group.start);
+    const count = keep.filter((t) => t >= group.start && t < group.start + group.count).length;
+    if (count) out.addGroup(start < 0 ? 0 : start * 3, count * 3, group.materialIndex);
+  }
+  return out;
+}
+
 function meterUVsForBox(geometry: BufferGeometry, uAxis: "x" | "z" = "z") {
   const position = geometry.getAttribute("position");
   const normal = geometry.getAttribute("normal");
@@ -212,19 +245,7 @@ function segmentsExcluding(a: number, b: number, exclusions: [number, number][])
 }
 
 /** Distribuye `count` elementos en índices de módulos interiores, de forma pareja. */
-export function distributeInBays(count: number, bayCount: number, exclude: Set<number> = new Set()) {
-  const candidates: number[] = [];
-  for (let i = 1; i < bayCount - 1; i += 1) if (!exclude.has(i)) candidates.push(i);
-  if (bayCount <= 2) for (let i = 0; i < bayCount; i += 1) if (!exclude.has(i)) candidates.push(i);
-  const picked: number[] = [];
-  if (count <= 0 || candidates.length === 0) return picked;
-  const n = Math.min(count, candidates.length);
-  for (let k = 0; k < n; k += 1) {
-    const index = Math.min(candidates.length - 1, Math.floor(((k + 0.5) * candidates.length) / n));
-    picked.push(candidates[index]);
-  }
-  return [...new Set(picked)];
-}
+export { distributeInBays } from "./layout.ts";
 
 class ModelBuilder {
   readonly root = new Group();
@@ -308,62 +329,26 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export function createWarehouseModel(config: WarehouseConfig, definition: WarehouseDefinition, options: GeneratorOptions = {}): GeneratedModel {
   const idStyle = options.idStyle ?? "grid";
   const b = new ModelBuilder(definition.code, idStyle);
+  const lay = warehouseLayout(config, definition);
   const d = config.dimensions;
-  const W = d.width;
-  const L = d.length;
-  const half = W / 2;
-  const S = d.roofSlope / 100;
-  const angle = Math.atan(S);
-  const eave = d.eaveHeight;
-  const ridge = ridgeHeight(d);
-  const n = d.bayCount;
-  const frameZ = Array.from({ length: n + 1 }, (_, i) => -L / 2 + i * d.baySpacing);
+  const { W, L, half, S, angle, eave, ridge, n, frameZ, roofT, wallT, baseH, latticeColumns, trussRafters, colD, flange, rd } = lay;
+  const { roofSurface, topSteel, endDepth, bottomChordY, wallX, gableZ } = lay;
+  const { doorW, doorH, frontDoors, backDoors, sideDoorBays, personDoorBays, windowBaysEast, windowBaysWest, winW, winH, winV0 } = lay;
+  const roofOption = lay.roofOption;
+  const wallOption = lay.wallOption;
+  const specs = definition.options.openings;
 
-  const env = definition.envelope;
-  const roofOption = env.roof.find((o) => o.id === config.envelope.roof) ?? env.roof[0];
-  const wallOption = env.walls.find((o) => o.id === config.envelope.walls) ?? env.walls[0];
   const finish = definition.structure.finishes.find((f) => f.id === config.structureFinish);
   const system = definition.structure.systems.find((s) => s.id === config.structure);
   const systemName = system?.name ?? config.structure;
   const profiles = definition.structure.profileLabels;
   const finishName = finish?.name ?? "";
-  const roofT = Math.max(0.03, roofOption.thicknessMm / 1000);
-  const wallT = Math.max(0.03, wallOption.thicknessMm / 1000);
-  const precast = wallOption.finish === "precastSheet";
-  const baseH = precast ? env.precastBaseHeight : 0;
-
-  const latticeColumns = config.structure === "truss";
-  const trussRafters = config.structure === "truss" || config.structure === "mixed";
-  const colD = latticeColumns ? Math.max(0.6, columnDepth(W, eave) + 0.2) : columnDepth(W, eave);
-  const flange = Math.min(0.32, 0.16 + colD * 0.18);
-  const rd = rafterDepth(W);
-  const PURLIN_H = 0.2;
-
-  const roofSurface = (x: number) => eave + (half - Math.abs(x)) * S;
-  const topSteel = (x: number) => roofSurface(x) - roofT - PURLIN_H;
-  const endDepth = trussEndDepth(W);
-  const bottomChordY = topSteel(half) - endDepth;
-  const wallX = half + colD / 2 + 0.18;
-  const gableZ = L / 2 + flange / 2 + 0.18;
+  // Los marcos de portones y puertas se meten 5 mm dentro del vano para que
+  // su cara no coincida con el canto del cerramiento (evita el parpadeo).
+  const TRIM_INSET = 0.005;
 
   const steel = "Acero estructural";
   const steelParams = (extra: Record<string, string | number>) => ({ sistema: systemName, terminacion: finishName, ...extra });
-
-  /* ───────────── aberturas (snap points) ───────────── */
-  const specs = definition.options.openings;
-  const doorW = specs.sectionalDoor.width;
-  const doorH = Math.min(specs.sectionalDoor.height, eave - 0.6);
-  const o = config.openings;
-  const gableDoorX = (count: number) => Array.from({ length: count }, (_, i) => -half + ((i + 1) * W) / (count + 1));
-  const frontDoors = gableDoorX(o.doorsFront);
-  const backDoors = gableDoorX(o.doorsBack);
-  const sideDoorBays = distributeInBays(o.doorsSide, n);
-  const personDoorBays = distributeInBays(o.personDoors, n);
-  const windowBaysEast = distributeInBays(o.windowsPerSide, n, new Set(sideDoorBays));
-  const windowBaysWest = distributeInBays(o.windowsPerSide, n, new Set(personDoorBays));
-  const winW = Math.min(specs.window.width, d.baySpacing - 1.4);
-  const winH = specs.window.height;
-  const winV0 = Math.max(baseH + 0.5, Math.min(eave * 0.55, eave - winH - 0.8));
 
   /* ───────────── fundaciones ───────────── */
   b.add(
@@ -491,11 +476,9 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
   });
 
   /* ───────────── columnas de testero (snap con portones) ───────────── */
-  const postCount = Math.max(1, Math.round(W / 6));
   for (const [z, doors, tag] of [[frameZ[0], frontDoors, "F"], [frameZ[n], backDoors, "C"]] as const) {
-    for (let k = 1; k < postCount; k += 1) {
-      const x = -half + (k * W) / postCount;
-      if (doors.some((dx) => Math.abs(x - dx) < doorW / 2 + 0.25)) continue;
+    for (const x of lay.gablePosts(doors)) {
+      const k = Math.round(((x + half) * lay.postCount) / W);
       const h = (trussRafters ? bottomChordY : topSteel(x) - rd) - 0.02;
       const label = `${tag}${k}`;
       b.add(
@@ -530,37 +513,58 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
   const girtStart = baseH > 0 ? baseH + 0.4 : 1.0;
   const girtHeights: number[] = [];
   for (let y = girtStart; y < eave - 0.5; y += GIRT_SPACING) girtHeights.push(y);
-  const sideOpenings = (side: -1 | 1): [number, number, number][] => {
-    // [z0, z1, top] de aberturas que cortan largueros
-    const result: [number, number, number][] = [];
+  const sideOpenings = (side: -1 | 1): [number, number, number, number][] => {
+    // [z0, z1, base, top] de portones y puertas, que cortan los largueros (las
+    // ventanas se resuelven aparte, sin cortar: ver más abajo).
+    const result: [number, number, number, number][] = [];
     const doorBays = side > 0 ? sideDoorBays : [];
     for (const bay of doorBays) {
       const zc = (frameZ[bay] + frameZ[bay + 1]) / 2;
-      result.push([zc - doorW / 2, zc + doorW / 2, doorH]);
-    }
-    const winBays = side > 0 ? windowBaysEast : windowBaysWest;
-    for (const bay of winBays) {
-      const zc = (frameZ[bay] + frameZ[bay + 1]) / 2;
-      result.push([zc - winW / 2, zc + winW / 2, winV0 + winH]);
+      result.push([zc - doorW / 2, zc + doorW / 2, 0, doorH]);
     }
     if (side < 0) {
       for (const bay of personDoorBays) {
         const z0 = frameZ[bay] + 1.0;
-        result.push([z0, z0 + specs.personDoor.width, specs.personDoor.height]);
+        result.push([z0, z0 + specs.personDoor.width, 0, specs.personDoor.height]);
       }
     }
     return result;
   };
+  // Margen alrededor de una abertura dentro del cual un larguero se interrumpe.
+  const OPENING_CLEAR = 0.1;
   for (const side of [-1, 1] as const) {
     const label = side < 0 ? "O" : "E";
-    const x = side * (half + colD / 2 + 0.09);
+    // El larguero va entre la columna y la chapa: su cara exterior queda 3 mm
+    // detrás de la cara interior del cerramiento (antes asomaba por la fachada).
+    const girtDepth = Math.max(0.06, 0.18 - wallT - 0.006);
+    const x = side * (half + colD / 2 + 0.003 + girtDepth / 2);
     const cuts = sideOpenings(side);
+    // Ventanas: el larguero que pasaría por la ventana no se corta en el aire.
+    // En ese módulo se reemplaza por dos largueros horizontales de columna a
+    // columna, uno justo debajo de la ventana y otro justo encima.
+    const winBays = side > 0 ? windowBaysEast : windowBaysWest;
+    const winTop = winV0 + winH;
+    const crossesWindow = (y: number) => y > winV0 - OPENING_CLEAR && y < winTop + OPENING_CLEAR;
+    const bayRange = (bay: number): [number, number] => [bay === 0 ? -L / 2 - 0.1 : frameZ[bay], bay === n - 1 ? L / 2 + 0.1 : frameZ[bay + 1]];
     girtHeights.forEach((y, k) => {
-      const exclusions = cuts.filter(([, , top]) => y < top + 0.1).map(([z0, z1]) => [z0 - 0.05, z1 + 0.05] as [number, number]);
+      // Sólo se corta el larguero que pasa a la altura de un portón o puerta:
+      // los que quedan por encima siguen enteros.
+      const exclusions = cuts.filter(([, , base, top]) => y > base - OPENING_CLEAR && y < top + OPENING_CLEAR).map(([z0, z1]) => [z0 - 0.05, z1 + 0.05] as [number, number]);
+      if (crossesWindow(y)) exclusions.push(...winBays.map(bayRange));
       const segments = segmentsExcluding(-L / 2 - 0.1, L / 2 + 0.1, exclusions);
-      const parts: Part[] = segments.map(([z0, z1]) => ({ geometry: new BoxGeometry(0.18, 0.08, z1 - z0), materialKey: "secondary" as MaterialKey, position: [x, y, (z0 + z1) / 2] }));
+      const parts: Part[] = segments.map(([z0, z1]) => ({ geometry: new BoxGeometry(girtDepth, 0.08, z1 - z0), materialKey: "secondary" as MaterialKey, position: [x, y, (z0 + z1) / 2] }));
       b.add({ category: "girts", key: `GI-${label}${pad(k + 1)}`, label: `Larguero lateral ${label}-${pad(k + 1)}`, bimCategory: "Structural Framing", family: "Larguero C conformado", type: profiles.girts, material: "Acero galvanizado", parameters: { altura_m: r3(y) } }, parts);
     });
+    if (girtHeights.some(crossesWindow)) {
+      winBays.forEach((bay, k) => {
+        const [z0, z1] = bayRange(bay);
+        const parts: Part[] = [winV0 - 0.06, winTop + 0.06].map((y) => ({ geometry: new BoxGeometry(girtDepth, 0.08, z1 - z0), materialKey: "secondary" as MaterialKey, position: [x, y, (z0 + z1) / 2] }));
+        b.add(
+          { category: "girts", key: `GV-${label}${pad(k + 1)}`, label: `Largueros de ventana ${label}-${pad(k + 1)}`, bimCategory: "Structural Framing", family: "Larguero C conformado", type: profiles.girts, material: "Acero galvanizado", parameters: { modulo: bay + 1, antepecho_m: r3(winV0 - 0.06), dintel_m: r3(winTop + 0.06) } },
+          parts
+        );
+      });
+    }
   }
   for (const [zSign, doors, tag] of [[-1, frontDoors, "F"], [1, backDoors, "C"]] as const) {
     const z = zSign * (L / 2 + flange / 2 + 0.09);
@@ -598,16 +602,16 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
   }
 
   /* ───────────── cubierta + lucernarios ───────────── */
-  const skylightsOn = Boolean(config.options.skylights);
   const sheetLen = halfSlope + EAVE_OVERHANG + 0.05;
-  const sheetPiece = (fromT: number, toT: number, bayLen: number) =>
-    meterUVsForBox(new BoxGeometry((toT - fromT) * sheetLen, roofT, bayLen), "z");
+  const isSkylight = lay.isSkylight;
+  const sheetPiece = (fromT: number, toT: number, bayLen: number, openEnds: number[] = []) =>
+    dropFacesOnPlanes(meterUVsForBox(new BoxGeometry((toT - fromT) * sheetLen, roofT, bayLen), "z"), "z", openEnds.map((e) => (e * bayLen) / 2));
   for (let bay = 0; bay < n; bay += 1) {
     const z0 = frameZ[bay] - (bay === 0 ? 0.45 : 0);
     const z1 = frameZ[bay + 1] + (bay === n - 1 ? 0.45 : 0);
     const bayLen = z1 - z0;
     const zc = (z0 + z1) / 2;
-    const isSkylightBay = skylightsOn && bay % 2 === 1 && bay < n - 1;
+    const isSkylightBay = isSkylight(bay);
     for (const side of [-1, 1] as const) {
       const label = side < 0 ? "O" : "E";
       const rot = side < 0 ? angle : -angle;
@@ -623,14 +627,18 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
         const ny = Math.cos(angle);
         return [p.x - nx * (roofT / 2), p.y - ny * (roofT / 2), zc] as [number, number, number];
       };
-      const parts = (ranges: [number, number][]) => ranges.map(([a, c]) => ({ geometry: sheetPiece(a, c, bayLen), materialKey: "roofSheet" as MaterialKey, position: placeSlice(a, c), rotation: [0, 0, rot] as [number, number, number] }));
+      // Sin tapas en la unión con el módulo vecino, salvo junto a un lucernario
+      // (ahí el canto de la chapa se ve a través del policarbonato).
+      const openEnds = [...(bay > 0 && !isSkylight(bay - 1) ? [-1] : []), ...(bay < n - 1 && !isSkylight(bay + 1) ? [1] : [])];
+      const parts = (ranges: [number, number][]) => ranges.map(([a, c]) => ({ geometry: sheetPiece(a, c, bayLen, openEnds), materialKey: "roofSheet" as MaterialKey, position: placeSlice(a, c), rotation: [0, 0, rot] as [number, number, number] }));
       const common = { category: "roof" as ModelCategory, bimCategory: "Roofs", family: roofOption.name, type: roofOption.name, material: roofOption.name, parameters: { faldon: label === "O" ? "Oeste" : "Este", modulo: bay + 1, pendiente_pct: d.roofSlope, espesor_mm: roofOption.thicknessMm } };
       if (isSkylightBay) {
         b.add({ ...common, key: `RF-${label}${pad(bay + 1)}`, label: `Cubierta ${label}-${pad(bay + 1)}` }, parts([[0, 0.38], [0.62, 1]]));
         const p = placeSlice(0.38, 0.62);
         b.add(
           { category: "skylights", key: `SK-${label}${pad(bay + 1)}`, label: `Lucernario ${label}-${pad(bay + 1)}`, bimCategory: "Roofs", family: "Lucernario policarbonato", type: "Policarbonato alveolar", material: "Policarbonato", parameters: { modulo: bay + 1, faldon: label === "O" ? "Oeste" : "Este" } },
-          [{ geometry: sheetPiece(0.38, 0.62, bayLen - 0.6), materialKey: "skylight", position: [p[0], p[1] + 0.005, p[2]], rotation: [0, 0, rot] }]
+          // Ocupa todo el largo del hueco: antes quedaban 30 cm abiertos en cada punta.
+          [{ geometry: sheetPiece(0.38, 0.62, bayLen), materialKey: "skylight", position: [p[0], p[1] + 0.005, p[2]], rotation: [0, 0, rot] }]
         );
       } else {
         b.add({ ...common, key: `RF-${label}${pad(bay + 1)}`, label: `Cubierta ${label}-${pad(bay + 1)}` }, parts([[0, 1]]));
@@ -662,6 +670,8 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
   }
 
   /* ───────────── cerramientos laterales ───────────── */
+  // Uniones entre módulos (pórticos interiores): ahí se tocan dos piezas.
+  const joints = frameZ.slice(1, -1);
   const sideTop = roofSurface(wallX) - roofT - 0.03;
   for (const side of [-1, 1] as const) {
     const label = side < 0 ? "O" : "E";
@@ -680,11 +690,11 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
       const sheetOpenings = openings.map((op) => ({ ...op, v0: Math.max(op.v0, baseH) })).filter((op) => op.v1 > baseH + 0.05);
       // Muescas: aberturas que llegan al borde inferior del panel de chapa.
       const sheetRects = sheetOpenings.map((op) => (op.v0 <= baseH + 0.001 ? { ...op, v0: baseH } : op));
-      const geometry = panelWithOpenings([[u1, sideTop], [u0, sideTop]], u0, u1, baseH, sheetRects, wallT);
       // forma en (u=z, v=y), extrusión → mapear a pared en x = ±wallX
-      geometry.rotateY(-Math.PI / 2);
+      const geometry = panelWithOpenings([[u1, sideTop], [u0, sideTop]], u0, u1, baseH, sheetRects, wallT).rotateY(-Math.PI / 2);
+      const panel = dropFacesOnPlanes(geometry, "z", joints.filter((j) => Math.abs(j - u0) < 0.001 || Math.abs(j - u1) < 0.001));
       const xOuter = side * wallX;
-      const parts: Part[] = [{ geometry, materialKey: "wallSheet", position: [side < 0 ? xOuter + wallT : xOuter, 0, 0] }];
+      const parts: Part[] = [{ geometry: panel, materialKey: "wallSheet", position: [side < 0 ? xOuter + wallT : xOuter, 0, 0] }];
       b.add(
         { category: "walls", key: `WL-${label}${pad(bay + 1)}`, label: `Cerramiento ${label}-${pad(bay + 1)}`, bimCategory: "Walls", family: wallOption.name, type: wallOption.name, material: wallOption.name, parameters: { modulo: bay + 1, lado: label === "O" ? "Oeste" : "Este", espesor_mm: wallOption.thicknessMm } },
         parts
@@ -694,7 +704,11 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
         const segs = segmentsExcluding(u0, u1, gaps);
         b.add(
           { category: "walls", key: `PC-${label}${pad(bay + 1)}`, label: `Zócalo premoldeado ${label}-${pad(bay + 1)}`, bimCategory: "Walls", family: "Panel premoldeado", type: `Hormigón premoldeado h=${baseH} m`, material: "Hormigón", parameters: { modulo: bay + 1, altura_m: baseH } },
-          segs.map(([a, c]) => ({ geometry: meterUVsForBox(new BoxGeometry(0.16, baseH, c - a), "z"), materialKey: "precast" as MaterialKey, position: [side * (wallX - 0.02), baseH / 2, (a + c) / 2] }))
+          segs.map(([a, c]) => ({
+            geometry: dropFacesOnPlanes(meterUVsForBox(new BoxGeometry(0.16, baseH, c - a), "z"), "z", joints.filter((j) => Math.abs(j - a) < 0.001 || Math.abs(j - c) < 0.001).map((j) => j - (a + c) / 2)),
+            materialKey: "precast" as MaterialKey,
+            position: [side * (wallX - 0.02), baseH / 2, (a + c) / 2] as [number, number, number],
+          }))
         );
       }
     }
@@ -702,14 +716,17 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
 
   /* ───────────── testeros ───────────── */
   for (const [zSign, doors, tag, name] of [[-1, frontDoors, "F", "Frente"], [1, backDoors, "C", "Contrafrente"]] as const) {
+    // El testero termina contra la cara interior de los laterales, así las
+    // esquinas no tienen dos caras en el mismo plano.
+    const gableX = wallX - wallT;
     const top: [number, number][] = [
-      [wallX, roofSurface(wallX) - roofT - 0.03],
+      [gableX, roofSurface(wallX) - roofT - 0.03],
       [0, roofSurface(0) - roofT - 0.03],
-      [-wallX, roofSurface(wallX) - roofT - 0.03],
+      [-gableX, roofSurface(wallX) - roofT - 0.03],
     ];
     const openings: Rect[] = doors.map((dx) => ({ u0: dx - doorW / 2, u1: dx + doorW / 2, v0: 0, v1: doorH }));
     const sheetRects = openings.filter((op) => op.v1 > baseH + 0.05).map((op) => ({ ...op, v0: baseH }));
-    const geometry = panelWithOpenings(top, -wallX, wallX, baseH, sheetRects, wallT);
+    const geometry = panelWithOpenings(top, -gableX, gableX, baseH, sheetRects, wallT);
     const z = zSign * gableZ;
     b.add(
       { category: "walls", key: `WL-${tag}`, label: `Cerramiento ${name.toLowerCase()}`, bimCategory: "Walls", family: wallOption.name, type: wallOption.name, material: wallOption.name, parameters: { testero: name, espesor_mm: wallOption.thicknessMm } },
@@ -729,7 +746,7 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
         { category: "doors", key: `DR-${tag}${k + 1}`, label: `Portón ${name.toLowerCase()} ${k + 1}`, bimCategory: "Doors", family: specs.sectionalDoor.name, type: `${doorW} × ${r3(doorH)} m`, material: "Panel de acero con aislación", parameters: { ancho_m: doorW, alto_m: r3(doorH), testero: name } },
         [
           { geometry: meterUVsForBox(new BoxGeometry(doorW - 0.04, doorH - 0.02, 0.05), "x"), materialKey: "sectionalDoor", position: [dx, doorH / 2, zDoor] },
-          { geometry: mergeGeometries([new BoxGeometry(0.12, doorH, 0.14).translate(-doorW / 2 - 0.06, doorH / 2, 0), new BoxGeometry(0.12, doorH, 0.14).translate(doorW / 2 + 0.06, doorH / 2, 0), new BoxGeometry(doorW + 0.24, 0.12, 0.14).translate(0, doorH + 0.06, 0)]), materialKey: "trim", position: [dx, 0, zSign * (gableZ - 0.02)] },
+          { geometry: mergeGeometries([new BoxGeometry(0.12, doorH, 0.14).translate(-doorW / 2 - 0.06 + TRIM_INSET, doorH / 2, 0), new BoxGeometry(0.12, doorH, 0.14).translate(doorW / 2 + 0.06 - TRIM_INSET, doorH / 2, 0), new BoxGeometry(doorW + 0.24, 0.12, 0.14).translate(0, doorH + 0.06 - TRIM_INSET, 0)]), materialKey: "trim", position: [dx, 0, zSign * (gableZ - 0.02)] },
         ]
       );
     });
@@ -743,7 +760,7 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
       { category: "doors", key: `DR-E${k + 1}`, label: `Portón lateral ${k + 1}`, bimCategory: "Doors", family: specs.sectionalDoor.name, type: `${doorW} × ${r3(doorH)} m`, material: "Panel de acero con aislación", parameters: { ancho_m: doorW, alto_m: r3(doorH), modulo: bay + 1 } },
       [
         { geometry: meterUVsForBox(new BoxGeometry(0.05, doorH - 0.02, doorW - 0.04), "z"), materialKey: "sectionalDoor", position: [x, doorH / 2, zc] },
-        { geometry: mergeGeometries([new BoxGeometry(0.14, doorH, 0.12).translate(0, doorH / 2, -doorW / 2 - 0.06), new BoxGeometry(0.14, doorH, 0.12).translate(0, doorH / 2, doorW / 2 + 0.06), new BoxGeometry(0.14, 0.12, doorW + 0.24).translate(0, doorH + 0.06, 0)]), materialKey: "trim", position: [wallX - 0.02, 0, zc] },
+        { geometry: mergeGeometries([new BoxGeometry(0.14, doorH, 0.12).translate(0, doorH / 2, -doorW / 2 - 0.06 + TRIM_INSET), new BoxGeometry(0.14, doorH, 0.12).translate(0, doorH / 2, doorW / 2 + 0.06 - TRIM_INSET), new BoxGeometry(0.14, 0.12, doorW + 0.24).translate(0, doorH + 0.06 - TRIM_INSET, 0)]), materialKey: "trim", position: [wallX - 0.02, 0, zc] },
       ]
     );
   });
@@ -755,7 +772,7 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
       { category: "doors", key: `PD-O${k + 1}`, label: `Puerta peatonal ${k + 1}`, bimCategory: "Doors", family: specs.personDoor.name, type: `${pw} × ${ph} m`, material: "Chapa doble", parameters: { ancho_m: pw, alto_m: ph, modulo: bay + 1 } },
       [
         { geometry: new BoxGeometry(0.05, ph - 0.02, pw - 0.04), materialKey: "personDoor", position: [-wallX + 0.1, ph / 2, zc] },
-        { geometry: mergeGeometries([new BoxGeometry(0.12, ph, 0.08).translate(0, ph / 2, -pw / 2 - 0.04), new BoxGeometry(0.12, ph, 0.08).translate(0, ph / 2, pw / 2 + 0.04), new BoxGeometry(0.12, 0.08, pw + 0.16).translate(0, ph + 0.04, 0)]), materialKey: "trim", position: [-wallX - 0.02, 0, zc] },
+        { geometry: mergeGeometries([new BoxGeometry(0.13, ph, 0.08).translate(0, ph / 2, -pw / 2 - 0.04 + TRIM_INSET), new BoxGeometry(0.13, ph, 0.08).translate(0, ph / 2, pw / 2 + 0.04 - TRIM_INSET), new BoxGeometry(0.13, 0.08, pw + 0.16).translate(0, ph + 0.04 - TRIM_INSET, 0)]), materialKey: "trim", position: [-wallX - 0.02, 0, zc] },
       ]
     );
   });
@@ -784,11 +801,8 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
   }
 
   /* ───────────── marquesina ───────────── */
-  if (config.options.canopy) {
-    const cw = Math.min(W * 0.62, Math.max(8, doorW * Math.max(1, frontDoors.length) + 4));
-    const depth = 4;
-    const hc = Math.min((frontDoors.length ? doorH : 4) + 0.7, eave - 0.3);
-    const zWall = -gableZ - 0.05;
+  if (lay.canopy) {
+    const { width: cw, depth, height: hc, zWall } = lay.canopy;
     const beams: BufferGeometry[] = [];
     const beamCount = Math.max(2, Math.round(cw / 4) + 1);
     for (let k = 0; k < beamCount; k += 1) {
@@ -809,10 +823,8 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
   }
 
   /* ───────────── puente grúa (placeholder) ───────────── */
-  if (config.options.crane) {
-    const clear = trussRafters ? bottomChordY : topSteel(half) - rd * 2;
-    const railY = clear - 1.4;
-    const railX = half - colD / 2 - 0.35;
+  if (lay.crane) {
+    const { railY, railX } = lay.crane;
     for (const side of [-1, 1] as const) {
       const label = side < 0 ? "A" : "B";
       const parts: BufferGeometry[] = [new BoxGeometry(0.3, 0.6, L).translate(side * railX, railY, 0)];
@@ -822,7 +834,7 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
         [{ geometry: mergeGeometries(parts), materialKey: "structure" }]
       );
     }
-    const bridgeZ = frameZ[Math.max(1, Math.floor(n / 3))] + d.baySpacing / 2;
+    const bridgeZ = lay.crane.bridgeZ;
     const span = 2 * railX;
     b.add(
       { category: "equipment", key: "CR-BRIDGE", label: "Puente grúa (placeholder)", bimCategory: "Specialty Equipment", family: "Puente grúa birriel", type: "Representación conceptual — sin capacidad definida", material: "Acero pintado", parameters: { luz_m: r3(span), estado: "placeholder" } },

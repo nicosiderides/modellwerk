@@ -10,11 +10,14 @@ import {
   Color,
   DirectionalLight,
   Fog,
+  HalfFloatType,
+  Matrix4,
   Mesh,
   PCFShadowMap,
   SRGBColorSpace,
   Vector2,
   Vector3,
+  WebGLRenderTarget,
   type Object3D,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -27,7 +30,7 @@ import { ScaleReferences } from "./ScaleReferences";
 import { loadProductModel } from "./engine/ProductModelLoader";
 import { ModelStageController } from "./engine/ModelStageController";
 import { normalizeModel } from "./engine/normalizeModel";
-import type { ProductViewerProps, ViewerContent } from "./types";
+import type { ProductViewerProps, ViewerContent, ViewerSurroundings } from "./types";
 
 /**
  * MW Product Viewer — visor 3D genérico para productos constructivos.
@@ -50,7 +53,7 @@ function disposeOwned(root: Object3D) {
   });
 }
 
-function ModelStage(props: ProductViewerProps & { onBounds: (box: Box3 | null, fitToken: string) => void }) {
+function ModelStage(props: ProductViewerProps & { onBounds: (box: Box3 | null, fitToken: string) => void; onOrigin: (origin: Matrix4 | null) => void }) {
   const { content, resolveMaterial, materialVersion, hiddenCategories, isolatedCategories, explode, explodeOffsets, selectable, selectedElementId, onSelect, onIndex, onLoadState, onBounds } = props;
   const gl = useThree((state) => state.gl);
   const camera = useThree((state) => state.camera);
@@ -144,6 +147,11 @@ function ModelStage(props: ProductViewerProps & { onBounds: (box: Box3 | null, f
 
   useEffect(() => {
     callbacks.current.onBounds(stage ? stage.controller.bounds() : null, stage?.fitToken ?? "");
+    // Origen del modelo después de normalizarlo (el entorno se ubica igual).
+    const inner = stage?.controller.root.getObjectByName("MW_NORMALIZED_INNER");
+    if (inner) inner.updateWorldMatrix(true, false);
+    props.onOrigin(inner ? inner.matrixWorld.clone() : stage ? new Matrix4() : null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage]);
 
   useEffect(() => {
@@ -212,11 +220,17 @@ function ModelStage(props: ProductViewerProps & { onBounds: (box: Box3 | null, f
   return <primitive object={stage.controller.root} />;
 }
 
-function Lighting({ bounds, quality }: { bounds: Box3 | null; quality: ProductViewerProps["quality"] }) {
+function Lighting({ bounds, extent, quality }: { bounds: Box3 | null; extent: Box3 | null; quality: ProductViewerProps["quality"] }) {
   const sun = useRef<DirectionalLight>(null);
   const scene = useThree((state) => state.scene);
   const invalidate = useThree((state) => state.invalidate);
   const radius = useMemo(() => (bounds && !bounds.isEmpty() ? bounds.getSize(new Vector3()).length() / 2 : 40), [bounds]);
+  // Las sombras cubren el modelo y su entorno inmediato (vehículos, árboles).
+  const shadowBox = useMemo(() => {
+    const box = bounds && !bounds.isEmpty() ? bounds.clone() : new Box3(new Vector3(-20, 0, -30), new Vector3(20, 10, 30));
+    if (extent && !extent.isEmpty()) box.union(extent);
+    return box;
+  }, [bounds, extent]);
 
   useEffect(() => {
     scene.background = new Color(BACKGROUND);
@@ -224,22 +238,25 @@ function Lighting({ bounds, quality }: { bounds: Box3 | null; quality: ProductVi
     const light = sun.current;
     if (light) {
       const cam = light.shadow.camera;
-      const extent = radius * 1.15;
+      const center = shadowBox.getCenter(new Vector3());
+      const span = shadowBox.getSize(new Vector3());
+      const extent = Math.max(radius * 1.15, Math.hypot(span.x, span.z) / 2 + 4);
       cam.left = -extent;
       cam.right = extent;
       cam.top = extent;
       cam.bottom = -extent;
       cam.near = 0.5;
-      cam.far = radius * 6;
+      cam.far = Math.max(radius, extent) * 6;
       cam.updateProjectionMatrix();
       // Sol lateral-posterior: la sombra cae hacia la cámara y modela los volúmenes.
-      light.position.set(-radius * 1.35, radius * 1.7, radius * 0.75);
-      light.target.position.set(0, 0, 0);
+      const reach = Math.max(radius, extent);
+      light.position.set(center.x - reach * 1.35, reach * 1.7, center.z + reach * 0.75);
+      light.target.position.set(center.x, 0, center.z);
       light.target.updateMatrixWorld();
       light.shadow.needsUpdate = true;
     }
     invalidate();
-  }, [radius, scene, invalidate]);
+  }, [radius, shadowBox, scene, invalidate]);
 
   return (
     <>
@@ -296,7 +313,11 @@ function AmbientOcclusion() {
   const camera = useThree((state) => state.camera);
   const size = useThree((state) => state.size);
   const composer = useMemo(() => {
-    const c = new EffectComposer(gl);
+    // El composer dibuja en su propio buffer, que por defecto NO tiene
+    // antialiasing: por eso en calidad alta los bordes salían en serrucho.
+    // Le damos un buffer con 4 muestras (MSAA), igual que el canvas normal.
+    const target = new WebGLRenderTarget(size.width * gl.getPixelRatio(), size.height * gl.getPixelRatio(), { type: HalfFloatType, samples: 4 });
+    const c = new EffectComposer(gl, target);
     c.addPass(new RenderPass(scene, camera));
     const ao = new GTAOPass(scene, camera, size.width, size.height);
     ao.output = GTAOPass.OUTPUT.Default;
@@ -315,6 +336,38 @@ function AmbientOcclusion() {
   useEffect(() => () => composer.dispose(), [composer]);
   useFrame(() => composer.render(), 1);
   return null;
+}
+
+/** Entorno del producto, ubicado con el mismo origen que el modelo. */
+function Surroundings({ content, origin, onExtent }: { content: ViewerSurroundings | null | undefined; origin: Matrix4 | null; onExtent: (box: Box3 | null) => void }) {
+  const invalidate = useThree((state) => state.invalidate);
+  const [built, setBuilt] = useState<{ root: Object3D; box: Box3; dispose?: (root: Object3D) => void } | null>(null);
+  const key = content?.key ?? null;
+  const contentRef = useRef(content);
+  useEffect(() => {
+    contentRef.current = content;
+  });
+  useEffect(() => {
+    const current = contentRef.current;
+    const next = current && key ? { ...current.build(), dispose: current.dispose } : null;
+    setBuilt((previous) => {
+      if (previous) previous.dispose?.(previous.root);
+      return next;
+    });
+    invalidate();
+  }, [key, invalidate]);
+  useEffect(() => () => setBuilt((previous) => (previous?.dispose?.(previous.root), null)), []);
+  useEffect(() => {
+    if (!built || !origin) return onExtent(null);
+    onExtent(built.box.clone().applyMatrix4(origin));
+    invalidate();
+  }, [built, origin, onExtent, invalidate]);
+  if (!built || !origin) return null;
+  return (
+    <group matrixAutoUpdate={false} matrix={origin}>
+      <primitive object={built.root} />
+    </group>
+  );
 }
 
 /** Expone una captura PNG de la vista (para la ficha imprimible). */
@@ -338,6 +391,8 @@ function SnapshotBridge({ onReady }: { onReady?: (capture: () => string | null) 
 export default function ProductViewer(props: ProductViewerProps) {
   const [bounds, setBounds] = useState<Box3 | null>(null);
   const [fitToken, setFitToken] = useState("");
+  const [origin, setOrigin] = useState<Matrix4 | null>(null);
+  const [extent, setExtent] = useState<Box3 | null>(null);
   const onBounds = useCallback((box: Box3 | null, token: string) => {
     setBounds(box);
     if (token) setFitToken(token);
@@ -358,9 +413,10 @@ export default function ProductViewer(props: ProductViewerProps) {
           gl.toneMappingExposure = 1.02;
         }}
       >
-        <Lighting bounds={bounds} quality={props.quality} />
+        <Lighting bounds={bounds} extent={extent} quality={props.quality} />
         <Ground bounds={bounds} />
-        <ModelStage {...props} onBounds={onBounds} />
+        <ModelStage {...props} onBounds={onBounds} onOrigin={setOrigin} />
+        <Surroundings content={props.surroundings} origin={origin} onExtent={setExtent} />
         <CameraDirector bounds={bounds} fitToken={fitToken} request={props.cameraRequest} insets={props.insets} interactive={!props.captureMode} />
         <ScaleReferences bounds={bounds} visible={props.showScaleReferences} />
         {high && <AmbientOcclusion />}

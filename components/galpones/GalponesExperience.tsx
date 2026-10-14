@@ -14,6 +14,7 @@ import { ModelStatus } from "./ModelStatus";
 import { CompareModal } from "./CompareModal";
 import { QuoteModal } from "./QuoteModal";
 import { SavedModal } from "./SavedModal";
+import { LotMap } from "./map/LotMap";
 import { definitionOf, useGalpones, type Stage } from "./store";
 
 const WarehouseViewer = dynamic(() => import("./WarehouseViewer"), { ssr: false });
@@ -90,7 +91,7 @@ function Toast() {
   const toast = useGalpones((s) => s.ui.toast);
   if (!toast) return null;
   return (
-    <div className="gp-toast" role="status" key={toast.id}>
+    <div className={`gp-toast gp-toast--${toast.tone}`} role="status" key={toast.id}>
       {toast.text}
     </div>
   );
@@ -146,6 +147,7 @@ export default function GalponesExperience() {
       {modal === "compare" && <CompareModal />}
       {modal === "quote" && <QuoteModal />}
       {modal === "saved" && <SavedModal />}
+      {modal === "map" && <LotMap />}
       <Toast />
     </div>
   );

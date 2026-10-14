@@ -9,6 +9,8 @@ import type {
   WarehouseConfig,
   WarehouseDefinition,
 } from "./types.ts";
+import { SITE_DEFAULTS, normalizeSite } from "./siteConfig.ts";
+import { LOT_DEFAULTS, normalizeLot } from "./lotRules.ts";
 
 /**
  * Reglas de configuración (independientes de React y de Three).
@@ -114,6 +116,8 @@ export function createDefaultConfig(definition: WarehouseDefinition): WarehouseC
     envelope: { ...definition.envelope.defaults },
     openings: { ...definition.options.openings.defaults },
     options: Object.fromEntries(definition.options.options.filter((o) => o.status === "available").map((o) => [o.id, false])),
+    site: { ...SITE_DEFAULTS },
+    lot: structuredClone(LOT_DEFAULTS),
   };
   const variant = getVariant(definition);
   if (variant) base.variant = variant.id;
@@ -160,6 +164,8 @@ export function normalizeConfig(definition: WarehouseDefinition, config: Warehou
   }
 
   if (!definition.structure.finishes.some((f) => f.id === next.structureFinish)) next.structureFinish = definition.structure.defaultFinish;
+  next.site = normalizeSite(next.site);
+  next.lot = normalizeLot(next.lot);
 
   const env = definition.envelope;
   const roof = env.roof.find((o) => o.id === next.envelope.roof) ?? env.roof.find((o) => o.id === env.defaults.roof) ?? env.roof[0];

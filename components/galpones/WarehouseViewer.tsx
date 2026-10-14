@@ -4,7 +4,8 @@ import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { createWarehouseModel } from "@/core/galpones/geometry";
 import { getVariant } from "@/core/galpones/configuration";
 import ProductViewer from "@/components/product-viewer/ProductViewer";
-import type { ViewerContent, ViewerInsets } from "@/components/product-viewer/types";
+import type { ViewerContent, ViewerInsets, ViewerSurroundings } from "@/components/product-viewer/types";
+import { buildSite, disposeSite } from "@/core/galpones/site";
 import { staticCatalog } from "@/core/galpones/catalog";
 import { WarehouseMaterialLibrary, materialSpecs, materialVersion } from "./materials";
 import { definitionOf, useGalpones } from "./store";
@@ -68,6 +69,16 @@ export default function WarehouseViewer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geometryKey, definition]);
 
+  // Entorno: depende de la planta del galpón, del entorno elegido y de si se muestran vehículos.
+  const siteKey = config ? JSON.stringify([geometryKey, config.site, config.lot, viewer.scaleReferences]) : null;
+  const surroundings = useMemo<ViewerSurroundings | null>(() => {
+    if (!config || !definition) return null;
+    const snapshotConfig = structuredClone(config);
+    const vehicles = viewer.scaleReferences;
+    return { key: siteKey!, build: () => buildSite(snapshotConfig, definition, { vehicles }), dispose: (root) => disposeSite(root as Parameters<typeof disposeSite>[0]) };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteKey, definition]);
+
   const mobile = width < 760;
   const capture = typeof document !== "undefined" && document.documentElement.dataset.gpCapture === "1";
   const insets = useMemo<ViewerInsets>(() => {
@@ -91,6 +102,7 @@ export default function WarehouseViewer() {
     <ProductViewer
       className={`gp-viewer gp-viewer--${stage}`}
       content={content}
+      surroundings={surroundings}
       resolveMaterial={library.resolve}
       materialVersion={version}
       hiddenCategories={hidden}
