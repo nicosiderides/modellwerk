@@ -83,5 +83,82 @@
     "purlins": "Perfil C galvanizado (referencial)",
     "girts": "Perfil C galvanizado (referencial)",
     "bracing": "Barra redonda (referencial)"
-  }
+  },
+  "foundations": [
+    {
+      "id": "padFootings",
+      "name": "Bases aisladas",
+      "summary": "Una base de hormigón debajo de cada columna.",
+      "bullets": [
+        "La solución más habitual para galpones metálicos",
+        "Menos hormigón: sólo donde llegan las cargas",
+        "Rápida de excavar y hormigonar"
+      ],
+      "whenToUse": "Suelos firmes a poca profundidad.",
+      "memoryText": "bases aisladas de hormigón armado bajo cada columna, con fuste hasta el nivel de platea"
+    },
+    {
+      "id": "stripFooting",
+      "name": "Zapata corrida",
+      "summary": "Una franja continua de hormigón bajo todo el perímetro.",
+      "bullets": [
+        "Reparte la carga en una superficie mayor",
+        "Sostiene también muros y zócalos perimetrales",
+        "Buena para suelos de resistencia media"
+      ],
+      "whenToUse": "Suelos blandos o cerramientos pesados (mampostería, premoldeados).",
+      "memoryText": "zapata corrida perimetral de hormigón armado con viga de fundación bajo las líneas de columnas"
+    },
+    {
+      "id": "piles",
+      "name": "Pilotis",
+      "summary": "Pilotes de hormigón que bajan hasta el suelo firme.",
+      "bullets": [
+        "Llevan las cargas a varios metros de profundidad",
+        "Cabezales unidos con vigas de encadenado",
+        "Para suelos de baja capacidad o rellenos"
+      ],
+      "whenToUse": "Suelos flojos, rellenos o napa alta (según estudio de suelos).",
+      "memoryText": "pilotes de hormigón armado con cabezales bajo cada columna, unidos con vigas de encadenado"
+    }
+  ],
+  "defaultFoundation": "padFootings",
+  "floors": [
+    {
+      "id": "h20",
+      "name": "Hormigón H20",
+      "summary": "Platea de hormigón H20 con terminación rugosa (peinada).",
+      "bullets": [
+        "Superficie antideslizante",
+        "La opción más económica",
+        "Ideal para depósitos, talleres y tránsito pesado"
+      ],
+      "whenToUse": "Depósitos, talleres y zonas de carga.",
+      "memoryText": "platea de hormigón H20 con terminación peinada antideslizante y juntas de dilatación",
+      "look": {
+        "color": "#aaa69c",
+        "roughness": 0.97,
+        "pattern": "slabBroom"
+      }
+    },
+    {
+      "id": "troweled",
+      "name": "Hormigón alisado",
+      "summary": "Hormigón llaneado a máquina: superficie lisa, compacta y con brillo suave.",
+      "bullets": [
+        "Fácil de limpiar y barrer",
+        "Menos polvo en el ambiente",
+        "Buena terminación para producción y exhibición"
+      ],
+      "whenToUse": "Industria, logística con autoelevadores, locales y showrooms.",
+      "memoryText": "platea de hormigón alisado a máquina (llaneado mecánico) con endurecedor superficial y juntas aserradas",
+      "look": {
+        "color": "#938e86",
+        "roughness": 0.3,
+        "pattern": "slabTroweled",
+        "envMapIntensity": 0.75
+      }
+    }
+  ],
+  "defaultFloor": "h20"
 }

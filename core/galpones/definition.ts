@@ -59,6 +59,8 @@ export function validateDefinition(d: WarehouseDefinition): string[] {
   need(d.defaults && d.defaults.bayCount * d.defaults.baySpacing >= r.length.min - 1e-6 && d.defaults.bayCount * d.defaults.baySpacing <= r.length.max + 1e-6, "warehouse.json: defaults.bayCount × baySpacing fuera del rango de longitud");
   need(d.structure?.systems?.some((s) => s.id === d.structure.default), "structure.json: default debe existir en systems");
   need(d.structure?.finishes?.some((f) => f.id === d.structure.defaultFinish), "structure.json: defaultFinish debe existir en finishes");
+  need(d.structure?.foundations?.some((f) => f.id === d.structure.defaultFoundation), "structure.json: defaultFoundation debe existir en foundations");
+  need(d.structure?.floors?.some((f) => f.id === d.structure.defaultFloor), "structure.json: defaultFloor debe existir en floors");
   const env = d.envelope;
   need(env?.roof?.some((o) => o.id === env.defaults.roof), "envelope.json: defaults.roof");
   need(env?.walls?.some((o) => o.id === env.defaults.walls), "envelope.json: defaults.walls");

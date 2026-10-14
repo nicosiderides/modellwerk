@@ -3947,3 +3947,114 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
     font-size: 8.5px;
   }
 }
+
+/* ── Fundación ── */
+.gp-foundations {
+  margin-top: 6px;
+}
+
+.gp-subhead-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gp-subhead-row .gp-subhead {
+  margin-bottom: 8px;
+}
+
+.gp-linkbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 0;
+  border: 0;
+  background: none;
+  color: var(--gp-muted);
+  font-family: var(--gp-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.gp-linkbtn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.gp-linkbtn:hover,
+.gp-linkbtn.is-active {
+  color: var(--gp-signal);
+}
+
+.gp-choice__aside {
+  flex: none;
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+.gp-choice__when {
+  margin-top: 4px;
+  color: var(--gp-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.gp-fsketch {
+  display: block;
+  width: 58px;
+  height: 51px;
+  color: #9a958a;
+}
+
+.gp-choice.is-selected .gp-fsketch {
+  color: var(--gp-signal);
+}
+
+.gp-fsketch__soil {
+  fill: rgba(255, 255, 255, 0.035);
+}
+
+.gp-fsketch__ground {
+  stroke: var(--gp-line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.gp-fsketch__slab {
+  fill: #6f6b63;
+}
+
+.gp-fsketch__steel {
+  fill: #c7ccd0;
+}
+
+/* ── Piso ── */
+.gp-floors {
+  margin-top: 6px;
+}
+
+.gp-floorchip {
+  display: block;
+  width: 52px;
+  height: 44px;
+  border: 1px solid var(--gp-line-strong);
+  border-radius: 2px;
+}
+
+/* H20 peinado: estrías finas */
+.gp-floorchip--h20 {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.09) 0 1px, transparent 1px 3px),
+    radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.08), transparent 60%);
+}
+
+/* Alisado: brillo suave y una junta aserrada */
+.gp-floorchip--troweled {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.12) 70%, rgba(0, 0, 0, 0.06) 100%),
+    linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(0, 0, 0, 0.28) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}

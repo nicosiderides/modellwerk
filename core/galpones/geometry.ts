@@ -18,6 +18,7 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { buildNodeName } from "../product-engine/naming.ts";
 import type { BimElementMetadata, ModelCategory, ModelMetadataDocument, ModelSource } from "../product-engine/types.ts";
 import { EAVE_OVERHANG, GIRT_SPACING, PURLIN_SPACING } from "./geometry-rules.ts";
+import { SLAB_BOTTOM, foundationSizes } from "./foundations.ts";
 import { PURLIN_H, warehouseLayout } from "./layout.ts";
 import type { WarehouseConfig, WarehouseDefinition } from "./types.ts";
 
@@ -355,12 +356,9 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
     { category: "foundations", key: "SLAB", label: "Platea / contrapiso", bimCategory: "Floors", family: "Contrapiso de hormigón", type: "Hormigón armado — espesor a definir", material: "Hormigón", parameters: { area_m2: Math.round(W * L) } },
     [{ geometry: meterUVsForBox(new BoxGeometry(2 * wallX + 0.6, 0.2, 2 * gableZ + 0.6), "x"), materialKey: "slab", position: [0, -0.1, 0] }]
   );
-  const footing = new BoxGeometry(1.4, 0.6, 1.4);
-  const footingAt = (x: number, z: number, key: string, label: string) =>
-    b.add(
-      { category: "foundations", key: `FD-${key}`, label: `Base ${label}`, bimCategory: "Structural Foundations", family: "Base aislada", type: "A definir por ingeniería", material: "Hormigón armado", parameters: { grilla: label } },
-      [{ geometry: footing, materialKey: "footing", position: [x, -0.5, z] }]
-    );
+  // Las fundaciones se arman al final, cuando se conocen todas las columnas.
+  const columnPoints: { x: number; z: number; key: string; label: string; main: boolean }[] = [];
+  const footingAt = (x: number, z: number, key: string, label: string, main = true) => columnPoints.push({ x, z, key, label, main });
 
   /* ───────────── pórticos ───────────── */
   const columnCache = new Map<number, BufferGeometry>();
@@ -485,7 +483,86 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
         { category: "columns", key: `GC-${label}`, label: `Columna de testero ${label}`, bimCategory: "Structural Columns", family: "Columna de testero", type: profiles.columns, material: steel, parameters: steelParams({ grilla: label, altura_m: r3(h) }) },
         [{ geometry: iSection(0.26, 0.15, h), materialKey: "structure", position: [x, 0, z], rotation: [0, Math.PI / 2, 0] }]
       );
-      footingAt(x, z, `G${label}`, `testero ${label}`);
+      footingAt(x, z, `G${label}`, `testero ${label}`, false);
+    }
+  }
+
+  /* ───────────── fundaciones según el tipo elegido ───────────── */
+  {
+    const kind = config.foundation ?? "padFootings";
+    const option = definition.structure.foundations?.find((f) => f.id === kind);
+    const family = option?.name ?? "Fundación";
+    const concrete = "Hormigón armado";
+    const size = foundationSizes(W);
+    const z0 = frameZ[0];
+    const zN = frameZ[n];
+    const runsAround = (inset: number): [string, string, number, number, number, number][] => [
+      ["A", "lateral A", -half, z0 - inset, -half, zN + inset],
+      ["B", "lateral B", half, z0 - inset, half, zN + inset],
+      ["F", "frente", -half + inset, z0, half - inset, z0],
+      ["C", "contrafrente", -half + inset, zN, half - inset, zN],
+    ];
+    if (kind === "stripFooting") {
+      // Zapata corrida perimetral + viga de fundación bajo las líneas de columnas.
+      const { width: bw, thickness: t, bottom, stemWidth } = size.strip;
+      const stemH = SLAB_BOTTOM - (bottom + t);
+      for (const [key, where, xa, za, xb, zb] of runsAround(bw / 2)) {
+        const alongZ = Math.abs(zb - za) > Math.abs(xb - xa);
+        const len = alongZ ? zb - za : xb - xa;
+        const cx = (xa + xb) / 2;
+        const cz = (za + zb) / 2;
+        b.add(
+          { category: "foundations", key: `ZC-${key}`, label: `Zapata corrida ${where}`, bimCategory: "Structural Foundations", family, type: `${concrete} — ancho ${bw} m (referencial)`, material: concrete, parameters: { largo_m: r3(len), ancho_m: bw } },
+          [
+            { geometry: new BoxGeometry(alongZ ? bw : len, t, alongZ ? len : bw), materialKey: "footing", position: [cx, bottom + t / 2, cz] },
+            { geometry: new BoxGeometry(alongZ ? stemWidth : len, stemH, alongZ ? len : stemWidth), materialKey: "footing", position: [cx, SLAB_BOTTOM - stemH / 2, cz] },
+          ]
+        );
+      }
+    } else if (kind === "piles") {
+      // Pilotes con cabezal bajo cada columna, unidos por vigas de encadenado.
+      const P = size.piles;
+      const pileTop = SLAB_BOTTOM - P.capHeight;
+      const pileMain = new CylinderGeometry(P.diameter / 2, P.diameter / 2, P.length, 14);
+      const pileGable = new CylinderGeometry(P.diameterGable / 2, P.diameterGable / 2, P.length, 14);
+      const capMain = new BoxGeometry(P.capMain[0], P.capHeight, P.capMain[1]);
+      const capGable = new BoxGeometry(P.capGable[0], P.capHeight, P.capGable[1]);
+      for (const p of columnPoints) {
+        const piles = p.main ? [-P.spacing / 2, P.spacing / 2] : [0];
+        b.add(
+          { category: "foundations", key: `PI-${p.key}`, label: `Cabezal y pilotes ${p.label}`, bimCategory: "Structural Foundations", family, type: `${concrete} — ${piles.length} pilote${piles.length > 1 ? "s" : ""} Ø ${Math.round((p.main ? P.diameter : P.diameterGable) * 100)} cm (referencial)`, material: concrete, parameters: { grilla: p.label, pilotes: piles.length, largo_pilote_m: P.length } },
+          [
+            { geometry: p.main ? capMain : capGable, materialKey: "footing", position: [p.x, SLAB_BOTTOM - P.capHeight / 2, p.z] },
+            ...piles.map((dx): Part => ({ geometry: p.main ? pileMain : pileGable, materialKey: "footing", position: [p.x + dx, pileTop - P.length / 2, p.z] })),
+          ]
+        );
+      }
+      const [beamW, beamH] = P.beam;
+      for (const [key, where, xa, za, xb, zb] of runsAround(0)) {
+        const alongZ = Math.abs(zb - za) > Math.abs(xb - xa);
+        const len = alongZ ? zb - za : xb - xa;
+        b.add(
+          { category: "foundations", key: `VE-${key}`, label: `Viga de encadenado ${where}`, bimCategory: "Structural Framing", family: "Viga de encadenado", type: `${concrete} — ${beamW * 100}×${beamH * 100} cm (referencial)`, material: concrete, parameters: { largo_m: r3(len) } },
+          [{ geometry: new BoxGeometry(alongZ ? beamW : len, beamH, alongZ ? len : beamW), materialKey: "footing", position: [(xa + xb) / 2, SLAB_BOTTOM - beamH / 2, (za + zb) / 2] }]
+        );
+      }
+    } else {
+      // Bases aisladas: zapata cuadrada + fuste hasta la platea.
+      const D = size.pad;
+      const stemH = SLAB_BOTTOM - (D.bottom + D.thickness);
+      const padMain = new BoxGeometry(D.side, D.thickness, D.side);
+      const padGable = new BoxGeometry(D.sideGable, D.thickness, D.sideGable);
+      const stem = new BoxGeometry(D.stem, stemH, D.stem);
+      for (const p of columnPoints) {
+        const side = p.main ? D.side : D.sideGable;
+        b.add(
+          { category: "foundations", key: `FD-${p.key}`, label: `Base ${p.label}`, bimCategory: "Structural Foundations", family, type: `${concrete} — ${side} × ${side} m (referencial)`, material: concrete, parameters: { grilla: p.label, lado_m: side } },
+          [
+            { geometry: p.main ? padMain : padGable, materialKey: "footing", position: [p.x, D.bottom + D.thickness / 2, p.z] },
+            { geometry: stem, materialKey: "footing", position: [p.x, SLAB_BOTTOM - stemH / 2, p.z] },
+          ]
+        );
+      }
     }
   }
 

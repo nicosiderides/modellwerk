@@ -280,15 +280,19 @@ function Lighting({ bounds, extent, quality, wide }: { bounds: Box3 | null; exte
   );
 }
 
-function Ground({ bounds, bare }: { bounds: Box3 | null; bare: boolean }) {
-  if (bare) return null;
+function Ground({ bounds, bare, xray }: { bounds: Box3 | null; bare: boolean; xray: boolean }) {
+  if (bare && !xray) return null;
   const size = bounds && !bounds.isEmpty() ? bounds.getSize(new Vector3()) : new Vector3(40, 10, 60);
   const radius = Math.max(size.x, size.z);
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]} receiveShadow>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]} receiveShadow renderOrder={xray ? 5 : 0}>
         <circleGeometry args={[Math.max(250, radius * 7), 64]} />
-        <meshStandardMaterial color="#cbc8bf" roughness={1} metalness={0} />
+        {xray ? (
+          <meshStandardMaterial key="xray" color="#cbc8bf" roughness={1} metalness={0} transparent opacity={0.36} depthWrite={false} />
+        ) : (
+          <meshStandardMaterial key="solid" color="#cbc8bf" roughness={1} metalness={0} />
+        )}
       </mesh>
       <Grid
         position={[0, -0.02, 0]}
@@ -448,8 +452,8 @@ export default function ProductViewer(props: ProductViewerProps) {
         }}
       >
         <Lighting bounds={bounds} extent={extent} quality={props.quality} wide={Boolean(props.backdrop)} />
-        <Ground bounds={bounds} bare={Boolean(props.backdrop)} />
-        {props.backdrop && <Backdrop content={props.backdrop} origin={origin} />}
+        <Ground bounds={bounds} bare={Boolean(props.backdrop)} xray={Boolean(props.underground)} />
+        {props.backdrop && !props.underground && <Backdrop content={props.backdrop} origin={origin} />}
         <ModelStage {...props} onBounds={onBounds} onOrigin={setOrigin} />
         <Surroundings content={props.surroundings} origin={origin} onExtent={setExtent} />
         <CameraDirector bounds={bounds} fitToken={fitToken} request={props.cameraRequest} insets={props.insets} interactive={!props.captureMode} wide={Boolean(props.backdrop)} />

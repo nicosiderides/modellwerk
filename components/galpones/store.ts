@@ -7,7 +7,7 @@ import { staticCatalog } from "@/core/galpones/catalog";
 import { createDefaultConfig, normalizeConfig, selectVariant } from "@/core/galpones/configuration";
 import { clampDimension, dimensionValue, fitToLot, limitSentence, ruleRequirement, variantFits } from "@/core/galpones/lotLimits";
 import { formatNumber } from "@/core/galpones/metrics";
-import type { DimensionKey, LotConfig, LotLocation, Openings, SiteConfig, StructureSystemId, WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
+import type { DimensionKey, FloorId, FoundationId, LotConfig, LotLocation, Openings, SiteConfig, StructureSystemId, WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
 import { lotPatchFromLocation } from "@/core/galpones/geo/lotFromParcel";
 import type { ZoneResult } from "@/core/galpones/geo/cordobaZoning";
 import { planSite } from "@/core/galpones/sitePlan";
@@ -40,6 +40,8 @@ type ViewerState = {
   quality: ViewerQuality;
   /** Piso del visor cuando el lote tiene ubicación real: foto aérea, plano o neutro. */
   ground: GroundMode;
+  /** Vista bajo el suelo: el terreno se vuelve translúcido para ver las fundaciones. */
+  underground: boolean;
 };
 type ModelState = ModelLoadState & { index: MetadataIndex | null; metadata: ModelMetadataDocument | null };
 export type ToastTone = "info" | "limit";
@@ -67,6 +69,10 @@ export type GalponesState = {
   setVariant: (variantId: string) => void;
   setStructure: (id: StructureSystemId) => void;
   setStructureFinish: (id: string) => void;
+  /** Elige el tipo de fundación y muestra la vista bajo el suelo. */
+  setFoundation: (id: FoundationId) => void;
+  /** Elige la terminación del piso y muestra el interior. */
+  setFloor: (id: FloorId) => void;
   setEnvelope: (patch: Partial<WarehouseConfig["envelope"]>) => void;
   setOpenings: (patch: Partial<Openings>) => void;
   toggleOption: (id: string, on: boolean) => void;
@@ -90,6 +96,7 @@ export type GalponesState = {
   showAll: () => void;
   setQuality: (quality: ViewerQuality) => void;
   setGround: (ground: GroundMode) => void;
+  setUnderground: (on: boolean) => void;
 
   // modelo / selección
   setModelState: (state: ModelLoadState) => void;
@@ -115,7 +122,7 @@ let toastId = 0;
 
 export const useGalpones = create<GalponesState>((set, get) => ({
   warehouse: { definitionId: null, config: null },
-  viewer: { camera: { preset: "perspective", nonce: 0 }, explode: false, scaleReferences: true, hidden: [], isolated: null, quality: "balanced", ground: "photo" },
+  viewer: { camera: { preset: "perspective", nonce: 0 }, explode: false, scaleReferences: true, hidden: [], isolated: null, quality: "balanced", ground: "photo", underground: false },
   model: { status: "idle", progress: 0, index: null, metadata: null },
   ui: { stage: "catalog", tab: "dimensions", modal: null, panelOpen: true, toast: null },
   selection: null,
@@ -146,9 +153,10 @@ export const useGalpones = create<GalponesState>((set, get) => ({
     set((state) => ({
       ui: { ...state.ui, stage, modal: null, panelOpen: stage === "catalog" ? state.ui.panelOpen : true },
       selection: stage === "explore" ? state.selection : null,
-      viewer: stage === "explore" ? state.viewer : { ...state.viewer, isolated: null, hidden: [], explode: stage === "summary" ? false : state.viewer.explode },
+      viewer: stage === "explore" ? state.viewer : { ...state.viewer, isolated: null, hidden: [], explode: stage === "summary" ? false : state.viewer.explode, underground: stage === "configure" ? state.viewer.underground : false },
     })),
-  setTab: (tab) => set((state) => ({ ui: { ...state.ui, tab, panelOpen: true } })),
+  // Al salir de Estructura se vuelve a la vista normal (la vista bajo el suelo es para elegir la fundación).
+  setTab: (tab) => set((state) => ({ ui: { ...state.ui, tab, panelOpen: true }, viewer: tab === "structure" ? state.viewer : { ...state.viewer, underground: false } })),
   setModal: (modal) => set((state) => ({ ui: { ...state.ui, modal } })),
   setPanelOpen: (panelOpen) => set((state) => ({ ui: { ...state.ui, panelOpen } })),
   toast: (text, tone = "info") => {
@@ -190,6 +198,13 @@ export const useGalpones = create<GalponesState>((set, get) => ({
   },
   setStructure: (id) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, structure: id })), selection: null })),
   setStructureFinish: (id) => set((state) => withConfig(state, (d, c) => normalizeConfig(d, { ...c, structureFinish: id }))),
+  setFloor: (id) =>
+    set((state) => ({
+      ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, floor: id })),
+      // Para ver el piso: vista interior (si no se estaba ya adentro).
+      viewer: { ...state.viewer, underground: false, explode: false, camera: state.viewer.camera.preset === "interior" ? state.viewer.camera : { preset: "interior", nonce: state.viewer.camera.nonce + 1 } },
+    })),
+  setFoundation: (id) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, foundation: id })), viewer: { ...state.viewer, underground: true, explode: false } })),
   setEnvelope: (patch) => set((state) => withConfig(state, (d, c) => normalizeConfig(d, { ...c, envelope: { ...c.envelope, ...patch } }))),
   setOpenings: (patch) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, openings: { ...c.openings, ...patch } })), selection: null })),
   toggleOption: (id, on) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, options: { ...c.options, [id]: on } })), selection: null })),
@@ -255,6 +270,7 @@ export const useGalpones = create<GalponesState>((set, get) => ({
   showAll: () => set((state) => ({ viewer: { ...state.viewer, hidden: [], isolated: null } })),
   setQuality: (quality) => set((state) => ({ viewer: { ...state.viewer, quality } })),
   setGround: (ground) => set((state) => ({ viewer: { ...state.viewer, ground } })),
+  setUnderground: (underground) => set((state) => ({ viewer: { ...state.viewer, underground } })),
 
   setModelState: (model) => set((state) => ({ model: { ...state.model, ...model } })),
   setModelIndex: (index, metadata) => set((state) => ({ model: { ...state.model, index, metadata } })),

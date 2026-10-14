@@ -251,3 +251,55 @@ test("implantación: configuraciones viejas sin lote se completan", () => {
   assert.equal(fixed.site.sidewalk, 1.5);
 });
 type WarehouseConfigShape = ReturnType<typeof createDefaultConfig>;
+
+test("fundaciones: tres tipos, por defecto bases aisladas, y configuraciones viejas se completan", () => {
+  for (const id of IDS) {
+    const def = load(id);
+    assert.deepEqual(def.structure.foundations.map((f) => f.id).sort(), ["padFootings", "piles", "stripFooting"], id);
+    assert.equal(createDefaultConfig(def).foundation, "padFootings", id);
+  }
+  const def = load("industrial-light");
+  const old = createDefaultConfig(def) as Partial<ReturnType<typeof createDefaultConfig>>;
+  delete old.foundation;
+  assert.equal(normalizeConfig(def, old as ReturnType<typeof createDefaultConfig>).foundation, "padFootings");
+});
+
+test("fundaciones: el 3D y la memoria cambian según el tipo", () => {
+  const def = load("industrial-pro");
+  const keysFor = (foundation: "padFootings" | "stripFooting" | "piles") => {
+    const config = normalizeConfig(def, { ...createDefaultConfig(def), foundation });
+    const { root, metadata } = createWarehouseModel(config, def);
+    const ids = metadata.elements.map((e) => e.elementId);
+    assert.equal(new Set(ids).size, ids.length, `${foundation}: IDs repetidos`);
+    const meshes: Mesh[] = [];
+    root.traverse((o) => { if ((o as Mesh).isMesh) meshes.push(o as Mesh); });
+    assert.equal(buildMetadataIndex(meshes, metadata).unmatchedNodes, 0, `${foundation}: piezas sin metadata`);
+    const keys = metadata.elements.filter((e) => e.category === "foundations").map((e) => e.elementId);
+    const text = generateTechnicalDescription(config, def).join(" ");
+    return { keys, text };
+  };
+  const pads = keysFor("padFootings");
+  const strip = keysFor("stripFooting");
+  const piles = keysFor("piles");
+  assert.ok(pads.keys.some((k) => /FD-/.test(k)) && !pads.keys.some((k) => /ZC-|PI-/.test(k)));
+  assert.equal(strip.keys.filter((k) => /ZC-/.test(k)).length, 4);
+  assert.ok(piles.keys.some((k) => /PI-/.test(k)) && piles.keys.filter((k) => /VE-/.test(k)).length === 4);
+  assert.match(pads.text, /bases aisladas/);
+  assert.match(strip.text, /zapata corrida/);
+  assert.match(piles.text, /pilotes/);
+});
+
+test("piso: H20 por defecto, alisado opcional, y queda en la memoria", () => {
+  for (const id of IDS) {
+    const def = load(id);
+    assert.deepEqual(def.structure.floors.map((f) => f.id).sort(), ["h20", "troweled"], id);
+    assert.equal(createDefaultConfig(def).floor, "h20", id);
+  }
+  const def = load("industrial-light");
+  const old = createDefaultConfig(def) as Partial<ReturnType<typeof createDefaultConfig>>;
+  delete old.floor;
+  assert.equal(normalizeConfig(def, old as ReturnType<typeof createDefaultConfig>).floor, "h20");
+  const troweled = normalizeConfig(def, { ...createDefaultConfig(def), floor: "troweled" });
+  assert.match(generateTechnicalDescription(troweled, def).join(" "), /hormigón alisado/);
+  assert.match(generateTechnicalDescription(createDefaultConfig(def), def).join(" "), /hormigón H20/);
+});

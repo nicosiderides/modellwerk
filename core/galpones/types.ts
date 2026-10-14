@@ -88,6 +88,36 @@ export type StructureSystem = {
 
 export type FinishOption = { id: string; name: string; hex: string; memoryText: string };
 
+/** Tipos de fundación: bases aisladas, zapata corrida o pilotes (pilotis). */
+export type FoundationId = "padFootings" | "stripFooting" | "piles";
+
+export type FoundationOption = {
+  id: FoundationId;
+  name: string;
+  summary: string;
+  bullets: string[];
+  /** Cuándo conviene (texto para el usuario). */
+  whenToUse: string;
+  /** Fragmento para la memoria descriptiva. */
+  memoryText: string;
+};
+
+/** Terminación del piso (platea): hormigón H20 o hormigón alisado. */
+export type FloorId = "h20" | "troweled";
+
+export type FloorOption = {
+  id: FloorId;
+  name: string;
+  summary: string;
+  bullets: string[];
+  /** Para qué uso conviene (texto para el usuario). */
+  whenToUse: string;
+  /** Fragmento para la memoria descriptiva. */
+  memoryText: string;
+  /** Aspecto en el 3D. */
+  look: { color: string; roughness: number; pattern: "slabBroom" | "slabTroweled"; envMapIntensity?: number };
+};
+
 export type StructureData = {
   default: StructureSystemId;
   systems: StructureSystem[];
@@ -95,6 +125,12 @@ export type StructureData = {
   defaultFinish: string;
   /** Datos visuales/descriptivos del perfil — no son cálculo estructural. */
   profileLabels: Record<"columns" | "rafters" | "purlins" | "girts" | "bracing", string>;
+  /** Tipos de fundación disponibles (referenciales: se definen con estudio de suelos). */
+  foundations: FoundationOption[];
+  defaultFoundation: FoundationId;
+  /** Terminaciones de piso disponibles. */
+  floors: FloorOption[];
+  defaultFloor: FloorId;
 };
 
 /* ───────────────────────────── envelope.json ───────────────────────────── */
@@ -223,6 +259,10 @@ export type WarehouseConfig = {
   dimensions: Dimensions;
   structure: StructureSystemId;
   structureFinish: string;
+  /** Tipo de fundación. */
+  foundation: FoundationId;
+  /** Terminación del piso. */
+  floor: FloorId;
   envelope: { roof: string; walls: string; insulation: string; roofColor: string; wallColor: string };
   openings: Openings;
   options: Record<string, boolean>;

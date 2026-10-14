@@ -1,6 +1,8 @@
 import { EAVE_OVERHANG, GIRT_SPACING, PURLIN_SPACING } from "./geometry-rules.ts";
 import { PURLIN_H, warehouseLayout, type WarehouseLayout } from "./layout.ts";
-import type { WarehouseConfig, WarehouseDefinition } from "./types.ts";
+import { SLAB_BOTTOM, foundationSizes } from "./foundations.ts";
+import { formatNumber } from "./metrics.ts";
+import type { FoundationId, WarehouseConfig, WarehouseDefinition } from "./types.ts";
 
 /**
  * Lámina de planos básicos (A3 apaisada) generada desde la configuración.
@@ -279,7 +281,7 @@ function windowElevation(pen: Pen, toPaper: (u: number, y: number) => Pt, uc: nu
 
 /* ───────────────────────── PLANTA ───────────────────────── */
 
-function drawPlan(lay: WarehouseLayout, scale: number, config: WarehouseConfig) {
+function drawPlan(lay: WarehouseLayout, scale: number, config: WarehouseConfig, floorName = "") {
   const k = 1000 / scale;
   const pen = new Pen("plan");
   const P = (z: number, x: number): Pt => [z * k, -x * k];
@@ -413,6 +415,7 @@ function drawPlan(lay: WarehouseLayout, scale: number, config: WarehouseConfig) 
   const area = lay.W * lay.L;
   pen.text([P(cz, 0)[0], P(0, half * 0.35)[1]], "NAVE", 2.4, "middle", 'class="troom"');
   pen.text([P(cz, 0)[0], P(0, half * 0.35)[1] + 3.2], `${fmt(area, 0)} m² · NPT ±0,00`, 1.7, "middle", 'class="tnote"');
+  if (floorName) pen.text([P(cz, 0)[0], P(0, half * 0.35)[1] + 5.6], `Piso: ${floorName.charAt(0).toLowerCase()}${floorName.slice(1)}`, 1.5, "middle", 'class="tnote"');
   if (lay.canopy) pen.text([P(lay.canopy.zWall - lay.canopy.depth / 2, 0)[0], P(0, 0)[1] + 0.6], "Marquesina", 1.4, "middle", 'class="tnote"', -90);
   if (lay.skylightsOn) {
     const sk = [...Array(n).keys()].find((b) => lay.isSkylight(b));
@@ -595,7 +598,7 @@ function drawGableElevation(lay: WarehouseLayout, scale: number, which: "front" 
 
 /* ───────────────────────── CORTE X-X (transversal) ───────────────────────── */
 
-function drawCrossSection(lay: WarehouseLayout, scale: number, structureName: string) {
+function drawCrossSection(lay: WarehouseLayout, scale: number, structureName: string, foundation: FoundationId = "padFootings") {
   const k = 1000 / scale;
   const pen = new Pen("secX");
   const C = (x: number, y: number): Pt => [-x * k, -y * k];
@@ -609,7 +612,38 @@ function drawCrossSection(lay: WarehouseLayout, scale: number, structureName: st
   // Terreno, platea (cortada) y bases (ocultas)
   pen.line(C(-wallX - 3, 0), C(wallX + 3, 0), "ground");
   pen.rect(C(-wallX - 0.3, 0), C(wallX + 0.3, -0.2), "conc");
-  for (const s of [-1, 1]) pen.rect(C(s * half - 0.7, -0.2), C(s * half + 0.7, -0.8), "hid");
+  // Fundaciones según el tipo (el corte pasa entre pórticos: bases y cabezales quedan en vista, ocultos).
+  const fs = foundationSizes(lay.W);
+  // Lo más bajo que se dibuja: los ejes y la cota total van debajo.
+  const deepest = foundation === "piles" ? SLAB_BOTTOM - fs.piles.capHeight - Math.min(fs.piles.length, 3.2) : foundation === "stripFooting" ? fs.strip.bottom : fs.pad.bottom;
+  for (const s of [-1, 1]) {
+    const x = s * half;
+    if (foundation === "stripFooting") {
+      const { width: bw, thickness: t, bottom, stemWidth } = fs.strip;
+      pen.rect(C(x - bw / 2, bottom), C(x + bw / 2, bottom + t), "conc");
+      pen.rect(C(x - stemWidth / 2, bottom + t), C(x + stemWidth / 2, SLAB_BOTTOM), "conc");
+    } else if (foundation === "piles") {
+      const P = fs.piles;
+      const capBottom = SLAB_BOTTOM - P.capHeight;
+      const shown = Math.min(P.length, 3.2);
+      pen.rect(C(x - P.capMain[0] / 2, capBottom), C(x + P.capMain[0] / 2, SLAB_BOTTOM), "hid");
+      pen.rect(C(x - P.beam[0] / 2, SLAB_BOTTOM - P.beam[1]), C(x + P.beam[0] / 2, SLAB_BOTTOM), "conc");
+      for (const dx of [-P.spacing / 2, P.spacing / 2]) {
+        const px = x + dx;
+        pen.rect(C(px - P.diameter / 2, capBottom - shown), C(px + P.diameter / 2, capBottom), "hid");
+      }
+      // Corte del dibujo (los pilotes siguen más abajo) y su largo.
+      const yb = capBottom - shown;
+      const zig: Pt[] = [C(x - 0.9, yb), C(x - 0.3, yb + 0.15), C(x - 0.1, yb - 0.15), C(x + 0.1, yb + 0.15), C(x + 0.3, yb - 0.15), C(x + 0.9, yb)];
+      pen.poly(zig, "thin", false);
+      // C() espeja x: "afuera" del galpón en el papel es x + s.
+      pen.text(C(x + s * 1.3, capBottom - shown / 2), `pilotes L≈${formatNumber(P.length, 0)} m`, DIM_TEXT * 0.8, s > 0 ? "end" : "start", 'class="tdim"');
+    } else {
+      const D = fs.pad;
+      pen.rect(C(x - D.side / 2, D.bottom), C(x + D.side / 2, D.bottom + D.thickness), "hid");
+      pen.rect(C(x - D.stem / 2, D.bottom + D.thickness), C(x + D.stem / 2, SLAB_BOTTOM), "hid");
+    }
+  }
 
   // Pórtico del fondo (en vista)
   const colTop = topSteel(half + colD / 2);
@@ -727,15 +761,15 @@ function drawCrossSection(lay: WarehouseLayout, scale: number, structureName: st
   if (g0 !== undefined) leader(pen, C(-(half + colD / 2), g0), [C(-wallX, 0)[0] + 2.5, C(0, g0)[1] - 2.5], "largueros");
 
   // Ejes, cotas y niveles
-  const yAx = C(0, -0.8)[1] + 3;
+  const yAx = C(0, deepest - 0.2)[1] + 3;
   for (const [x, name] of [
     [-half, "A"],
     [half, "B"],
   ] as const) {
-    pen.line([C(x, 0)[0], C(0, -0.8)[1] + 1], [C(x, 0)[0], yAx + 6], "axis");
+    pen.line([C(x, 0)[0], C(0, deepest - 0.2)[1] + 1], [C(x, 0)[0], yAx + 6], "axis");
     bubble(pen, [C(x, 0)[0], yAx + 8.1], name);
   }
-  dimH(pen, C(-half, 0)[0], C(half, 0)[0], yAx + 2, C(0, -0.8)[1] + 1, fmt(lay.W));
+  dimH(pen, C(-half, 0)[0], C(half, 0)[0], yAx + 2, C(0, deepest - 0.2)[1] + 1, fmt(lay.W));
   const xIn = C(half - colD / 2 - 0.6, 0)[0] + 2.5;
   dimV(pen, C(0, 0)[1], C(0, lay.clearHeight)[1], xIn, xIn - 1, `h libre ${fmt(lay.clearHeight)}`);
   const right = Math.max(C(xe, 0)[0], C(-xe, 0)[0]) + 2.5;
@@ -905,11 +939,12 @@ export function buildDrawingSheet(config: WarehouseConfig, definition: Warehouse
   const lay = warehouseLayout(config, definition);
   const system = definition.structure.systems.find((s) => s.id === config.structure);
   const structureName = system?.name ?? config.structure;
+  const floorName = definition.structure.floors?.find((f) => f.id === config.floor)?.name ?? "";
   const innerH = PAGE.h - 2 * PAGE.m - 6;
   const withBack = lay.backDoors.length > 0;
   const build = (scale: number) => ({
     left: [
-      { pen: drawPlan(lay, scale, config), name: "PLANTA" },
+      { pen: drawPlan(lay, scale, config, floorName), name: "PLANTA" },
       { pen: drawSideElevation(lay, scale, -1), name: "VISTA LATERAL OESTE" },
       { pen: drawSideElevation(lay, scale, 1), name: "VISTA LATERAL ESTE" },
       { pen: drawLongSection(lay, scale), name: "CORTE Y-Y" },
@@ -917,7 +952,7 @@ export function buildDrawingSheet(config: WarehouseConfig, definition: Warehouse
     right: [
       { pen: drawGableElevation(lay, scale, "front"), name: "VISTA FRENTE" },
       ...(withBack ? [{ pen: drawGableElevation(lay, scale, "back"), name: "VISTA CONTRAFRENTE" }] : []),
-      { pen: drawCrossSection(lay, scale, structureName), name: "CORTE X-X" },
+      { pen: drawCrossSection(lay, scale, structureName, config.foundation), name: "CORTE X-X" },
     ] as Placed[],
   });
 
@@ -1026,7 +1061,8 @@ function titleBlock(config: WarehouseConfig, definition: WarehouseDefinition, la
   ty += 4.2;
   r.push(t(x + 3, ty, `${fmt(lay.W, 1)} × ${fmt(lay.L, 1)} m · ${fmt(lay.W * lay.L, 0)} m² · alero ${fmt(lay.eave)} m · cumbrera ${fmt(lay.ridge)} m · i = ${fmt(lay.roofSlope, 0)} %`, 1.75, "tsmall"));
   ty += 3.3;
-  r.push(t(x + 3, ty, `Estructura: ${structureName} · ${lay.n} módulos de ${fmt(lay.baySpacing)} m`, 1.75, "tsmall"));
+  const foundationName = definition.structure.foundations?.find((f) => f.id === config.foundation)?.name;
+  r.push(t(x + 3, ty, `Estructura: ${structureName} · ${lay.n} módulos de ${fmt(lay.baySpacing)} m${foundationName ? ` · Fundación: ${foundationName.toLowerCase()}` : ""}`, 1.75, "tsmall"));
   ty += 3.3;
   r.push(t(x + 3, ty, `Cubierta: ${lay.roofOption.name} (${roofColor.toLowerCase()}) · Cerram.: ${lay.wallOption.name} (${wallColor.toLowerCase()})`, 1.75, "tsmall"));
   ty += 3.3;

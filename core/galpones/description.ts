@@ -21,6 +21,8 @@ export function descriptionTokens(config: WarehouseConfig, definition: Warehouse
   const find = <T extends { id: string }>(list: T[], id: string) => list.find((item) => item.id === id);
   const system = find(definition.structure.systems, config.structure);
   const finish = find(definition.structure.finishes, config.structureFinish);
+  const foundation = find(definition.structure.foundations, config.foundation);
+  const floor = find(definition.structure.floors, config.floor);
   const roof = find(definition.envelope.roof, config.envelope.roof);
   const walls = find(definition.envelope.walls, config.envelope.walls);
   const insulation = find(definition.envelope.insulation, config.envelope.insulation);
@@ -59,6 +61,8 @@ export function descriptionTokens(config: WarehouseConfig, definition: Warehouse
     spacing: n(d.baySpacing),
     structure: system?.memoryText ?? "",
     finish: finish?.memoryText ?? "",
+    foundation: foundation?.memoryText ?? "",
+    floor: floor?.memoryText ?? "",
     roof: roof?.memoryText ?? "",
     walls: walls?.memoryText ?? "",
     insulation: insulation?.memoryText ?? "",

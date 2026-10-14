@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Expand, Eye, Map as MapIcon, Maximize2, PersonStanding, Satellite, ScanEye, Sparkles, SquareDashed, View } from "lucide-react";
+import { Box, Expand, Eye, Layers, Map as MapIcon, Maximize2, PersonStanding, Satellite, ScanEye, Sparkles, SquareDashed, View } from "lucide-react";
 import type { CameraPresetId } from "@/components/product-viewer/types";
 import { useGalpones } from "./store";
 
@@ -19,6 +19,7 @@ export function ViewToolbar() {
   const setScale = useGalpones((s) => s.setScaleReferences);
   const setQuality = useGalpones((s) => s.setQuality);
   const setGround = useGalpones((s) => s.setGround);
+  const setUnderground = useGalpones((s) => s.setUnderground);
   const located = useGalpones((s) => Boolean(s.warehouse.config?.lot.enabled && s.warehouse.config.lot.location));
   const camera = viewer.camera;
 
@@ -40,6 +41,10 @@ export function ViewToolbar() {
         <button type="button" className={viewer.explode ? "is-active" : ""} onClick={() => setExplode(!viewer.explode)} title="Vista explotada">
           <ScanEye aria-hidden />
           <span>Explotar</span>
+        </button>
+        <button type="button" className={viewer.underground ? "is-active" : ""} onClick={() => setUnderground(!viewer.underground)} title="Ver bajo el suelo (fundaciones)">
+          <Layers aria-hidden />
+          <span>Fundación</span>
         </button>
         <button type="button" className={viewer.scaleReferences ? "is-active" : ""} onClick={() => setScale(!viewer.scaleReferences)} title="Referencias de escala">
           <PersonStanding aria-hidden />

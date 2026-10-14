@@ -61,12 +61,13 @@ function shade(hex: string, factor: number) {
   return `#${new Color(hex).multiplyScalar(factor).getHexString()}`;
 }
 
-export function materialSpecs(config: WarehouseConfig, definition: WarehouseDefinition): Record<string, Spec> {
+export function materialSpecs(config: WarehouseConfig, definition: WarehouseDefinition, opts: { underground?: boolean } = {}): Record<string, Spec> {
   const env = definition.envelope;
   const color = (id: string) => env.colors.find((c) => c.id === id)?.hex ?? "#c4c6c3";
   const roof = env.roof.find((o) => o.id === config.envelope.roof) ?? env.roof[0];
   const walls = env.walls.find((o) => o.id === config.envelope.walls) ?? env.walls[0];
   const finish = definition.structure.finishes.find((f) => f.id === config.structureFinish);
+  const floor = definition.structure.floors?.find((f) => f.id === config.floor);
   const galvanized = finish?.id === "galvanized";
   const roofColor = color(config.envelope.roofColor);
   const wallColor = color(config.envelope.wallColor);
@@ -78,8 +79,13 @@ export function materialSpecs(config: WarehouseConfig, definition: WarehouseDefi
     canopyRoof: { color: roofColor, metalness: 0.4, roughness: 0.48, pattern: "trapezoidal", normalScale: 0.9 },
     wallSheet: { color: wallColor, metalness: 0.32, roughness: 0.52, pattern: wallPattern[walls.finish], normalScale: 0.85 },
     precast: { color: "#b6b1a6", metalness: 0, roughness: 0.92, pattern: "precast", normalScale: 0.6 },
-    slab: { color: "#aaa69d", metalness: 0, roughness: 0.95, pattern: "slab", normalScale: 0.5 },
-    footing: { color: "#8f8b82", metalness: 0, roughness: 0.95 },
+    // Vista bajo el suelo: la platea se vuelve translúcida y el hormigón enterrado se aclara para leerse.
+    slab: opts.underground
+      ? { color: "#c9c4b8", metalness: 0, roughness: 0.95, transparent: true, opacity: 0.18 }
+      : floor
+        ? { color: floor.look.color, metalness: 0, roughness: floor.look.roughness, pattern: floor.look.pattern, normalScale: floor.look.pattern === "slabBroom" ? 0.9 : 0.8, envMapIntensity: floor.look.envMapIntensity }
+        : { color: "#aaa69d", metalness: 0, roughness: 0.95, pattern: "slab", normalScale: 0.5 },
+    footing: opts.underground ? { color: "#c9a45a", metalness: 0, roughness: 0.85 } : { color: "#8f8b82", metalness: 0, roughness: 0.95 },
     skylight: { color: "#f3f7f5", metalness: 0, roughness: 0.25, transparent: true, opacity: 0.55, doubleSide: true },
     sectionalDoor: { color: shade(wallColor, 1.05), metalness: 0.35, roughness: 0.45, pattern: "sectionalDoor", normalScale: 0.9 },
     personDoor: { color: "#495055", metalness: 0.4, roughness: 0.5 },
@@ -91,9 +97,9 @@ export function materialSpecs(config: WarehouseConfig, definition: WarehouseDefi
 }
 
 /** Clave estable para saber cuándo reasignar materiales. */
-export function materialVersion(config: WarehouseConfig) {
+export function materialVersion(config: WarehouseConfig, underground = false) {
   const e = config.envelope;
-  return `${config.structureFinish}|${e.roof}|${e.walls}|${e.roofColor}|${e.wallColor}`;
+  return `${config.structureFinish}|${config.floor}|${e.roof}|${e.walls}|${e.roofColor}|${e.wallColor}|${underground ? "u" : ""}`;
 }
 
 export class WarehouseMaterialLibrary {
