@@ -424,11 +424,11 @@ function parcelOutline(ring: [number, number][], width = 0.4) {
   g.setAttribute("position", new BufferAttribute(new Float32Array(pos), 3));
   g.setIndex(index);
   g.computeVertexNormals();
-  const m = new MeshStandardMaterial({ color: "#c9a227", roughness: 0.6, side: DoubleSide, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
+  const m = new MeshStandardMaterial({ color: "#c9a227", roughness: 0.6, side: DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
   m.name = "ground-map:parcel";
   const mesh = new Mesh(g, m);
   mesh.name = "ground-map:parcel-outline";
-  mesh.position.y = -0.025;
+  mesh.position.y = -0.035;
   mesh.receiveShadow = true;
   return mesh;
 }

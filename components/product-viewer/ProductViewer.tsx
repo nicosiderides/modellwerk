@@ -169,6 +169,13 @@ function ModelStage(props: ProductViewerProps & { onBounds: (box: Box3 | null, f
     invalidate();
   }, [stage, selectedElementId, invalidate]);
 
+  // Corte en planta (después de asignar materiales y resaltado).
+  const sectionHeight = props.sectionHeight ?? null;
+  useEffect(() => {
+    stage?.controller.setSection(sectionHeight);
+    invalidate();
+  }, [stage, materialVersion, selectedElementId, sectionHeight, invalidate]);
+
   useEffect(() => {
     explodeTarget.current = explode ? 1 : 0;
     invalidate();
@@ -280,22 +287,37 @@ function Lighting({ bounds, extent, quality, wide }: { bounds: Box3 | null; exte
   );
 }
 
+/**
+ * Piso neutro y grilla. Van siempre "detrás" de todo lo que se apoya en el
+ * suelo (veredas, playones, platea): además de estar unos cm más abajo, se
+ * empujan hacia atrás en profundidad para que nunca asomen por encima.
+ */
 function Ground({ bounds, bare, xray }: { bounds: Box3 | null; bare: boolean; xray: boolean }) {
+  const grid = useRef<Mesh>(null);
+  useEffect(() => {
+    const material = grid.current?.material as { polygonOffset?: boolean; polygonOffsetFactor?: number; polygonOffsetUnits?: number; needsUpdate?: boolean } | undefined;
+    if (!material) return;
+    material.polygonOffset = true;
+    material.polygonOffsetFactor = 4;
+    material.polygonOffsetUnits = 8;
+    material.needsUpdate = true;
+  });
   if (bare && !xray) return null;
   const size = bounds && !bounds.isEmpty() ? bounds.getSize(new Vector3()) : new Vector3(40, 10, 60);
   const radius = Math.max(size.x, size.z);
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]} receiveShadow renderOrder={xray ? 5 : 0}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.04, 0]} receiveShadow renderOrder={xray ? 5 : 0}>
         <circleGeometry args={[Math.max(250, radius * 7), 64]} />
         {xray ? (
           <meshStandardMaterial key="xray" color="#cbc8bf" roughness={1} metalness={0} transparent opacity={0.36} depthWrite={false} />
         ) : (
-          <meshStandardMaterial key="solid" color="#cbc8bf" roughness={1} metalness={0} />
+          <meshStandardMaterial key="solid" color="#cbc8bf" roughness={1} metalness={0} polygonOffset polygonOffsetFactor={6} polygonOffsetUnits={12} />
         )}
       </mesh>
       <Grid
-        position={[0, -0.02, 0]}
+        ref={grid}
+        position={[0, -0.03, 0]}
         args={[10, 10]}
         infiniteGrid
         cellSize={6}
@@ -447,6 +469,8 @@ export default function ProductViewer(props: ProductViewerProps) {
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance", preserveDrawingBuffer: Boolean(props.captureMode) }}
         onCreated={({ gl }) => {
           gl.outputColorSpace = SRGBColorSpace;
+          // Para el corte en planta (sólo afecta a materiales con planos de corte).
+          gl.localClippingEnabled = true;
           gl.toneMapping = ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.02;
         }}

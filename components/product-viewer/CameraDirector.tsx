@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, type ElementRef } from "react";
 import { CameraControls } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Box3, MathUtils, PerspectiveCamera, Vector3 } from "three";
 import type { CameraPresetId, CameraRequest, ViewerInsets } from "./types";
 
@@ -141,6 +141,30 @@ export function CameraDirector({ bounds, fitToken, request, insets, interactive,
     apply(lastPreset.current, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [insets.left, insets.right, insets.top, insets.bottom]);
+
+  // Plano cercano según la distancia de la cámara: adentro de la nave tiene que
+  // ser chico (paredes cerca), pero si después la cámara se aleja con ese valor
+  // la placa de video pierde precisión y los pisos se "pelean" (la grilla del
+  // suelo asomaba por el playón). Se ajusta solo, cuadro a cuadro.
+  useFrame(() => {
+    const control = controls.current;
+    if (!control) return;
+    const near = MathUtils.clamp(control.distance / 100, 0.05, 1);
+    if (Math.abs(near - camera.near) / camera.near < 0.08) return;
+    camera.near = near;
+    camera.updateProjectionMatrix();
+    invalidate();
+  });
+
+  // La cámara nunca baja del nivel del suelo: desde la vista interior (que
+  // permite mirar hacia arriba) al alejarse con la rueda quedaba enterrada y se
+  // veía todo desde abajo.
+  useEffect(() => {
+    const control = controls.current;
+    if (!control) return;
+    control.setBoundary(new Box3(new Vector3(-1e5, 0.3, -1e5), new Vector3(1e5, 1e5, 1e5)));
+    control.boundaryEnclosesCamera = true;
+  }, []);
 
   // Con mapa de fondo se puede alejar más (sin mover la cámara al prenderlo).
   useEffect(() => {

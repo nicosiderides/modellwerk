@@ -19,6 +19,9 @@ import { definitionOf, useGalpones } from "./store";
  * a materiales, visibilidad y cámara. El visor no sabe nada de galpones.
  */
 
+/** Altura del corte en la vista en planta (m). */
+export const PLAN_CUT_HEIGHT = 1.2;
+
 let snapshot: (() => string | null) | null = null;
 export const captureViewerSnapshot = () => snapshot?.() ?? null;
 
@@ -48,6 +51,8 @@ export default function WarehouseViewer() {
   const shared = staticCatalog.shared();
 
   const underground = viewer.underground;
+  // Vista en planta: el galpón se corta a 1,20 m, como un plano de arquitectura.
+  const planCut = viewer.camera.preset === "top" && viewer.camera.nonce > 0 ? PLAN_CUT_HEIGHT : null;
   const version = config ? materialVersion(config, underground) : "";
   useMemo(() => {
     if (config && definition) library.update(materialSpecs(config, definition, { underground }));
@@ -137,6 +142,7 @@ export default function WarehouseViewer() {
         surroundings={underground ? null : surroundings}
         backdrop={backdrop}
         underground={underground}
+        sectionHeight={planCut}
         resolveMaterial={library.resolve}
         materialVersion={version}
         hiddenCategories={hidden}
@@ -158,6 +164,11 @@ export default function WarehouseViewer() {
         insets={insets}
         onSnapshotReady={onSnapshot}
       />
+      {planCut !== null && !capture && (
+        <p className="gp-cut-badge" style={{ left: insets.left + 14 }}>
+          Planta · corte a +{planCut.toFixed(2).replace(".", ",")} m
+        </p>
+      )}
       {backdrop && !capture && !underground && (
         <p className="gp-map-credit" style={{ left: insets.left + 14 }}>
           {groundAttribution(groundMode)}

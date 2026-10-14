@@ -1,4 +1,4 @@
-import { Box3, Color, Material, Mesh, MeshStandardMaterial, Raycaster, Vector2, Vector3, type Camera, type Object3D } from "three";
+import { Box3, Color, DoubleSide, Material, Mesh, MeshStandardMaterial, Plane, Raycaster, Vector2, Vector3, type Camera, type Object3D, type Side } from "three";
 import { buildMetadataIndex, type MetadataIndex } from "@/core/product-engine/metadata";
 import type { ModelCategory, ModelMetadataDocument } from "@/core/product-engine/types";
 import type { ExplodeOffsets, MaterialResolver } from "../types";
@@ -29,6 +29,58 @@ type MeshRecord = {
 
 const HIGHLIGHT = new Color("#c89b3c");
 
+/**
+ * Corte horizontal (vista en planta): todo lo que está por encima de la altura
+ * de corte desaparece y la "sección" de muros y columnas se ve rellena de un
+ * gris oscuro (poché), como en un plano. El relleno son las caras internas
+ * de cada pieza, que sólo se dibujan mientras dura el corte.
+ */
+const POCHE = "vec4(0.17, 0.18, 0.19, 1.0)";
+const pocheUniforms = new WeakMap<Material, { value: number }>();
+const sideBefore = new WeakMap<Material, Side>();
+
+function installPoche(material: Material) {
+  let uniform = pocheUniforms.get(material);
+  if (uniform) return uniform;
+  uniform = { value: 0 };
+  pocheUniforms.set(material, uniform);
+  const u = uniform;
+  const previous = material.onBeforeCompile;
+  const previousKey = material.customProgramCacheKey.bind(material);
+  material.onBeforeCompile = (shader, renderer) => {
+    previous.call(material, shader, renderer);
+    shader.uniforms.uPoche = u;
+    shader.fragmentShader = shader.fragmentShader
+      .replace("void main() {", "uniform float uPoche;\nvoid main() {")
+      .replace("#include <dithering_fragment>", `#include <dithering_fragment>\n\tif (uPoche > 0.5 && !gl_FrontFacing) gl_FragColor = ${POCHE};`);
+  };
+  material.customProgramCacheKey = () => `${previousKey()}|poche`;
+  material.needsUpdate = true;
+  return uniform;
+}
+
+function sectionMaterial(material: Material, plane: Plane | null) {
+  const had = Boolean(material.clippingPlanes?.length);
+  const uniform = installPoche(material);
+  if (plane) {
+    if (!sideBefore.has(material)) sideBefore.set(material, material.side);
+    material.side = DoubleSide;
+    material.clippingPlanes = [plane];
+    material.clipShadows = true;
+    // Vidrios y lucernarios: se cortan, pero sin relleno.
+    uniform.value = material.transparent ? 0 : 1;
+  } else {
+    const side = sideBefore.get(material);
+    if (side !== undefined) {
+      material.side = side;
+      sideBefore.delete(material);
+    }
+    material.clippingPlanes = null;
+    uniform.value = 0;
+  }
+  if (had !== Boolean(plane)) material.needsUpdate = true;
+}
+
 export class ModelStageController {
   readonly root: Object3D;
   readonly index: MetadataIndex;
@@ -38,6 +90,7 @@ export class ModelStageController {
   private readonly meshes: Mesh[] = [];
   private readonly highlightCache = new WeakMap<Material, Material>();
   private selected: string | null = null;
+  private section: Plane | null = null;
   private explodeFactor = 0;
   private readonly raycaster = new Raycaster();
   private readonly box: Box3;
@@ -140,6 +193,24 @@ export class ModelStageController {
     return this.explodeFactor;
   }
 
+  /** Corte horizontal a una altura (m) o sin corte (null). */
+  setSection(height: number | null) {
+    this.section = height === null ? null : new Plane(new Vector3(0, -1, 0), height);
+    this.applySection();
+  }
+
+  private applySection() {
+    const materials = new Set<Material>();
+    for (const record of this.records) {
+      for (const m of [record.baseMaterial, record.mesh.material].flat()) materials.add(m);
+      if (!Array.isArray(record.baseMaterial)) {
+        const highlight = this.highlightCache.get(record.baseMaterial);
+        if (highlight) materials.add(highlight);
+      }
+    }
+    for (const material of materials) sectionMaterial(material, this.section);
+  }
+
   select(elementId: string | null) {
     this.selected = elementId;
     this.applyHighlight();
@@ -165,6 +236,7 @@ export class ModelStageController {
       const base = record.baseMaterial;
       record.mesh.material = active && !Array.isArray(base) ? this.highlightOf(base) : base;
     }
+    if (this.section) this.applySection();
   }
 
   /** Raycast único: devuelve el elementId del primer mesh visible bajo el cursor. */
@@ -182,6 +254,8 @@ export class ModelStageController {
         parent = parent.parent;
       }
       if (!visible) continue;
+      // Con corte en planta, lo que está por encima no se ve: no se puede elegir.
+      if (this.section && hit.point.y > this.section.constant + 0.01) continue;
       return this.index.elementIdByNode.get(mesh.uuid) ?? null;
     }
     return null;

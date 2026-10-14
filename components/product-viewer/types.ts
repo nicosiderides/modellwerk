@@ -72,6 +72,8 @@ export type ProductViewerProps = {
   backdrop?: ViewerBackdrop | null;
   /** Vista bajo el suelo: el piso se dibuja translúcido para ver lo enterrado (fundaciones). */
   underground?: boolean;
+  /** Corte horizontal del modelo a esta altura (m), como una planta de arquitectura. null = sin corte. */
+  sectionHeight?: number | null;
   /** Recibe una función que devuelve una imagen PNG (data URL) de la vista actual. */
   onSnapshotReady?: (capture: () => string | null) => void;
   className?: string;

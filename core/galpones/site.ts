@@ -63,6 +63,17 @@ function plane(r: Rect, y: number) {
   return g;
 }
 
+/**
+ * Cordón: 4 mm más corto en las puntas y 4 mm más ancho a cada lado que la
+ * franja de vereda que ocupa. Así ninguna de sus caras coincide con las de la
+ * vereda (dos caras en el mismo plano "titilan").
+ */
+function curbSlab(r: Rect, y0: number, y1: number) {
+  const e = 0.004;
+  const alongX = r.x1 - r.x0 >= r.z1 - r.z0;
+  return slab(alongX ? { x0: r.x0 + e, x1: r.x1 - e, z0: r.z0 - e, z1: r.z1 + e } : { x0: r.x0 - e, x1: r.x1 + e, z0: r.z0 + e, z1: r.z1 - e }, y0, y1);
+}
+
 function slab(r: Rect, y0: number, y1: number) {
   const g = new BoxGeometry(r.x1 - r.x0, y1 - y0, r.z1 - r.z0);
   g.translate((r.x0 + r.x1) / 2, (y0 + y1) / 2, (r.z0 + r.z1) / 2);
@@ -98,19 +109,28 @@ class Bin {
   }
 }
 
+/**
+ * Prioridad en el suelo: cuando dos superficies del entorno quedan casi en el
+ * mismo plano (pintura sobre asfalto, hormigón sobre platea), la de más arriba
+ * en esta lista se dibuja siempre encima. Se combina con las alturas de `Y`
+ * para que no "titilen" ni se vea una a través de la otra al alejarse.
+ */
+const LAYER = { asphalt: 1, concrete: 2, blue: 3, paint: 4, setback: 5 } as const;
+const layered = (layer: number) => ({ polygonOffset: true, polygonOffsetFactor: -layer, polygonOffsetUnits: -2 * layer });
+
 function siteMaterials() {
   const concreteMap = surfaceNormalMap("slab");
   const walkMap = surfaceNormalMap("slab", 0.25);
-  const paint = (color: string) => new MeshStandardMaterial({ color, roughness: 0.7, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const paint = (color: string, layer: number = LAYER.paint) => new MeshStandardMaterial({ color, roughness: 0.7, ...layered(layer) });
   return {
-    concrete: new MeshStandardMaterial({ color: "#b9b8b2", roughness: 0.92, normalMap: concreteMap, name: "site:concrete" }),
+    concrete: new MeshStandardMaterial({ color: "#b9b8b2", roughness: 0.92, normalMap: concreteMap, name: "site:concrete", ...layered(LAYER.concrete) }),
     walk: new MeshStandardMaterial({ color: "#d3d0c8", roughness: 0.9, normalMap: walkMap, name: "site:walk" }),
     curb: new MeshStandardMaterial({ color: "#bdb9b0", roughness: 0.85, name: "site:curb" }),
-    asphalt: new MeshStandardMaterial({ color: "#4a4c4f", roughness: 0.96, metalness: 0, name: "site:asphalt" }),
+    asphalt: new MeshStandardMaterial({ color: "#4a4c4f", roughness: 0.96, metalness: 0, name: "site:asphalt", ...layered(LAYER.asphalt) }),
     grass: new MeshStandardMaterial({ color: "#8d9a70", roughness: 1, name: "site:grass" }),
     white: paint("#eeeeea"),
     yellow: paint("#d8a520"),
-    blue: paint("#2f5f9e"),
+    blue: paint("#2f5f9e", LAYER.blue),
     stop: new MeshStandardMaterial({ color: "#b9b5ac", roughness: 0.9, name: "site:stop" }),
     trunk: new MeshStandardMaterial({ color: "#5d4c3d", roughness: 0.95, name: "site:trunk" }),
     leaves: new MeshStandardMaterial({ color: "#ffffff", roughness: 0.9, flatShading: true, name: "site:leaves" }),
@@ -118,7 +138,7 @@ function siteMaterials() {
     lamp: new MeshStandardMaterial({ color: "#2a2d30", roughness: 0.5, metalness: 0.4, emissive: "#fff3d6", emissiveIntensity: 0.05, name: "site:lamp" }),
     fence: new MeshStandardMaterial({ color: "#8b9196", roughness: 0.5, metalness: 0.6, name: "site:fence" }),
     mesh: new MeshStandardMaterial({ color: "#8b9196", roughness: 0.6, metalness: 0.4, transparent: true, opacity: 0.28, depthWrite: false, side: DoubleSide, name: "site:fence-mesh" }),
-    setback: new MeshStandardMaterial({ color: "#c9a227", roughness: 0.6, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3, name: "site:setback" }),
+    setback: new MeshStandardMaterial({ color: "#c9a227", roughness: 0.6, name: "site:setback", ...layered(LAYER.setback) }),
   };
 }
 
@@ -189,7 +209,7 @@ export function buildSiteFromPlan(plan: SitePlan, opts: SiteOptions): SiteBuild 
     walk.add(slab(r, -0.03, Y.walk));
     const c = 0.14;
     const cr = edge === "x0" ? rect(r.x0, r.x0 + c, r.z0, r.z1) : edge === "x1" ? rect(r.x1 - c, r.x1, r.z0, r.z1) : edge === "z0" ? rect(r.x0, r.x1, r.z0, r.z0 + c) : rect(r.x0, r.x1, r.z1 - c, r.z1);
-    curb.add(slab(cr, -0.03, Y.walk + 0.01));
+    curb.add(curbSlab(cr, -0.025, Y.walk + 0.025));
     grow(r);
   }
   /* Playones, rampas y caminos */
@@ -276,11 +296,11 @@ export function buildSiteFromPlan(plan: SitePlan, opts: SiteOptions): SiteBuild 
     const near = R.publicWalk[0];
     for (const [x0, x1] of segments(near.x0, near.x1, gateXs)) {
       walk.add(slab(rect(x0, x1, near.z0 + 0.15, near.z1), -0.03, 0.12));
-      curb.add(slab(rect(x0, x1, near.z0, near.z0 + 0.15), -0.03, 0.14));
+      curb.add(curbSlab(rect(x0, x1, near.z0, near.z0 + 0.15), -0.025, 0.14));
     }
     for (const w of R.publicWalk.slice(1)) {
       walk.add(slab(w, -0.03, 0.12));
-      if (w === R.publicWalk[1]) curb.add(slab(rect(w.x0, w.x1, w.z1 - 0.15, w.z1), -0.03, 0.14));
+      if (w === R.publicWalk[1]) curb.add(curbSlab(rect(w.x0, w.x1, w.z1 - 0.15, w.z1), -0.025, 0.14));
     }
     for (let x = R.main.x0 + 2; x < R.main.x1 - 3; x += 6) white.add(new PlaneGeometry(3, 0.14).rotateX(-Math.PI / 2).translate(x + 1.5, Y.paint, R.centerZ));
     if (R.side && R.sideCenterX !== null) for (let z = R.side.z0 + 4; z < R.side.z1 - 3; z += 6) white.add(new PlaneGeometry(0.14, 3).rotateX(-Math.PI / 2).translate(R.sideCenterX, Y.paint, z + 1.5));

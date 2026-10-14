@@ -496,6 +496,9 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
     const size = foundationSizes(W);
     const z0 = frameZ[0];
     const zN = frameZ[n];
+    // Las caras de arriba quedan 1 cm por debajo de la platea: si coinciden
+    // con su cara inferior, en la vista bajo el suelo "titilan".
+    const TOP = SLAB_BOTTOM - 0.01;
     const runsAround = (inset: number): [string, string, number, number, number, number][] => [
       ["A", "lateral A", -half, z0 - inset, -half, zN + inset],
       ["B", "lateral B", half, z0 - inset, half, zN + inset],
@@ -505,24 +508,27 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
     if (kind === "stripFooting") {
       // Zapata corrida perimetral + viga de fundación bajo las líneas de columnas.
       const { width: bw, thickness: t, bottom, stemWidth } = size.strip;
-      const stemH = SLAB_BOTTOM - (bottom + t);
-      for (const [key, where, xa, za, xb, zb] of runsAround(bw / 2)) {
+      const stemH = TOP - (bottom + t);
+      // Las zapatas y las vigas de los testeros llegan justo hasta las de los
+      // laterales (se tocan, no se encimen: así no hay caras superpuestas).
+      const stems = runsAround(stemWidth / 2);
+      runsAround(bw / 2).forEach(([key, where, xa, za, xb, zb], i) => {
         const alongZ = Math.abs(zb - za) > Math.abs(xb - xa);
         const len = alongZ ? zb - za : xb - xa;
-        const cx = (xa + xb) / 2;
-        const cz = (za + zb) / 2;
+        const [, , sxa, sza, sxb, szb] = stems[i];
+        const stemLen = alongZ ? szb - sza : sxb - sxa;
         b.add(
           { category: "foundations", key: `ZC-${key}`, label: `Zapata corrida ${where}`, bimCategory: "Structural Foundations", family, type: `${concrete} — ancho ${bw} m (referencial)`, material: concrete, parameters: { largo_m: r3(len), ancho_m: bw } },
           [
-            { geometry: new BoxGeometry(alongZ ? bw : len, t, alongZ ? len : bw), materialKey: "footing", position: [cx, bottom + t / 2, cz] },
-            { geometry: new BoxGeometry(alongZ ? stemWidth : len, stemH, alongZ ? len : stemWidth), materialKey: "footing", position: [cx, SLAB_BOTTOM - stemH / 2, cz] },
+            { geometry: new BoxGeometry(alongZ ? bw : len, t, alongZ ? len : bw), materialKey: "footing", position: [(xa + xb) / 2, bottom + t / 2, (za + zb) / 2] },
+            { geometry: new BoxGeometry(alongZ ? stemWidth : stemLen, stemH, alongZ ? stemLen : stemWidth), materialKey: "footing", position: [(sxa + sxb) / 2, TOP - stemH / 2, (sza + szb) / 2] },
           ]
         );
-      }
+      });
     } else if (kind === "piles") {
       // Pilotes con cabezal bajo cada columna, unidos por vigas de encadenado.
       const P = size.piles;
-      const pileTop = SLAB_BOTTOM - P.capHeight;
+      const pileTop = TOP - P.capHeight;
       const pileMain = new CylinderGeometry(P.diameter / 2, P.diameter / 2, P.length, 14);
       const pileGable = new CylinderGeometry(P.diameterGable / 2, P.diameterGable / 2, P.length, 14);
       const capMain = new BoxGeometry(P.capMain[0], P.capHeight, P.capMain[1]);
@@ -532,24 +538,27 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
         b.add(
           { category: "foundations", key: `PI-${p.key}`, label: `Cabezal y pilotes ${p.label}`, bimCategory: "Structural Foundations", family, type: `${concrete} — ${piles.length} pilote${piles.length > 1 ? "s" : ""} Ø ${Math.round((p.main ? P.diameter : P.diameterGable) * 100)} cm (referencial)`, material: concrete, parameters: { grilla: p.label, pilotes: piles.length, largo_pilote_m: P.length } },
           [
-            { geometry: p.main ? capMain : capGable, materialKey: "footing", position: [p.x, SLAB_BOTTOM - P.capHeight / 2, p.z] },
+            { geometry: p.main ? capMain : capGable, materialKey: "footing", position: [p.x, TOP - P.capHeight / 2, p.z] },
             ...piles.map((dx): Part => ({ geometry: p.main ? pileMain : pileGable, materialKey: "footing", position: [p.x + dx, pileTop - P.length / 2, p.z] })),
           ]
         );
       }
       const [beamW, beamH] = P.beam;
-      for (const [key, where, xa, za, xb, zb] of runsAround(0)) {
+      // Vigas: su cara de arriba queda dentro de los cabezales (más baja) y las
+      // de los testeros terminan donde empiezan las de los laterales.
+      const beamTop = TOP - 0.05;
+      for (const [key, where, xa, za, xb, zb] of runsAround(beamW / 2).map(([k, w, xa, za, xb, zb]) => [k, w, xa, k === "A" || k === "B" ? za + beamW / 2 : za, xb, k === "A" || k === "B" ? zb - beamW / 2 : zb] as const)) {
         const alongZ = Math.abs(zb - za) > Math.abs(xb - xa);
         const len = alongZ ? zb - za : xb - xa;
         b.add(
           { category: "foundations", key: `VE-${key}`, label: `Viga de encadenado ${where}`, bimCategory: "Structural Framing", family: "Viga de encadenado", type: `${concrete} — ${beamW * 100}×${beamH * 100} cm (referencial)`, material: concrete, parameters: { largo_m: r3(len) } },
-          [{ geometry: new BoxGeometry(alongZ ? beamW : len, beamH, alongZ ? len : beamW), materialKey: "footing", position: [(xa + xb) / 2, SLAB_BOTTOM - beamH / 2, (za + zb) / 2] }]
+          [{ geometry: new BoxGeometry(alongZ ? beamW : len, beamH, alongZ ? len : beamW), materialKey: "footing", position: [(xa + xb) / 2, beamTop - beamH / 2, (za + zb) / 2] }]
         );
       }
     } else {
       // Bases aisladas: zapata cuadrada + fuste hasta la platea.
       const D = size.pad;
-      const stemH = SLAB_BOTTOM - (D.bottom + D.thickness);
+      const stemH = TOP - (D.bottom + D.thickness);
       const padMain = new BoxGeometry(D.side, D.thickness, D.side);
       const padGable = new BoxGeometry(D.sideGable, D.thickness, D.sideGable);
       const stem = new BoxGeometry(D.stem, stemH, D.stem);
@@ -559,7 +568,7 @@ export function createWarehouseModel(config: WarehouseConfig, definition: Wareho
           { category: "foundations", key: `FD-${p.key}`, label: `Base ${p.label}`, bimCategory: "Structural Foundations", family, type: `${concrete} — ${side} × ${side} m (referencial)`, material: concrete, parameters: { grilla: p.label, lado_m: side } },
           [
             { geometry: p.main ? padMain : padGable, materialKey: "footing", position: [p.x, D.bottom + D.thickness / 2, p.z] },
-            { geometry: stem, materialKey: "footing", position: [p.x, SLAB_BOTTOM - stemH / 2, p.z] },
+            { geometry: stem, materialKey: "footing", position: [p.x, TOP - stemH / 2, p.z] },
           ]
         );
       }

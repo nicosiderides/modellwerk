@@ -4058,3 +4058,28 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
     linear-gradient(135deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.12) 70%, rgba(0, 0, 0, 0.06) 100%),
     linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(0, 0, 0, 0.28) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
 }
+
+/* ── Corte en planta ── */
+.gp-cut-badge {
+  position: absolute;
+  z-index: 3;
+  top: 132px;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--gp-line);
+  border-radius: var(--gp-radius);
+  background: var(--gp-panel);
+  color: var(--gp-signal);
+  font-family: var(--gp-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .gp-cut-badge {
+    top: 160px;
+    left: 10px !important;
+  }
+}
