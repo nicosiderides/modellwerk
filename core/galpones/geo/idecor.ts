@@ -119,6 +119,28 @@ export async function mainRoadsIn(bbox: [number, number, number, number], signal
   return fc.features.flatMap((f) => (f.geometry.type === "LineString" ? [f.geometry.coordinates as LonLat[]] : (f.geometry.coordinates as LonLat[][])));
 }
 
+/** Manzanas en un recuadro (para dibujar el plano del barrio). */
+export async function blocksInBBox(bbox: [number, number, number, number], signal?: AbortSignal) {
+  const fc = await getJson<FeatureCollection<{ nomenclatura?: string }>>(wfs("idecor:manzana", bboxFilter(bbox), { fields: "nomenclatura", count: 4000 }), signal, 25000);
+  return fc.features.map((f) => outerRing(f.geometry)).filter((r) => r.length > 2);
+}
+
+/** Contornos de parcelas en un recuadro (sólo la forma). */
+export async function parcelRingsInBBox(bbox: [number, number, number, number], signal?: AbortSignal) {
+  const fc = await getJson<FeatureCollection<{ Estado?: string }>>(wfs("idecor:parcelas", bboxFilter(bbox), { fields: "Estado", count: 4000 }), signal, 25000);
+  return fc.features.map((f) => ({ ring: outerRing(f.geometry), built: /EDIFICADO/i.test(f.properties.Estado ?? "") })).filter((p) => p.ring.length > 2);
+}
+
+/** Vías principales con nombre (Ord. 8060) en un recuadro. */
+export async function namedRoadsIn(bbox: [number, number, number, number], signal?: AbortSignal) {
+  type Line = { type: "Feature"; geometry: { type: "MultiLineString" | "LineString"; coordinates: LonLat[][] | LonLat[] }; properties: { nombre?: string; tipo?: string } };
+  const fc = await getJson<{ features: Line[] }>(wfs("idecor:CBA_Red_Vial_8060", bboxFilter(bbox), { fields: "nombre,tipo", count: 400 }), signal);
+  return fc.features.flatMap((f) => {
+    const lines = f.geometry.type === "LineString" ? [f.geometry.coordinates as LonLat[]] : (f.geometry.coordinates as LonLat[][]);
+    return lines.map((line) => ({ line, name: (f.properties.nombre ?? "").trim(), kind: (f.properties.tipo ?? "").trim() }));
+  });
+}
+
 /* ─────────────────────────── normativa ─────────────────────────── */
 
 export async function zoningAt(p: LonLat, signal?: AbortSignal): Promise<{ z8256: Ord8256Props | null; z8133: Ord8133Props | null }> {

@@ -65,6 +65,11 @@ export type ProductViewerProps = {
    * el encuadre; sí recibe y proyecta sombras.
    */
   surroundings?: ViewerSurroundings | null;
+  /**
+   * Piso de fondo (por ejemplo, un mapa real alrededor del lote). Reemplaza el
+   * piso neutro y la grilla; se dibuja debajo del entorno.
+   */
+  backdrop?: ViewerBackdrop | null;
   /** Recibe una función que devuelve una imagen PNG (data URL) de la vista actual. */
   onSnapshotReady?: (capture: () => string | null) => void;
   className?: string;
@@ -74,4 +79,13 @@ export type ViewerSurroundings = {
   key: string;
   build: () => { root: Object3D; box: Box3 };
   dispose?: (root: Object3D) => void;
+};
+
+export type ViewerBackdrop = {
+  /** Cambia cuando hay que rearmarlo (otro lote, otro tipo de mapa). */
+  key: string;
+  /** Corrimiento dentro de las coordenadas del modelo (no obliga a rearmarlo). */
+  offset: [number, number, number];
+  /** `invalidate` pide un nuevo cuadro (por ejemplo, al llegar una imagen). */
+  build: (invalidate: () => void) => { root: Object3D; dispose: () => void };
 };

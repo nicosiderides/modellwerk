@@ -147,12 +147,18 @@ function treeCanopy() {
 
 /* ─────────────────────────────── entorno ─────────────────────────────── */
 
-export function buildSite(config: WarehouseConfig, definition: WarehouseDefinition, opts: { vehicles: boolean }): SiteBuild {
+/**
+ * `realGround`: debajo hay un mapa real (foto aérea o plano). Entonces no se
+ * dibuja la calle genérica ni sus veredas y árboles: la calle es la del mapa.
+ */
+export type SiteOptions = { vehicles: boolean; realGround?: boolean };
+
+export function buildSite(config: WarehouseConfig, definition: WarehouseDefinition, opts: SiteOptions): SiteBuild {
   const plan = planSite(config, definition);
   return buildSiteFromPlan(plan, opts);
 }
 
-export function buildSiteFromPlan(plan: SitePlan, opts: { vehicles: boolean }): SiteBuild {
+export function buildSiteFromPlan(plan: SitePlan, opts: SiteOptions): SiteBuild {
   const { lay, site } = plan;
   const mats = siteMaterials();
   const root = new Group();
@@ -262,7 +268,7 @@ export function buildSiteFromPlan(plan: SitePlan, opts: { vehicles: boolean }): 
     concrete.add(plane(g, Y.concrete));
     grow(g);
   }
-  if (plan.road) {
+  if (plan.road && !opts.realGround) {
     const R = plan.road;
     asphalt.add(plane(R.main, Y.asphalt));
     if (R.side) asphalt.add(plane(R.side, Y.asphalt + 0.001));
@@ -339,7 +345,8 @@ export function buildSiteFromPlan(plan: SitePlan, opts: { vehicles: boolean }): 
   add(fenceMesh.mesh(mats.mesh, "site:fence-mesh", { cast: false, receive: false }));
 
   /* Árboles y luminarias (instancias) */
-  const trees = site.landscape ? plan.trees : [];
+  const inLot = (z: number) => !plan.lotRect || z >= plan.lotRect.z0;
+  const trees = site.landscape ? plan.trees.filter(([, z]) => !opts.realGround || inLot(z)) : [];
   if (trees.length) {
     const rand = rng(trees.length * 7919 + Math.round(lay.L * 13));
     const trunkGeo = new CylinderGeometry(0.11, 0.17, 3.4, 8).translate(0, 1.7, 0);

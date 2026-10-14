@@ -3919,3 +3919,31 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
   color: var(--gp-muted);
   font-size: 13px;
 }
+
+/* ── Piso de mapa real en el visor ── */
+.gp-map-credit {
+  position: absolute;
+  z-index: 3;
+  top: 114px;
+  margin: 0;
+  max-width: 60vw;
+  color: rgba(60, 56, 49, 0.62);
+  font-family: var(--gp-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 6px rgba(235, 232, 225, 0.9);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+  .gp-map-credit {
+    top: 144px;
+    left: 10px !important;
+    right: 10px;
+    max-width: none;
+    font-size: 8.5px;
+  }
+}

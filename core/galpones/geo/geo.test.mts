@@ -104,3 +104,18 @@ test("usar un lote real: medidas, normativa de la zona y el galpón cumple", () 
   const d = Math.hypot(...(toXY(f, origin).map((v, i) => v - toXY(f, location.fit.origin)[i]) as [number, number]));
   assert.ok(d < 0.05);
 });
+
+test("mapa: Web Mercator y coordenadas del lote van y vuelven", async () => {
+  const { worldPx, worldPxToLonLat, lotTransform, mapLevel, metersPerPx } = await import("./tiles.ts");
+  const p: [number, number] = [-64.1133, -31.4516];
+  const back = worldPxToLonLat(worldPx(p, 19), 19);
+  assert.ok(Math.abs(back[0] - p[0]) < 1e-9 && Math.abs(back[1] - p[1]) < 1e-9);
+  const fit = { origin: p, s: [Math.cos(0.3), Math.sin(0.3)] as [number, number], t: [-Math.sin(0.3), Math.cos(0.3)] as [number, number] };
+  const T = lotTransform(fit);
+  const q = T.toLocal(T.toLonLat([42.5, 61.2]));
+  assert.ok(Math.abs(q[0] - 42.5) < 1e-6 && Math.abs(q[1] - 61.2) < 1e-6);
+  // ±480 m a zoom 17 (≈ 1 m/px): 4 o 5 mosaicos por lado.
+  const level = mapLevel(p, 480, 17);
+  assert.ok(Math.abs((level.px[2] - level.px[0]) * metersPerPx(p[1], 17) - 960) < 1);
+  assert.ok(level.tiles.length >= 16 && level.tiles.length <= 25);
+});

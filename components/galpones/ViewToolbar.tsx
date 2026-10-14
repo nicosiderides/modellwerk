@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Expand, Eye, Maximize2, PersonStanding, ScanEye, Sparkles, SquareDashed, View } from "lucide-react";
+import { Box, Expand, Eye, Map as MapIcon, Maximize2, PersonStanding, Satellite, ScanEye, Sparkles, SquareDashed, View } from "lucide-react";
 import type { CameraPresetId } from "@/components/product-viewer/types";
 import { useGalpones } from "./store";
 
@@ -18,6 +18,8 @@ export function ViewToolbar() {
   const setExplode = useGalpones((s) => s.setExplode);
   const setScale = useGalpones((s) => s.setScaleReferences);
   const setQuality = useGalpones((s) => s.setQuality);
+  const setGround = useGalpones((s) => s.setGround);
+  const located = useGalpones((s) => Boolean(s.warehouse.config?.lot.enabled && s.warehouse.config.lot.location));
   const camera = viewer.camera;
 
   return (
@@ -48,6 +50,18 @@ export function ViewToolbar() {
           <span>{viewer.quality === "high" ? "Alta" : "Fluida"}</span>
         </button>
       </div>
+      {located && (
+        <div className="gp-toolbar__group" aria-label="Piso del entorno">
+          <button type="button" className={viewer.ground === "photo" ? "is-active" : ""} onClick={() => setGround(viewer.ground === "photo" ? "off" : "photo")} title="Foto aérea real alrededor del lote">
+            <Satellite aria-hidden />
+            <span>Foto</span>
+          </button>
+          <button type="button" className={viewer.ground === "plan" ? "is-active" : ""} onClick={() => setGround(viewer.ground === "plan" ? "off" : "plan")} title="Plano del barrio (catastro)">
+            <MapIcon aria-hidden />
+            <span>Plano</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
