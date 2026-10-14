@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { ArrowRight, ChevronDown, CircleX, Info, MapPin, RotateCcw, TriangleAlert, X } from "lucide-react";
+import { ArrowRight, ChevronDown, CircleX, Info, Layers, MapPin, RotateCcw, TriangleAlert, X } from "lucide-react";
 import { evaluateRules, getVariant, isDiscrete, openingLimits, ridgeHeight, slopeDegrees } from "@/core/galpones/configuration";
 import { calculateMetrics, formatNumber } from "@/core/galpones/metrics";
-import type { WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
+import type { FoundationId, WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
 import { ChoiceCard, NumberField, Stepper, Swatches, Toggle, useRemembered } from "./controls";
 import { definitionOf, useGalpones, type ConfigTab } from "./store";
 import { LotPanel } from "./LotPanel";
@@ -155,6 +155,123 @@ function StructurePanel({ definition, config }: { definition: WarehouseDefinitio
         value={config.structureFinish}
         onChange={setFinish}
       />
+      <FoundationPicker definition={definition} config={config} />
+      <FloorPicker definition={definition} config={config} />
+    </div>
+  );
+}
+
+/** Esquema en corte de cada fundación (terreno, platea, columna y hormigón). */
+function FoundationSketch({ kind }: { kind: FoundationId }) {
+  const concrete = "currentColor";
+  return (
+    <svg viewBox="0 0 64 56" className="gp-fsketch" aria-hidden>
+      <rect x="3" y="14" width="58" height="40" className="gp-fsketch__soil" />
+      <line x1="2" y1="14" x2="62" y2="14" className="gp-fsketch__ground" />
+      <rect x="4" y="12" width="56" height="3" className="gp-fsketch__slab" />
+      <rect x="29.5" y="2" width="5" height="10" className="gp-fsketch__steel" />
+      {kind === "padFootings" && (
+        <g fill={concrete}>
+          <rect x="29" y="15" width="6" height="12" />
+          <rect x="20" y="27" width="24" height="7" />
+        </g>
+      )}
+      {kind === "stripFooting" && (
+        <g fill={concrete}>
+          <rect x="28.5" y="15" width="7" height="9" />
+          <rect x="4" y="24" width="56" height="6" opacity="0.55" />
+          <rect x="21" y="24" width="22" height="6" />
+        </g>
+      )}
+      {kind === "piles" && (
+        <g fill={concrete}>
+          <rect x="21" y="15" width="22" height="7" />
+          <rect x="23.5" y="22" width="4" height="31" />
+          <rect x="36.5" y="22" width="4" height="31" />
+        </g>
+      )}
+    </svg>
+  );
+}
+
+function FloorPicker({ definition, config }: { definition: WarehouseDefinition; config: WarehouseConfig }) {
+  const setFloor = useGalpones((s) => s.setFloor);
+  const options = definition.structure.floors ?? [];
+  if (!options.length) return null;
+  return (
+    <div className="gp-floors">
+      <h3 className="gp-subhead">Piso</h3>
+      <div className="gp-choices">
+        {options.map((option) => (
+          <ChoiceCard
+            key={option.id}
+            selected={config.floor === option.id}
+            title={option.name}
+            summary={option.summary}
+            aside={<span className={`gp-floorchip gp-floorchip--${option.id}`} style={{ backgroundColor: option.look.color }} aria-hidden />}
+            onSelect={() => setFloor(option.id)}
+          >
+            {config.floor === option.id && (
+              <>
+                <ul className="gp-bullets">
+                  {option.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <span className="gp-choice__when">Conviene: {option.whenToUse}</span>
+              </>
+            )}
+          </ChoiceCard>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FoundationPicker({ definition, config }: { definition: WarehouseDefinition; config: WarehouseConfig }) {
+  const setFoundation = useGalpones((s) => s.setFoundation);
+  const underground = useGalpones((s) => s.viewer.underground);
+  const setUnderground = useGalpones((s) => s.setUnderground);
+  const locked = isDiscrete(definition);
+  const options = definition.structure.foundations ?? [];
+  if (!options.length) return null;
+  return (
+    <div className="gp-foundations">
+      <div className="gp-subhead-row">
+        <h3 className="gp-subhead">Fundación</h3>
+        <button type="button" className={`gp-linkbtn ${underground ? "is-active" : ""}`} onClick={() => setUnderground(!underground)}>
+          <Layers aria-hidden /> {underground ? "Volver a la vista normal" : "Ver bajo el suelo"}
+        </button>
+      </div>
+      <div className="gp-choices">
+        {options.map((option) => (
+          <ChoiceCard
+            key={option.id}
+            selected={config.foundation === option.id}
+            title={option.name}
+            summary={option.summary}
+            aside={<FoundationSketch kind={option.id} />}
+            onSelect={() => setFoundation(option.id)}
+          >
+            {config.foundation === option.id && (
+              <>
+                <ul className="gp-bullets">
+                  {option.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <span className="gp-choice__when">Conviene: {option.whenToUse}</span>
+              </>
+            )}
+          </ChoiceCard>
+        ))}
+      </div>
+      <p className="gp-note">
+        <Info aria-hidden />
+        {locked
+          ? "El modelo BIM de esta tipología trae sus propias fundaciones; el tipo elegido queda en la memoria descriptiva y en el pedido de presupuesto."
+          : "Medidas referenciales: el tipo y el tamaño final de la fundación los define el estudio de suelos."}
+      </p>
     </div>
   );
 }

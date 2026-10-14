@@ -128,6 +128,7 @@ export function ChoiceCard({
   children,
   badge,
   disabled,
+  aside,
 }: {
   selected: boolean;
   title: string;
@@ -136,6 +137,8 @@ export function ChoiceCard({
   children?: ReactNode;
   badge?: string;
   disabled?: boolean;
+  /** Ilustración chica a la derecha (por ejemplo, un esquema). */
+  aside?: ReactNode;
 }) {
   return (
     <button type="button" className={`gp-choice ${selected ? "is-selected" : ""}`} aria-pressed={selected} onClick={onSelect} disabled={disabled}>
@@ -150,6 +153,7 @@ export function ChoiceCard({
         {summary && <span className="gp-choice__summary">{summary}</span>}
         {children}
       </span>
+      {aside && <span className="gp-choice__aside">{aside}</span>}
     </button>
   );
 }

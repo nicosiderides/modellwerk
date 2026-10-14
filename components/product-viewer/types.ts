@@ -70,6 +70,8 @@ export type ProductViewerProps = {
    * piso neutro y la grilla; se dibuja debajo del entorno.
    */
   backdrop?: ViewerBackdrop | null;
+  /** Vista bajo el suelo: el piso se dibuja translúcido para ver lo enterrado (fundaciones). */
+  underground?: boolean;
   /** Recibe una función que devuelve una imagen PNG (data URL) de la vista actual. */
   onSnapshotReady?: (capture: () => string | null) => void;
   className?: string;

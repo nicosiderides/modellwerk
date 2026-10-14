@@ -113,6 +113,8 @@ export function createDefaultConfig(definition: WarehouseDefinition): WarehouseC
     },
     structure: definition.structure.default,
     structureFinish: definition.structure.defaultFinish,
+    foundation: definition.structure.defaultFoundation,
+    floor: definition.structure.defaultFloor,
     envelope: { ...definition.envelope.defaults },
     openings: { ...definition.options.openings.defaults },
     options: Object.fromEntries(definition.options.options.filter((o) => o.status === "available").map((o) => [o.id, false])),
@@ -164,6 +166,9 @@ export function normalizeConfig(definition: WarehouseDefinition, config: Warehou
   }
 
   if (!definition.structure.finishes.some((f) => f.id === next.structureFinish)) next.structureFinish = definition.structure.defaultFinish;
+  // Configuraciones guardadas antes de existir la opción: toman la fundación por defecto.
+  if (!definition.structure.foundations.some((f) => f.id === next.foundation)) next.foundation = definition.structure.defaultFoundation;
+  if (!definition.structure.floors.some((f) => f.id === next.floor)) next.floor = definition.structure.defaultFloor;
   next.site = normalizeSite(next.site);
   next.lot = normalizeLot(next.lot);
 

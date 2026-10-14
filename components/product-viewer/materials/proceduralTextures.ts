@@ -6,7 +6,7 @@ import { CanvasTexture, LinearSRGBColorSpace, RepeatWrapping, type Texture } fro
  * Un GLB real puede traer sus propias texturas; la librería de materiales decide.
  */
 
-export type SurfacePattern = "trapezoidal" | "standingSeam" | "sandwichWall" | "sandwichRoof" | "sectionalDoor" | "precast" | "slab" | "smooth";
+export type SurfacePattern = "trapezoidal" | "standingSeam" | "sandwichWall" | "sandwichRoof" | "sectionalDoor" | "precast" | "slab" | "slabBroom" | "slabTroweled" | "smooth";
 
 type HeightFn = (u: number, v: number) => number;
 
@@ -62,6 +62,18 @@ const PATTERNS: Record<SurfacePattern, { height: HeightFn; strength: number; per
   sectionalDoor: { height: (u, v) => (Math.abs(((v * 2) % 1) - 0.5) > 0.47 ? -1 : 0) + Math.sin(v * Math.PI * 2 * 8) * 0.06, strength: 2.4, period: [1.0, 1.2] },
   precast: { height: (u, v) => (Math.abs(u - 0.5) > 0.495 ? -1 : 0) + (noise(u * 40, v * 40) - 0.5) * 0.12, strength: 2.0, period: [2.5, 2.5] },
   slab: { height: (u, v) => (Math.abs(u - 0.5) > 0.497 || Math.abs(v - 0.5) > 0.497 ? -1 : 0) + (noise(u * 60, v * 60) - 0.5) * 0.08, strength: 1.4, period: [6, 6] },
+  // Hormigón peinado: estrías finas en un sentido + juntas cada 6 m.
+  slabBroom: {
+    height: (u, v) => (Math.abs(u - 0.5) > 0.497 || Math.abs(v - 0.5) > 0.497 ? -1 : 0) + Math.sin(v * Math.PI * 2 * 220 + noise(u * 30, v * 4) * 3) * 0.05 + (noise(u * 90, v * 90) - 0.5) * 0.06,
+    strength: 1.6,
+    period: [6, 6],
+  },
+  // Hormigón alisado: casi liso, con juntas aserradas finas cada 5 m.
+  slabTroweled: {
+    height: (u, v) => (Math.abs(u - 0.5) > 0.498 || Math.abs(v - 0.5) > 0.498 ? -1 : 0) + (noise(u * 9, v * 9) - 0.5) * 0.02,
+    strength: 1.8,
+    period: [5, 5],
+  },
   smooth: { height: () => 0, strength: 0, period: [1, 1] },
 };
 

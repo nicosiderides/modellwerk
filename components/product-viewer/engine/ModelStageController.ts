@@ -100,8 +100,11 @@ export class ModelStageController {
     return Math.round(total);
   }
 
+  /** Caja del modelo sobre el terreno: lo enterrado (fundaciones, pilotes) no cuenta para el encuadre. */
   bounds() {
-    return this.box.clone();
+    const box = this.box.clone();
+    if (box.max.y > 0) box.min.y = Math.max(box.min.y, -0.25);
+    return box;
   }
 
   /** Reemplaza materiales de autoría por la librería web (por clave/categoría). */

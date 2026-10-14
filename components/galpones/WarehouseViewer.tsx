@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { createWarehouseModel } from "@/core/galpones/geometry";
 import { getVariant } from "@/core/galpones/configuration";
 import ProductViewer from "@/components/product-viewer/ProductViewer";
+import type { ModelCategory } from "@/core/product-engine/types";
 import type { ViewerBackdrop, ViewerContent, ViewerInsets, ViewerSurroundings } from "@/components/product-viewer/types";
 import { buildSite, disposeSite } from "@/core/galpones/site";
 import { planSite } from "@/core/galpones/sitePlan";
@@ -46,15 +47,16 @@ export default function WarehouseViewer() {
   const [width, height] = useViewportSize();
   const shared = staticCatalog.shared();
 
-  const version = config ? materialVersion(config) : "";
+  const underground = viewer.underground;
+  const version = config ? materialVersion(config, underground) : "";
   useMemo(() => {
-    if (config && definition) library.update(materialSpecs(config, definition));
+    if (config && definition) library.update(materialSpecs(config, definition, { underground }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version, definition]);
 
   // Clave geométrica: sólo lo que cambia la forma del modelo.
   const geometryKey = config
-    ? JSON.stringify([config.warehouse, config.variant, config.dimensions, config.structure, config.envelope.roof, config.envelope.walls, config.openings, config.options])
+    ? JSON.stringify([config.warehouse, config.variant, config.dimensions, config.structure, config.foundation, config.envelope.roof, config.envelope.walls, config.openings, config.options])
     : null;
 
   const content = useMemo<ViewerContent | null>(() => {
@@ -116,7 +118,11 @@ export default function WarehouseViewer() {
     return { top: 0, right: 0, bottom: 0, left: 0 };
   }, [capture, mobile, stage, panelOpen, selection, width, height]);
 
-  const hidden = viewer.hidden;
+  // Bajo el suelo se ve el esqueleto: estructura y fundaciones, sin envolvente.
+  const hidden = useMemo<ModelCategory[]>(
+    () => (underground ? Array.from(new Set<ModelCategory>([...viewer.hidden, "roof", "walls", "doors", "windows", "skylights", "gutters", "canopy"])) : viewer.hidden),
+    [underground, viewer.hidden]
+  );
   const isolated = viewer.isolated?.categories ?? null;
   const onSnapshot = useCallback((capture: () => string | null) => {
     snapshot = capture;
@@ -128,8 +134,9 @@ export default function WarehouseViewer() {
       <ProductViewer
         className={`gp-viewer gp-viewer--${stage}`}
         content={content}
-        surroundings={surroundings}
+        surroundings={underground ? null : surroundings}
         backdrop={backdrop}
+        underground={underground}
         resolveMaterial={library.resolve}
         materialVersion={version}
         hiddenCategories={hidden}
@@ -151,7 +158,7 @@ export default function WarehouseViewer() {
         insets={insets}
         onSnapshotReady={onSnapshot}
       />
-      {backdrop && !capture && (
+      {backdrop && !capture && !underground && (
         <p className="gp-map-credit" style={{ left: insets.left + 14 }}>
           {groundAttribution(groundMode)}
         </p>

@@ -66,6 +66,8 @@ export function WarehouseSummary() {
     ["Altura alero / cumbrera", `${formatNumber(config.dimensions.eaveHeight, 1)} / ${formatNumber(ridgeHeight(config.dimensions), 1)} m`],
     ["Estructura", structureLabel(definition, config.structure)],
     ["Terminación", finish?.name ?? "—"],
+    ["Fundación", find(definition.structure.foundations ?? [], config.foundation)?.name ?? "—"],
+    ["Piso", find(definition.structure.floors ?? [], config.floor)?.name ?? "—"],
     ["Cubierta", `${roof?.name ?? "—"}${insulation && insulation.level > 0 ? ` · ${insulation.name} ${insulation.thicknessMm} mm` : ""}`],
     ["Cerramientos", walls?.name ?? "—"],
     ["Aislación", insulation?.name ?? "—"],
