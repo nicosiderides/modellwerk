@@ -14,6 +14,8 @@ import { planSite } from "@/core/galpones/sitePlan";
 import { presetById } from "@/core/galpones/lotRules";
 import type { CameraPresetId, CameraRequest, ModelLoadState, SelectionInfo, ViewerQuality } from "@/components/product-viewer/types";
 
+export type GroundMode = "photo" | "plan" | "off";
+
 /**
  * Estado de MW Galpones, separado por responsabilidad:
  *   warehouse  → configuración comercial (serializable)
@@ -36,6 +38,8 @@ type ViewerState = {
   hidden: ModelCategory[];
   isolated: { id: string; categories: ModelCategory[] } | null;
   quality: ViewerQuality;
+  /** Piso del visor cuando el lote tiene ubicación real: foto aérea, plano o neutro. */
+  ground: GroundMode;
 };
 type ModelState = ModelLoadState & { index: MetadataIndex | null; metadata: ModelMetadataDocument | null };
 export type ToastTone = "info" | "limit";
@@ -85,6 +89,7 @@ export type GalponesState = {
   isolate: (id: string, categories: ModelCategory[]) => void;
   showAll: () => void;
   setQuality: (quality: ViewerQuality) => void;
+  setGround: (ground: GroundMode) => void;
 
   // modelo / selección
   setModelState: (state: ModelLoadState) => void;
@@ -110,7 +115,7 @@ let toastId = 0;
 
 export const useGalpones = create<GalponesState>((set, get) => ({
   warehouse: { definitionId: null, config: null },
-  viewer: { camera: { preset: "perspective", nonce: 0 }, explode: false, scaleReferences: true, hidden: [], isolated: null, quality: "balanced" },
+  viewer: { camera: { preset: "perspective", nonce: 0 }, explode: false, scaleReferences: true, hidden: [], isolated: null, quality: "balanced", ground: "photo" },
   model: { status: "idle", progress: 0, index: null, metadata: null },
   ui: { stage: "catalog", tab: "dimensions", modal: null, panelOpen: true, toast: null },
   selection: null,
@@ -249,6 +254,7 @@ export const useGalpones = create<GalponesState>((set, get) => ({
     set((state) => ({ viewer: { ...state.viewer, isolated: state.viewer.isolated?.id === id ? null : { id, categories }, hidden: [] } })),
   showAll: () => set((state) => ({ viewer: { ...state.viewer, hidden: [], isolated: null } })),
   setQuality: (quality) => set((state) => ({ viewer: { ...state.viewer, quality } })),
+  setGround: (ground) => set((state) => ({ viewer: { ...state.viewer, ground } })),
 
   setModelState: (model) => set((state) => ({ model: { ...state.model, ...model } })),
   setModelIndex: (index, metadata) => set((state) => ({ model: { ...state.model, index, metadata } })),

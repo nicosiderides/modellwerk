@@ -67,9 +67,11 @@ type CameraDirectorProps = {
   request: CameraRequest;
   insets: ViewerInsets;
   interactive: boolean;
+  /** Hay un mapa real de fondo: se puede alejar mucho más para ver el barrio. */
+  wide?: boolean;
 };
 
-export function CameraDirector({ bounds, fitToken, request, insets, interactive }: CameraDirectorProps) {
+export function CameraDirector({ bounds, fitToken, request, insets, interactive, wide = false }: CameraDirectorProps) {
   const controls = useRef<ElementRef<typeof CameraControls> | null>(null);
   const camera = useThree((state) => state.camera) as PerspectiveCamera;
   const viewport = useThree((state) => state.size);
@@ -78,9 +80,11 @@ export function CameraDirector({ bounds, fitToken, request, insets, interactive 
   const initialized = useRef(false);
   const boundsRef = useRef(bounds);
   const insetsRef = useRef(insets);
+  const wideRef = useRef(wide);
   useLayoutEffect(() => {
     boundsRef.current = bounds;
     insetsRef.current = insets;
+    wideRef.current = wide;
   });
 
   const apply = (preset: Exclude<CameraPresetId, "fit">, animate: boolean) => {
@@ -93,10 +97,10 @@ export function CameraDirector({ bounds, fitToken, request, insets, interactive 
     // superficie está delante cuando dos están muy juntas (cumbrera, babetas,
     // marcos). Afuera alcanza con ~1/80 del tamaño del modelo; adentro, cerca.
     camera.near = preset === "interior" ? 0.05 : Math.min(1, Math.max(0.1, radius / 80));
-    camera.far = Math.max(600, radius * 30);
+    camera.far = wideRef.current ? Math.max(3200, radius * 30) : Math.max(600, radius * 30);
     camera.updateProjectionMatrix();
     control.minDistance = preset === "interior" ? 0.5 : Math.max(2, radius * 0.15);
-    control.maxDistance = Math.max(60, radius * 6);
+    control.maxDistance = wideRef.current ? Math.max(520, radius * 6) : Math.max(60, radius * 6);
     control.minPolarAngle = pose.minPolar;
     control.maxPolarAngle = pose.maxPolar;
     void control.setLookAt(pose.position.x, pose.position.y, pose.position.z, pose.target.x, pose.target.y, pose.target.z, animate);
@@ -137,6 +141,18 @@ export function CameraDirector({ bounds, fitToken, request, insets, interactive 
     apply(lastPreset.current, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [insets.left, insets.right, insets.top, insets.bottom]);
+
+  // Con mapa de fondo se puede alejar más (sin mover la cámara al prenderlo).
+  useEffect(() => {
+    const box = boundsRef.current;
+    const control = controls.current;
+    if (!box || box.isEmpty() || !control || lastPreset.current === "interior") return;
+    const radius = box.getSize(new Vector3()).length() / 2;
+    camera.far = wide ? Math.max(3200, radius * 30) : Math.max(600, radius * 30);
+    camera.updateProjectionMatrix();
+    control.maxDistance = wide ? Math.max(520, radius * 6) : Math.max(60, radius * 6);
+    invalidate();
+  }, [wide, camera, invalidate]);
 
   return (
     <CameraControls

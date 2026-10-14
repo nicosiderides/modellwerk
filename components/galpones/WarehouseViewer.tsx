@@ -4,8 +4,10 @@ import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { createWarehouseModel } from "@/core/galpones/geometry";
 import { getVariant } from "@/core/galpones/configuration";
 import ProductViewer from "@/components/product-viewer/ProductViewer";
-import type { ViewerContent, ViewerInsets, ViewerSurroundings } from "@/components/product-viewer/types";
+import type { ViewerBackdrop, ViewerContent, ViewerInsets, ViewerSurroundings } from "@/components/product-viewer/types";
 import { buildSite, disposeSite } from "@/core/galpones/site";
+import { planSite } from "@/core/galpones/sitePlan";
+import { createGroundBackdrop, groundAttribution, hasPhoto } from "./map/groundMap";
 import { staticCatalog } from "@/core/galpones/catalog";
 import { WarehouseMaterialLibrary, materialSpecs, materialVersion } from "./materials";
 import { definitionOf, useGalpones } from "./store";
@@ -69,17 +71,40 @@ export default function WarehouseViewer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geometryKey, definition]);
 
+  const mobile = width < 760;
+
+  // Piso de mapa real: sólo si el lote tiene ubicación (elegido en el mapa).
+  const location = config?.lot.enabled ? config.lot.location : null;
+  const groundMode = !location || viewer.ground === "off" ? "off" : viewer.ground === "photo" && !hasPhoto(location.center) ? "plan" : viewer.ground;
+  const detail = mobile ? "low" : "high";
+  const backdropKey = location && groundMode !== "off" ? `${location.nomenclatura}|${location.fit.origin.join(",")}|${groundMode}|${detail}` : null;
+  const realGround = backdropKey !== null;
+
   // Entorno: depende de la planta del galpón, del entorno elegido y de si se muestran vehículos.
-  const siteKey = config ? JSON.stringify([geometryKey, config.site, config.lot, viewer.scaleReferences]) : null;
+  const siteKey = config ? JSON.stringify([geometryKey, config.site, config.lot, viewer.scaleReferences, realGround]) : null;
   const surroundings = useMemo<ViewerSurroundings | null>(() => {
     if (!config || !definition) return null;
     const snapshotConfig = structuredClone(config);
     const vehicles = viewer.scaleReferences;
-    return { key: siteKey!, build: () => buildSite(snapshotConfig, definition, { vehicles }), dispose: (root) => disposeSite(root as Parameters<typeof disposeSite>[0]) };
+    return { key: siteKey!, build: () => buildSite(snapshotConfig, definition, { vehicles, realGround }), dispose: (root) => disposeSite(root as Parameters<typeof disposeSite>[0]) };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [siteKey, definition]);
 
-  const mobile = width < 760;
+  // Rincón del lote (frente-oeste) en coordenadas del modelo: ahí se apoya el mapa.
+  const lotCorner = useMemo(() => {
+    if (!config || !definition || !realGround) return null;
+    const L = planSite(config, definition).lotRect;
+    return L ? ([L.x0, 0, L.z0] as [number, number, number]) : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteKey, definition, realGround]);
+  const backdrop = useMemo<ViewerBackdrop | null>(() => {
+    if (!backdropKey || !location || !lotCorner || groundMode === "off") return null;
+    const where = location;
+    const mode = groundMode;
+    return { key: backdropKey, offset: lotCorner, build: (invalidate) => createGroundBackdrop(where, mode, { detail, onChange: invalidate }) };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backdropKey, lotCorner?.[0], lotCorner?.[2]]);
+
   const capture = typeof document !== "undefined" && document.documentElement.dataset.gpCapture === "1";
   const insets = useMemo<ViewerInsets>(() => {
     if (capture) return { top: 0, right: 0, bottom: 0, left: 0 };
@@ -99,30 +124,38 @@ export default function WarehouseViewer() {
 
   if (!content) return null;
   return (
-    <ProductViewer
-      className={`gp-viewer gp-viewer--${stage}`}
-      content={content}
-      surroundings={surroundings}
-      resolveMaterial={library.resolve}
-      materialVersion={version}
-      hiddenCategories={hidden}
-      isolatedCategories={isolated}
-      explode={viewer.explode}
-      explodeOffsets={shared.explodeOffsets}
-      selectable={stage === "explore" || stage === "configure"}
-      selectedElementId={selection?.elementId ?? null}
-      onSelect={(next) => {
-        select(next);
-        if (next && useGalpones.getState().ui.stage === "configure") useGalpones.getState().goTo("explore");
-        if (next) useGalpones.getState().select(next);
-      }}
-      onIndex={setModelIndex}
-      onLoadState={setModelState}
-      cameraRequest={viewer.camera}
-      showScaleReferences={viewer.scaleReferences}
-      quality={viewer.quality}
-      insets={insets}
-      onSnapshotReady={onSnapshot}
-    />
+    <>
+      <ProductViewer
+        className={`gp-viewer gp-viewer--${stage}`}
+        content={content}
+        surroundings={surroundings}
+        backdrop={backdrop}
+        resolveMaterial={library.resolve}
+        materialVersion={version}
+        hiddenCategories={hidden}
+        isolatedCategories={isolated}
+        explode={viewer.explode}
+        explodeOffsets={shared.explodeOffsets}
+        selectable={stage === "explore" || stage === "configure"}
+        selectedElementId={selection?.elementId ?? null}
+        onSelect={(next) => {
+          select(next);
+          if (next && useGalpones.getState().ui.stage === "configure") useGalpones.getState().goTo("explore");
+          if (next) useGalpones.getState().select(next);
+        }}
+        onIndex={setModelIndex}
+        onLoadState={setModelState}
+        cameraRequest={viewer.camera}
+        showScaleReferences={viewer.scaleReferences}
+        quality={viewer.quality}
+        insets={insets}
+        onSnapshotReady={onSnapshot}
+      />
+      {backdrop && !capture && (
+        <p className="gp-map-credit" style={{ left: insets.left + 14 }}>
+          {groundAttribution(groundMode)}
+        </p>
+      )}
+    </>
   );
 }

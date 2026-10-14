@@ -30,7 +30,7 @@ import { ScaleReferences } from "./ScaleReferences";
 import { loadProductModel } from "./engine/ProductModelLoader";
 import { ModelStageController } from "./engine/ModelStageController";
 import { normalizeModel } from "./engine/normalizeModel";
-import type { ProductViewerProps, ViewerContent, ViewerSurroundings } from "./types";
+import type { ProductViewerProps, ViewerBackdrop, ViewerContent, ViewerSurroundings } from "./types";
 
 /**
  * MW Product Viewer — visor 3D genérico para productos constructivos.
@@ -220,7 +220,7 @@ function ModelStage(props: ProductViewerProps & { onBounds: (box: Box3 | null, f
   return <primitive object={stage.controller.root} />;
 }
 
-function Lighting({ bounds, extent, quality }: { bounds: Box3 | null; extent: Box3 | null; quality: ProductViewerProps["quality"] }) {
+function Lighting({ bounds, extent, quality, wide }: { bounds: Box3 | null; extent: Box3 | null; quality: ProductViewerProps["quality"]; wide: boolean }) {
   const sun = useRef<DirectionalLight>(null);
   const scene = useThree((state) => state.scene);
   const invalidate = useThree((state) => state.invalidate);
@@ -234,7 +234,8 @@ function Lighting({ bounds, extent, quality }: { bounds: Box3 | null; extent: Bo
 
   useEffect(() => {
     scene.background = new Color(BACKGROUND);
-    scene.fog = new Fog(BACKGROUND, radius * 7, radius * 18);
+    // Con mapa real la niebla empieza más lejos: se ve el barrio (≈ 1 km alrededor).
+    scene.fog = wide ? new Fog(BACKGROUND, Math.max(radius * 7, 240), Math.max(radius * 18, 1250)) : new Fog(BACKGROUND, radius * 7, radius * 18);
     const light = sun.current;
     if (light) {
       const cam = light.shadow.camera;
@@ -256,7 +257,7 @@ function Lighting({ bounds, extent, quality }: { bounds: Box3 | null; extent: Bo
       light.shadow.needsUpdate = true;
     }
     invalidate();
-  }, [radius, shadowBox, scene, invalidate]);
+  }, [radius, shadowBox, scene, invalidate, wide]);
 
   return (
     <>
@@ -279,7 +280,8 @@ function Lighting({ bounds, extent, quality }: { bounds: Box3 | null; extent: Bo
   );
 }
 
-function Ground({ bounds }: { bounds: Box3 | null }) {
+function Ground({ bounds, bare }: { bounds: Box3 | null; bare: boolean }) {
+  if (bare) return null;
   const size = bounds && !bounds.isEmpty() ? bounds.getSize(new Vector3()) : new Vector3(40, 10, 60);
   const radius = Math.max(size.x, size.z);
   return (
@@ -370,6 +372,38 @@ function Surroundings({ content, origin, onExtent }: { content: ViewerSurroundin
   );
 }
 
+/** Piso de fondo (mapa real), con el mismo origen que el modelo. */
+function Backdrop({ content, origin }: { content: ViewerBackdrop; origin: Matrix4 | null }) {
+  const invalidate = useThree((state) => state.invalidate);
+  const [built, setBuilt] = useState<{ root: Object3D; dispose: () => void } | null>(null);
+  const contentRef = useRef(content);
+  useEffect(() => {
+    contentRef.current = content;
+  });
+  const key = content.key;
+  useEffect(() => {
+    const next = contentRef.current.build(() => invalidate());
+    setBuilt(next);
+    invalidate();
+    return () => {
+      next.dispose();
+      setBuilt(null);
+    };
+  }, [key, invalidate]);
+  const [ox, oy, oz] = content.offset;
+  useEffect(() => {
+    invalidate();
+  }, [ox, oy, oz, invalidate]);
+  if (!built || !origin) return null;
+  return (
+    <group matrixAutoUpdate={false} matrix={origin}>
+      <group position={[ox, oy, oz]}>
+        <primitive object={built.root} />
+      </group>
+    </group>
+  );
+}
+
 /** Expone una captura PNG de la vista (para la ficha imprimible). */
 function SnapshotBridge({ onReady }: { onReady?: (capture: () => string | null) => void }) {
   const gl = useThree((state) => state.gl);
@@ -413,11 +447,12 @@ export default function ProductViewer(props: ProductViewerProps) {
           gl.toneMappingExposure = 1.02;
         }}
       >
-        <Lighting bounds={bounds} extent={extent} quality={props.quality} />
-        <Ground bounds={bounds} />
+        <Lighting bounds={bounds} extent={extent} quality={props.quality} wide={Boolean(props.backdrop)} />
+        <Ground bounds={bounds} bare={Boolean(props.backdrop)} />
+        {props.backdrop && <Backdrop content={props.backdrop} origin={origin} />}
         <ModelStage {...props} onBounds={onBounds} onOrigin={setOrigin} />
         <Surroundings content={props.surroundings} origin={origin} onExtent={setExtent} />
-        <CameraDirector bounds={bounds} fitToken={fitToken} request={props.cameraRequest} insets={props.insets} interactive={!props.captureMode} />
+        <CameraDirector bounds={bounds} fitToken={fitToken} request={props.cameraRequest} insets={props.insets} interactive={!props.captureMode} wide={Boolean(props.backdrop)} />
         <ScaleReferences bounds={bounds} visible={props.showScaleReferences} />
         {high && <AmbientOcclusion />}
         <SnapshotBridge onReady={props.onSnapshotReady} />
