@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { Mesh } from "three";
+import { Mesh, Vector3, type Object3D } from "three";
 import { assembleDefinition, WAREHOUSE_FILE_NAMES, type WarehouseFiles } from "./definition.ts";
 import { createDefaultConfig, normalizeConfig, openingLimits, ridgeHeight, selectVariant, setDimension, evaluateRules } from "./configuration.ts";
 import { calculateMetrics } from "./metrics.ts";
 import { generateTechnicalDescription } from "./description.ts";
 import { createWarehouseModel, distributeInBays } from "./geometry.ts";
+import { buildSite } from "./site.ts";
 import { configFromShareCode, configToShareCode, deserializeConfig, serializeConfig, readSaved, saveConfig } from "./storage.ts";
 import { buildQuoteRequest, localDraftTransport, submitWarehouseQuote, validateContact } from "./quote.ts";
 import { buildMetadataIndex, buildModelTree, resolveCategory } from "../product-engine/metadata.ts";
@@ -302,4 +303,66 @@ test("piso: H20 por defecto, alisado opcional, y queda en la memoria", () => {
   const troweled = normalizeConfig(def, { ...createDefaultConfig(def), floor: "troweled" });
   assert.match(generateTechnicalDescription(troweled, def).join(" "), /hormigón alisado/);
   assert.match(generateTechnicalDescription(createDefaultConfig(def), def).join(" "), /hormigón H20/);
+});
+
+/* Caras superpuestas: dos superficies en el mismo plano con distinto material "titilan" en pantalla. */
+function coincidentFaces(roots: Object3D[]) {
+  type F = { owner: string; mat: string; axis: number; sign: number; d: number; u0: number; u1: number; v0: number; v1: number; offset: number };
+  const faces: F[] = [];
+  const a = new Vector3(), b = new Vector3(), c = new Vector3(), n = new Vector3(), e = new Vector3();
+  for (const root of roots) {
+    root.updateMatrixWorld(true);
+    root.traverse((o) => {
+      const m = o as Mesh;
+      if (!m.isMesh || (m as unknown as { isInstancedMesh?: boolean }).isInstancedMesh) return;
+      const material = (Array.isArray(m.material) ? m.material[0] : m.material) as { name?: string; transparent?: boolean; polygonOffset?: boolean; polygonOffsetFactor?: number };
+      if (material.transparent) return;
+      const pos = m.geometry.getAttribute("position");
+      const idx = m.geometry.index;
+      const count = idx ? idx.count : pos.count;
+      for (let i = 0; i < count; i += 3) {
+        const at = (k: number) => (idx ? idx.getX(i + k) : i + k);
+        a.fromBufferAttribute(pos, at(0)).applyMatrix4(m.matrixWorld);
+        b.fromBufferAttribute(pos, at(1)).applyMatrix4(m.matrixWorld);
+        c.fromBufferAttribute(pos, at(2)).applyMatrix4(m.matrixWorld);
+        n.subVectors(b, a).cross(e.subVectors(c, a));
+        if (n.length() < 2e-4) continue;
+        n.normalize();
+        const axis = Math.abs(n.y) > 0.999 ? 1 : Math.abs(n.x) > 0.999 ? 0 : Math.abs(n.z) > 0.999 ? 2 : -1;
+        if (axis < 0) continue;
+        const sign = Math.sign(n.getComponent(axis));
+        const d = a.getComponent(axis);
+        // Caras de abajo apoyadas en el piso o enterradas: no se ven.
+        if (axis === 1 && (sign < 0 ? d <= 0.001 : d < -0.025)) continue;
+        const [ua, va] = [0, 1, 2].filter((q) => q !== axis);
+        const us = [a, b, c].map((p) => p.getComponent(ua));
+        const vs = [a, b, c].map((p) => p.getComponent(va));
+        faces.push({ owner: m.name || "?", mat: (m.userData?.materialKey as string) ?? material.name ?? "", axis, sign, d, u0: Math.min(...us), u1: Math.max(...us), v0: Math.min(...vs), v1: Math.max(...vs), offset: material.polygonOffset ? (material.polygonOffsetFactor ?? 0) : 0 });
+      }
+    });
+  }
+  const found = new Set<string>();
+  for (const axis of [0, 1, 2]) {
+    const list = faces.filter((f) => f.axis === axis).sort((p, q) => p.d - q.d);
+    for (let i = 0; i < list.length; i++)
+      for (let j = i + 1; j < list.length && list[j].d - list[i].d < 0.0025; j++) {
+        const p = list[i], q = list[j];
+        if (p.sign !== q.sign || p.owner === q.owner || p.mat === q.mat || p.offset !== q.offset) continue;
+        if (Math.min(p.u1, q.u1) - Math.max(p.u0, q.u0) < 0.02 || Math.min(p.v1, q.v1) - Math.max(p.v0, q.v0) < 0.02) continue;
+        found.add(`${p.owner} × ${q.owner} (${"xyz"[axis]} = ${p.d.toFixed(3)})`);
+      }
+  }
+  return [...found];
+}
+
+test("sin caras superpuestas entre materiales distintos (modelo + entorno, todas las fundaciones)", () => {
+  for (const id of ["industrial-light", "industrial-pro", "large-span"]) {
+    const def = load(id);
+    for (const foundation of ["padFootings", "stripFooting", "piles"] as const) {
+      const base = createDefaultConfig(def);
+      const config = normalizeConfig(def, { ...base, foundation, options: { skylights: true, canopy: true, crane: true }, site: { ...base.site, parking: 20, truckYard: true, landscape: true }, lot: { ...base.lot, enabled: true } });
+      const overlaps = coincidentFaces([createWarehouseModel(config, def).root, buildSite(config, def, { vehicles: false }).root]);
+      assert.deepEqual(overlaps, [], `${id}/${foundation}`);
+    }
+  }
 });
