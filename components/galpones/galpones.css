@@ -3428,6 +3428,11 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
   background: #121416;
 }
 
+/* Datos del lote en dos columnas: frente y fondo arriba, superficie y estado abajo. */
+.gp-map__stats {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .gp-map__stats dt,
 .gp-map__rules dt {
   color: var(--gp-faint);
