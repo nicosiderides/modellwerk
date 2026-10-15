@@ -2,7 +2,7 @@ import { normalizeConfig } from "@/core/galpones/configuration";
 import { zoneFromCordoba, type ZoneResult } from "@/core/galpones/geo/cordobaZoning";
 import { blockAt, mainRoadsIn, outerRing, zoningAt, type Feature, type ParcelProps } from "@/core/galpones/geo/idecor";
 import { buildLotLocation, lotPatchFromLocation } from "@/core/galpones/geo/lotFromParcel";
-import { analyzeParcel, fitPointToLonLat, type LonLat, type ParcelAnalysis } from "@/core/galpones/geo/parcel";
+import { analyzeParcel, fitPointToLonLat, toLot, type LonLat, type ParcelAnalysis } from "@/core/galpones/geo/parcel";
 import { blockingIssues, fitToLot } from "@/core/galpones/lotLimits";
 import { planSite } from "@/core/galpones/sitePlan";
 import type { LotLocation, WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
@@ -33,6 +33,12 @@ const ringBBox = (ring: LonLat[], padDeg = 0.0015): [number, number, number, num
   Math.max(...ring.map((p) => p[0])) + padDeg,
   Math.max(...ring.map((p) => p[1])) + padDeg,
 ];
+
+/** Fondo real del lote: la distancia mayor desde la línea del frente hacia adentro, medida en perpendicular al frente. */
+export const lotDepth = (a: ParcelAnalysis) => {
+  const t = a.ring.map((p) => toLot(a.fit.axes, p)[1]);
+  return Math.max(...t) - Math.min(...t);
+};
 
 /** Ancho real del frente elegido (algunas zonas cambian sus reglas según ese ancho). */
 export const frontLength = (a: ParcelAnalysis) => a.sides.find((s) => s.edges.includes(a.frontEdge))?.length ?? a.edges[a.frontEdge]?.length ?? a.fit.width;

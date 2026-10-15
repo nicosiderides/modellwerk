@@ -7,7 +7,7 @@ import { bearingOf, type LonLat } from "@/core/galpones/geo/parcel";
 import { formatNumber } from "@/core/galpones/metrics";
 import { definitionOf, useGalpones } from "../store";
 import { loadMapLibre, type MapLike, type MapMouseEvent, type MarkerLike } from "./maplibre";
-import { edgeMid, frontLength, frontPoint, fullSelection, keepFront, lotOverlays, previewFor, quickSelection, warehouseOverlays, withFront, type LotSelection } from "./lotSelection";
+import { edgeMid, frontLength, frontPoint, lotDepth, fullSelection, keepFront, lotOverlays, previewFor, quickSelection, warehouseOverlays, withFront, type LotSelection } from "./lotSelection";
 
 /**
  * Mapa para ubicar el lote real (Córdoba): foto aérea, parcelas del catastro,
@@ -636,12 +636,16 @@ function LotCard({
 
       <dl className="gp-map__stats">
         <div>
-          <dt>Superficie</dt>
-          <dd>{m2(loc.superficie)}</dd>
-        </div>
-        <div>
           <dt>Frente</dt>
           <dd>{m1(frontLength(a))}</dd>
+        </div>
+        <div>
+          <dt>Fondo</dt>
+          <dd>{m1(lotDepth(a))}</dd>
+        </div>
+        <div>
+          <dt>Superficie</dt>
+          <dd>{m2(loc.superficie)}</dd>
         </div>
         <div>
           <dt>Estado</dt>
