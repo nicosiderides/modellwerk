@@ -15,7 +15,15 @@ import { frontLength, fullSelection, lotOverlays, previewFor, quickSelection, wa
  * galpón dibujado en 3D sobre el lote.
  */
 
-const CORDOBA: LonLat = [-64.1888, -31.4201];
+/**
+ * Vista inicial del mapa: Córdoba capital desde el centro hasta Ciudad Universitaria
+ * y Parque Sarmiento. Es un recuadro (oeste-sur, este-norte), así en cualquier pantalla
+ * se ve la misma zona; en una pantalla de 1920 × 945 queda en zoom 13,6.
+ */
+const START_BOUNDS: [[number, number], [number, number]] = [
+  [-64.234, -31.4516],
+  [-64.1283, -31.4073],
+];
 const PARCEL_ZOOM = 16;
 const EMPTY = { type: "FeatureCollection", features: [] };
 const SIGNAL = "#c89b3c";
@@ -26,7 +34,7 @@ const BLUEPRINT = "#8fb8c6";
 type Base = "photo" | "map";
 
 /** Margen para encuadrar el lote sin que lo tape la tarjeta (a la derecha o abajo en celulares). */
-const framePadding = () => (window.innerWidth > 900 ? { top: 110, bottom: 90, left: 80, right: 460 } : { top: 130, bottom: Math.round(window.innerHeight * 0.58) + 20, left: 30, right: 30 });
+const framePadding = () => (window.innerWidth > 900 ? { top: 90, bottom: 190, left: 80, right: 460 } : { top: 130, bottom: Math.round(window.innerHeight * 0.58) + 20, left: 30, right: 30 });
 const ringBounds = (ring: LonLat[]): [[number, number], [number, number]] => [
   [Math.min(...ring.map((p) => p[0])), Math.min(...ring.map((p) => p[1]))],
   [Math.max(...ring.map((p) => p[0])), Math.max(...ring.map((p) => p[1]))],
@@ -251,8 +259,7 @@ export function LotMap() {
               { id: "orto", type: "raster", source: "orto", paint: { "raster-saturation": -0.18, "raster-contrast": 0.06, "raster-brightness-max": 0.9, "raster-fade-duration": 250 } },
             ],
           },
-          center: startLocation?.center ?? CORDOBA,
-          zoom: startLocation ? 17.5 : 11.4,
+          ...(startLocation ? { center: startLocation.center, zoom: 17.5 } : { bounds: START_BOUNDS }),
           maxPitch: 70,
           attributionControl: false,
           fadeDuration: 150,
@@ -428,6 +435,18 @@ export function LotMap() {
         <button type="button" className="gp-map__back" onClick={close} aria-label="Volver al configurador">
           <ArrowLeft aria-hidden /> <span>Volver</span>
         </button>
+        <div className="gp-map__bases" role="radiogroup" aria-label="Fondo del mapa">
+          <button type="button" role="radio" aria-checked={base === "photo"} className={base === "photo" ? "is-on" : ""} onClick={() => setBase("photo")}>
+            <Layers aria-hidden /> Foto aérea
+          </button>
+          <button type="button" role="radio" aria-checked={base === "map"} className={base === "map" ? "is-on" : ""} onClick={() => setBase("map")}>
+            <MapIcon aria-hidden /> Mapa
+          </button>
+        </div>
+      </header>
+
+      {/* Buscador centrado abajo, a la vista apenas se abre el mapa (en celulares va arriba). */}
+      <div className={`gp-map__finder ${sel ? "has-lot" : ""}`}>
         <form className="gp-map__search" onSubmit={runSearch} role="search">
           <Search aria-hidden />
           <input
@@ -460,15 +479,7 @@ export function LotMap() {
             </div>
           )}
         </form>
-        <div className="gp-map__bases" role="radiogroup" aria-label="Fondo del mapa">
-          <button type="button" role="radio" aria-checked={base === "photo"} className={base === "photo" ? "is-on" : ""} onClick={() => setBase("photo")}>
-            <Layers aria-hidden /> Foto aérea
-          </button>
-          <button type="button" role="radio" aria-checked={base === "map"} className={base === "map" ? "is-on" : ""} onClick={() => setBase("map")}>
-            <MapIcon aria-hidden /> Mapa
-          </button>
-        </div>
-      </header>
+      </div>
 
       {status === "loading" && (
         <div className="gp-map__center-msg">

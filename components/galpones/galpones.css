@@ -3049,6 +3049,23 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
   border-color: var(--gp-line-strong);
 }
 
+/* Buscador: centrado en la parte de abajo del mapa, bien a la vista. */
+.gp-map__finder {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 112px;
+  width: min(640px, calc(100% - 32px));
+  transform: translateX(-50%);
+  transition: left 420ms var(--gp-ease);
+}
+
+/* Con un lote elegido, la tarjeta ocupa la derecha: el buscador se centra en lo que queda libre. */
+.gp-map__finder.has-lot {
+  left: calc((100% - 432px) / 2);
+  width: min(560px, calc(100% - 464px));
+}
+
 .gp-map__search {
   position: relative;
   z-index: 2; /* la lista de resultados queda por encima de los botones de fondo */
@@ -3063,6 +3080,26 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
   background: rgba(14, 16, 17, 0.92);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.gp-map__finder .gp-map__search {
+  height: 56px;
+  padding: 0 6px 0 18px;
+  gap: 10px;
+  border-radius: 10px;
+  background: rgba(14, 16, 17, 0.9);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(200, 155, 60, 0.18);
+}
+
+.gp-map__finder .gp-map__search input {
+  font-size: 16px;
+}
+
+.gp-map__finder .gp-map__go {
+  height: 44px;
+  min-width: 92px;
+  border-radius: 7px;
+  font-size: 14px;
 }
 
 .gp-map__search:focus-within {
@@ -3132,7 +3169,9 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
 
 .gp-map__results {
   position: absolute;
-  top: calc(100% + 6px);
+  bottom: calc(100% + 8px);
+  max-height: min(360px, 55vh);
+  overflow: auto;
   left: -1px;
   right: -1px;
   display: grid;
@@ -3665,9 +3704,31 @@ html[data-gp-capture="1"] .gp-app > :not(.gp-stage) {
     display: none;
   }
 
-  .gp-map__search {
-    flex: 1 1 0;
-    min-width: 0;
+  /* En celulares el buscador vuelve arriba, al lado de "Volver" (abajo va la tarjeta del lote). */
+  .gp-map__finder,
+  .gp-map__finder.has-lot {
+    top: 10px;
+    bottom: auto;
+    left: 64px;
+    right: 10px;
+    width: auto;
+    transform: none;
+  }
+
+  .gp-map__finder .gp-map__search {
+    height: 44px;
+    padding: 0 4px 0 12px;
+    border-radius: var(--gp-radius);
+  }
+
+  .gp-map__finder .gp-map__go {
+    height: 36px;
+    min-width: 72px;
+  }
+
+  .gp-map__results {
+    top: calc(100% + 6px);
+    bottom: auto;
   }
 
   .gp-map__bases {
