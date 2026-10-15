@@ -7,7 +7,7 @@ import { bearingOf, type LonLat } from "@/core/galpones/geo/parcel";
 import { formatNumber } from "@/core/galpones/metrics";
 import { definitionOf, useGalpones } from "../store";
 import { loadMapLibre, type MapLike, type MapMouseEvent, type MarkerLike } from "./maplibre";
-import { frontLength, fullSelection, lotOverlays, previewFor, quickSelection, warehouseOverlays, withFront, type LotSelection } from "./lotSelection";
+import { edgeMid, frontLength, frontPoint, fullSelection, keepFront, lotOverlays, previewFor, quickSelection, warehouseOverlays, withFront, type LotSelection } from "./lotSelection";
 
 /**
  * Mapa para ubicar el lote real (Córdoba): foto aérea, parcelas del catastro,
@@ -138,6 +138,10 @@ export function LotMap() {
   const selAbort = useRef<AbortController | null>(null);
   const hoverId = useRef<string | number | null>(null);
   const tilted = useRef(false);
+  /** Frente elegido por el usuario (un punto sobre ese lado); null = el automático. */
+  const wantFront = useRef<LonLat | null>(null);
+  /** Después de cambiar el frente, la vista 3D se vuelve a mirar desde el frente nuevo. */
+  const refocus = useRef(false);
 
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [base, setBase] = useState<Base>("photo");
@@ -172,12 +176,13 @@ export function LotMap() {
   }, [definition, config, sel, preview]);
 
   /* ───────── selección ───────── */
-  const select = useCallback(async (parcel: Feature<ParcelProps>, fly = true) => {
+  const select = useCallback(async (parcel: Feature<ParcelProps>, fly = true, front: LonLat | null = null) => {
     selAbort.current?.abort();
     const ctrl = new AbortController();
     selAbort.current = ctrl;
     setSelError(null);
-    const quick = quickSelection(parcel);
+    wantFront.current = front;
+    const quick = keepFront(quickSelection(parcel), front);
     setSel(quick);
     const map = mapRef.current;
     if (map && fly) {
@@ -188,7 +193,8 @@ export function LotMap() {
     try {
       const full = await fullSelection(parcel, ctrl.signal);
       if (ctrl.signal.aborted) return;
-      setSel(full);
+      // Si mientras tanto el usuario eligió otro frente, se respeta.
+      setSel(keepFront(full, wantFront.current));
     } catch (e) {
       if ((e as Error).name === "AbortError") return;
       setSelError("No pudimos consultar la normativa de este lote. Revisá la conexión y volvé a tocarlo.");
@@ -196,10 +202,10 @@ export function LotMap() {
   }, []);
 
   const selectAt = useCallback(
-    async (p: LonLat, fly = true) => {
+    async (p: LonLat, fly = true, front: LonLat | null = null) => {
       try {
         const parcel = await parcelAt(p);
-        if (parcel) await select(parcel, fly);
+        if (parcel) await select(parcel, fly, front);
         else setSelError("En ese punto no hay una parcela del catastro (puede ser calle o espacio público).");
       } catch {
         setSelError("El catastro de Córdoba no respondió. Probá de nuevo en unos segundos.");
@@ -270,7 +276,8 @@ export function LotMap() {
           addLayers(map);
           setStatus("ready");
           refreshParcels();
-          if (startLocation) selectAt(startLocation.center, true);
+          // Lote ya elegido: se vuelve a abrir con el frente que se había elegido.
+          if (startLocation) selectAt(startLocation.center, true, edgeMid(startLocation.ring, startLocation.frontEdge));
         });
         map.on("moveend", () => refreshParcels());
         map.on("zoom", () => setZoomOk(map.getZoom() >= PARCEL_ZOOM - 0.5));
@@ -320,6 +327,24 @@ export function LotMap() {
     map.setLayoutProperty("orto", "visibility", base === "photo" ? "visible" : "none");
   }, [base, status]);
 
+  /* ───────── frente elegido por el usuario ───────── */
+  const chooseFront = useCallback((edge: number) => {
+    setSel((cur) => {
+      if (!cur) return cur;
+      const next = withFront(cur, edge);
+      wantFront.current = frontPoint(next);
+      refocus.current = true;
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !sel || !refocus.current) return;
+    refocus.current = false;
+    if (map.getPitch() > 20) tiltTo(map, sel, false);
+  }, [sel]);
+
   /* ───────── dibujar la selección ───────── */
   useEffect(() => {
     const map = mapRef.current;
@@ -359,11 +384,11 @@ export function LotMap() {
       el.title = isFront ? "Lado del lote sobre la calle que se toma como frente" : "Tomar este lado como frente del lote";
       if (!isFront) el.addEventListener("click", (ev) => {
         ev.stopPropagation();
-        setSel((cur) => (cur ? withFront(cur, side.edges[0]) : cur));
+        chooseFront(side.edges[0]);
       });
       markers.current.push(new ml.Marker({ element: el, anchor: "center" }).setLngLat(at).addTo(map));
     }
-  }, [sel, preview, definition, status]);
+  }, [sel, preview, definition, status, chooseFront]);
 
   /* ───────── vista 3D: un solo movimiento, al terminar de cargar el lote ───────── */
   useEffect(() => {
@@ -513,9 +538,12 @@ export function LotMap() {
             preview={preview}
             error={selError}
             onUse={use}
-            onClear={() => setSel(null)}
+            onClear={() => {
+              wantFront.current = null;
+              setSel(null);
+            }}
             betterFront={betterFront}
-            onBetterFront={() => betterFront && setSel((cur) => (cur ? withFront(cur, betterFront.edge) : cur))}
+            onBetterFront={() => betterFront && chooseFront(betterFront.edge)}
           />
         )}
       </aside>

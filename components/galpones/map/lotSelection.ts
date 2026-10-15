@@ -67,6 +67,41 @@ export async function fullSelection(parcel: Feature<ParcelProps>, signal?: Abort
 /** Recalcula con otro lado como frente. */
 export const withFront = (sel: LotSelection, edge: number) => compose(sel.parcel, sel.ring, sel.block, sel.roads, sel.zoneRaw, sel.zoneStatus, edge);
 
+/** Punto medio de un lado del contorno (en lon/lat). */
+export const edgeMid = (ring: LonLat[], i: number): LonLat => {
+  const p = ring[i];
+  const q = ring[(i + 1) % ring.length];
+  return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+};
+
+/** Punto que identifica el frente actual: el medio de su primer lado. */
+export const frontPoint = (sel: LotSelection): LonLat => edgeMid(sel.analysis.ringLonLat, sel.analysis.frontEdge);
+
+/**
+ * Mantiene el frente que eligió el usuario. El frente se recuerda como un punto
+ * (no como número de lado) porque al terminar de consultar la manzana, o al
+ * volver a abrir el mapa, el análisis se rehace y los lados pueden cambiar.
+ */
+export function keepFront(sel: LotSelection, want: LonLat | null): LotSelection {
+  if (!want) return sel;
+  const ring = sel.analysis.ringLonLat;
+  const k = Math.cos((want[1] * Math.PI) / 180);
+  let best = -1;
+  let bestD = Infinity;
+  ring.forEach((_, i) => {
+    const m = edgeMid(ring, i);
+    const d = ((m[0] - want[0]) * k) ** 2 + (m[1] - want[1]) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = i;
+    }
+  });
+  if (best < 0) return sel;
+  const current = sel.analysis.sides.find((side) => side.edges.includes(sel.analysis.frontEdge));
+  if (best === sel.analysis.frontEdge || current?.edges.includes(best)) return sel;
+  return withFront(sel, best);
+}
+
 export type LotPreview = {
   config: WarehouseConfig;
   /** El galpón actual entra tal cual. */
