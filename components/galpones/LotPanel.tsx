@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ChevronDown, CircleCheck, CircleX, ExternalLink, Info, MapPinned, TriangleAlert } from "lucide-react";
+import { ChevronDown, CircleCheck, CircleX, ExternalLink, Info, Lock, MapPinned, TriangleAlert } from "lucide-react";
 import { DESIGN_VEHICLES, LOT_PRESETS, presetById, type RuleKey } from "@/core/galpones/lotRules";
 import { SITE_LIMITS } from "@/core/galpones/siteConfig";
 import { verifySite, type SiteCheck } from "@/core/galpones/siteCheck";
@@ -290,15 +290,33 @@ export function LotPanel({ definition, config }: { definition: WarehouseDefiniti
             )}
           </h3>
           <div className="gp-grid-2" role="radiogroup" aria-label="Medidas del lote">
-            <ChoiceCard selected={lot.mode === "manual"} title="Tengo un lote" summary="Cargá sus medidas: el galpón se adapta a él" onSelect={() => setLot({ mode: "manual" })} />
-            <ChoiceCard selected={lot.mode === "auto"} title="Todavía no" summary="Calculamos el lote mínimo para tu galpón" onSelect={() => setLot({ mode: "auto" })} />
+            <ChoiceCard selected={lot.mode === "manual"} title="Tengo un lote" summary={lot.location ? "Las medidas del lote real ubicado en el mapa" : "Cargá sus medidas: el galpón se adapta a él"} onSelect={() => setLot({ mode: "manual" })} />
+            <ChoiceCard
+              selected={lot.mode === "auto"}
+              title="Todavía no"
+              summary={lot.location ? "Con el lote real ubicado, las medidas son las del terreno" : "Calculamos el lote mínimo para tu galpón"}
+              disabled={Boolean(lot.location)}
+              onSelect={() => setLot({ mode: "auto" })}
+            />
           </div>
           {lot.mode === "manual" && (
             <>
-              <div className="gp-grid-2">
-                <NumberField label="Frente del lote" value={lot.width} min={10} max={600} step={1} unit="m" decimals={1} onChange={(value) => setLot({ width: value })} />
-                <NumberField label="Fondo del lote" value={lot.depth} min={10} max={800} step={1} unit="m" decimals={1} onChange={(value) => setLot({ depth: value })} />
-              </div>
+              {lot.location ? (
+                <p className="gp-note">
+                  <Lock aria-hidden />
+                  <span>
+                    Lote real: <b>{formatNumber(lot.width, 1)} m de frente × {formatNumber(lot.depth, 1)} m de fondo</b> (su parte rectangular útil, según catastro). Estas medidas no se cambian a mano: para otras, elegí otro lote en el mapa o quitá la ubicación.
+                  </span>
+                </p>
+              ) : (
+                <>
+                  <div className="gp-grid-2">
+                    <NumberField label="Frente del lote" value={lot.width} min={10} max={600} step={1} unit="m" decimals={1} onChange={(value) => setLot({ width: value })} />
+                    <NumberField label="Fondo del lote" value={lot.depth} min={10} max={800} step={1} unit="m" decimals={1} onChange={(value) => setLot({ depth: value })} />
+                  </div>
+                  <p className="gp-field__hint">El galpón nunca queda más grande de lo que permiten el lote y la normativa: si achicás el lote, el galpón se achica con él.</p>
+                </>
+              )}
               <h3 className="gp-subhead">
                 Ubicación del galpón <span>siempre dentro del lote</span>
               </h3>

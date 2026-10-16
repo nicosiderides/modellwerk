@@ -134,13 +134,14 @@ export function clampDimension(definition: WarehouseDefinition, config: Warehous
   const before = blockingIssues(config, definition);
   const after = blockingIssues(next, definition);
   if (!after.length) return { config: next, limitedBy: null };
-  // Ya estaba fuera de norma: se permite el cambio si no agrega reglas incumplidas.
-  const had = ids(before);
-  const added = after.filter((c) => !had.has(c.id));
-  if (before.length && !added.length) return { config: next, limitedBy: null };
-
   const current = dimensionValue(config, key);
   const dir = Math.sign(value - current);
+  // Ya estaba fuera de norma: se puede achicar (acerca a cumplir), pero nunca agrandar.
+  const had = ids(before);
+  const added = after.filter((c) => !had.has(c.id));
+  if (before.length && dir > 0) return { config, limitedBy: primary(before) };
+  if (before.length && !added.length) return { config: next, limitedBy: null };
+
   if (dir === 0) return { config, limitedBy: null };
   const step = dimensionStep(definition, config, key);
   let ok = config;
@@ -216,6 +217,49 @@ export function fitToLot(definition: WarehouseDefinition, config: WarehouseConfi
     c = best.config;
   }
   return c;
+}
+
+export type KeepInLotResult = {
+  config: WarehouseConfig;
+  /** El galpón se achicó (o cambió de variante) para seguir cumpliendo. */
+  adjusted: boolean;
+  /** Ni achicándolo al mínimo cumple (el lote o la normativa no dan para esta tipología). */
+  impossible: boolean;
+};
+
+const sameSize = (a: WarehouseConfig, b: WarehouseConfig) => JSON.stringify(a.dimensions) === JSON.stringify(b.dimensions) && a.variant === b.variant;
+
+/**
+ * El galpón nunca queda más grande de lo que permiten el lote y la normativa:
+ * después de cambiar el lote, la normativa o algo que ocupa lugar
+ * (estacionamiento, marquesina…), si ya no cumple se achica hasta cumplir.
+ */
+export function keepInLot(definition: WarehouseDefinition, config: WarehouseConfig): KeepInLotResult {
+  if (!config.lot.enabled || !blockingIssues(config, definition).length) return { config, adjusted: false, impossible: false };
+  const fitted = fitToLot(definition, config);
+  return { config: fitted, adjusted: !sameSize(fitted, config), impossible: blockingIssues(fitted, definition).length > 0 };
+}
+
+/**
+ * Achicar una medida del lote propio: si con el valor pedido ni el galpón más
+ * chico entra o cumple, se queda en el lote más chico que sí da (búsqueda
+ * entre el valor pedido y el actual, de a 0,5 m).
+ */
+export function shrinkLotSide(definition: WarehouseDefinition, config: WarehouseConfig, side: "width" | "depth", value: number, apply: (c: WarehouseConfig, v: number) => WarehouseConfig): { config: WarehouseConfig; value: number; limited: boolean } {
+  const tryAt = (v: number) => keepInLot(definition, apply(config, v));
+  const asked = tryAt(value);
+  if (!asked.impossible) return { config: asked.config, value, limited: false };
+  const current = config.lot[side];
+  // Pasos de 0,5 m entre el valor pedido y el actual.
+  let lo = Math.ceil(value * 2) / 2;
+  let hi = current;
+  if (tryAt(hi).impossible) return { config: asked.config, value, limited: false }; // el actual tampoco da: no se frena
+  while (hi - lo > 0.5 + EPS) {
+    const mid = Math.round(((lo + hi) / 2) * 2) / 2;
+    if (tryAt(mid).impossible) lo = mid;
+    else hi = mid;
+  }
+  return { config: tryAt(hi).config, value: hi, limited: true };
 }
 
 /** Lo que permite el lote, para mostrar antes de diseñar. */

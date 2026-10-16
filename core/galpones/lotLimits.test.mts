@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { assembleDefinition, WAREHOUSE_FILE_NAMES, type WarehouseFiles } from "./definition.ts";
 import { createDefaultConfig, normalizeConfig } from "./configuration.ts";
 import { verifySite } from "./siteCheck.ts";
-import { blockingIssues, clampDimension, dimensionLimit, fitToLot, lotCapacity, variantFits } from "./lotLimits.ts";
+import { blockingIssues, clampDimension, dimensionLimit, fitToLot, keepInLot, lotCapacity, shrinkLotSide, variantFits } from "./lotLimits.ts";
 import type { LotConfig, WarehouseConfig, WarehouseDefinition } from "./types.ts";
 
 const load = (id: string): WarehouseDefinition =>
@@ -112,4 +112,47 @@ test("ubicación elegida: nunca sale del lote ni pisa el retiro", () => {
   assert.equal(v.lot!.front, range.front[0]);
   assert.ok(v.lot!.front >= 10);
   assert.deepEqual(blockingIssues(c, def).map((x) => x.id), []);
+});
+
+test("fuera de norma: se puede achicar, pero nunca agrandar", () => {
+  const def = load("industrial-pro");
+  // Lote chico para el galpón por defecto: queda fuera de norma.
+  const c = onLot(def, { width: 30, depth: 60, front: 10, left: 3, placement: "manual" });
+  assert.ok(blockingIssues(c, def).length > 0);
+  const up = clampDimension(def, c, "width", c.dimensions.width + 6);
+  assert.equal(up.config.dimensions.width, c.dimensions.width, "no crece");
+  assert.ok(up.limitedBy);
+  const down = clampDimension(def, c, "width", c.dimensions.width - 4);
+  assert.ok(down.config.dimensions.width < c.dimensions.width, "sí achica");
+});
+
+test("lote propio más chico o normativa más exigente: el galpón se achica y vuelve a cumplir", () => {
+  const def = load("industrial-pro");
+  const ok = fitToLot(def, onLot(def, { width: 60, depth: 120, placement: "auto" }));
+  assert.equal(blockingIssues(ok, def).length, 0);
+  // Lote más angosto
+  const narrower = keepInLot(def, normalizeConfig(def, { ...ok, lot: { ...ok.lot, width: 28 } }));
+  assert.equal(narrower.impossible, false);
+  assert.equal(narrower.adjusted, true);
+  assert.equal(blockingIssues(narrower.config, def).length, 0);
+  assert.ok(narrower.config.dimensions.width <= ok.dimensions.width);
+  // FOS más exigente
+  const fos = keepInLot(def, normalizeConfig(def, { ...ok, lot: { ...ok.lot, rules: { ...ok.lot.rules, fos: 0.2 } } }));
+  assert.equal(blockingIssues(fos.config, def).length, 0);
+  // Sin cambios que rompan: no toca nada
+  const same = keepInLot(def, ok);
+  assert.equal(same.adjusted, false);
+  assert.equal(same.config, ok);
+});
+
+test("achicar el lote propio: nunca por debajo de lo que necesita el galpón más chico", () => {
+  const def = load("industrial-pro");
+  const ok = fitToLot(def, onLot(def, { width: 60, depth: 120, placement: "auto" }));
+  const apply = (c: WarehouseConfig, v: number) => normalizeConfig(def, { ...c, lot: { ...c.lot, width: v } });
+  const r = shrinkLotSide(def, ok, "width", 5, apply);
+  assert.equal(r.limited, true);
+  assert.ok(r.value > 5 && r.value < 60, `tope ${r.value}`);
+  assert.equal(blockingIssues(r.config, def).length, 0, "en el tope, el galpón cumple");
+  // medio metro menos ya no da
+  assert.equal(keepInLot(def, apply(ok, r.value - 0.5)).impossible, true);
 });
