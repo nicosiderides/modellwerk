@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { ChevronDown, CircleCheck, CircleX, ExternalLink, Info, Lock, MapPinned, TriangleAlert } from "lucide-react";
-import { DESIGN_VEHICLES, LOT_PRESETS, presetById, type RuleKey } from "@/core/galpones/lotRules";
+import { DESIGN_VEHICLES, FREE_PRESET_ID, LOT_PRESETS, presetById, type RuleKey } from "@/core/galpones/lotRules";
 import { SITE_LIMITS } from "@/core/galpones/siteConfig";
 import { verifySite, type SiteCheck } from "@/core/galpones/siteCheck";
 import { lotCapacity } from "@/core/galpones/lotLimits";
@@ -244,6 +244,15 @@ export function LotPanel({ definition, config }: { definition: WarehouseDefiniti
               />
             ))}
           </div>
+          {lot.preset === FREE_PRESET_ID && (
+            <p className="gp-note gp-note--warn">
+              <TriangleAlert aria-hidden />
+              <span>
+                <b>Modo exploración.</b> No se verifica ninguna normativa (retiros, FOS, FOT ni altura): el galpón sólo se frena en el borde del lote. Sirve para ver hasta dónde da el terreno; para un proyecto real, volvé a la normativa del lote
+                {lot.location?.zone ? ` (${lot.location.zone.label})` : ""}.
+              </span>
+            </p>
+          )}
           <button type="button" className={`gp-disclosure ${editRules ? "is-open" : ""}`} onClick={() => setEditRules(!editRules)} aria-expanded={editRules}>
             Ver y editar parámetros <ChevronDown aria-hidden />
           </button>

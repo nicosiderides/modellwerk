@@ -146,7 +146,33 @@ export const LOT_PRESETS: LotPreset[] = [
     sources: {},
     notes: [],
   },
+  {
+    // Para explorar: ninguna regla, el galpón sólo se frena en el borde del lote.
+    id: "libre",
+    name: "Sin restricciones",
+    place: "Exploración · sin normativa, hasta el borde del lote",
+    summary: "Sin retiros, FOS, FOT ni altura máxima: para ver hasta dónde da el terreno. No es una normativa real.",
+    rules: {
+      minArea: null,
+      minFront: null,
+      fos: null,
+      fot: null,
+      maxHeight: null,
+      setbackFront: null,
+      setbackSide: null,
+      sideCount: 0,
+      setbackBack: null,
+      forestOfFree: null,
+      forestThreshold: null,
+      accessFromCorner: null,
+    },
+    sources: {},
+    notes: [],
+  },
 ];
+
+/** Normativa de exploración: sin reglas, sólo el borde del lote. */
+export const FREE_PRESET_ID = "libre";
 
 export const presetById = (id: string) => LOT_PRESETS.find((p) => p.id === id) ?? LOT_PRESETS[0];
 
