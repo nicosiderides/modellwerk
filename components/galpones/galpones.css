@@ -149,6 +149,12 @@
   font-weight: 600;
 }
 
+/* Botón deshabilitado (por ejemplo, "Usar este lote" en un lote ocupado). */
+.gp-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .gp-button--primary:hover:not(:disabled) {
   background: #d8ab4c;
 }
