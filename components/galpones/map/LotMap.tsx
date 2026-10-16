@@ -30,6 +30,10 @@ const SIGNAL = "#c89b3c";
 const SIGNAL_BRIGHT = "#f0c45c";
 const CREAM = "#f5f1e8";
 const BLUEPRINT = "#8fb8c6";
+const OCCUPIED = "#e06a5e";
+/** Misma regla que isOccupied, en el lenguaje de estilos del mapa. */
+const ESTADO = ["upcase", ["to-string", ["get", "Estado"]]];
+const OCCUPIED_EXPR = ["any", ["in", "EDIFICADO", ESTADO], ["all", ["in", "PH", ESTADO], ["!", ["in", "NOPH", ESTADO]]]];
 
 type Base = "photo" | "map";
 
@@ -43,6 +47,8 @@ type Hover = { x: number; y: number; title: string; detail: string } | null;
 
 const m2 = (v: number) => `${formatNumber(Math.round(v))} m²`;
 const m1 = (v: number) => `${formatNumber(v, 1)} m`;
+/** Lote ocupado según el catastro (edificado o en propiedad horizontal): se puede ver, pero no usar. */
+const isOccupied = (e: string) => /EDIFICADO/i.test(e) || (/PH/i.test(e) && !/NoPH/i.test(e));
 const estadoText = (e: string) => (/BALDIO/i.test(e) ? "Baldío" : /PH/i.test(e) && !/NoPH/i.test(e) ? "Propiedad horizontal" : /EDIFICADO/i.test(e) ? "Edificado" : e || "s/d");
 
 /** Textura rayada para los terrenos baldíos (convención de plano). */
@@ -73,7 +79,7 @@ function addLayers(map: MapLike) {
   if (!map.hasImage("hatch")) map.addImage("hatch", hatchImage([200, 155, 60], 0.75), { pixelRatio: 2 });
 
   map.addLayer({ id: "parcels-vacant", type: "fill", source: "parcels", minzoom: PARCEL_ZOOM - 0.5, filter: ["==", ["get", "Estado"], "BALDIO"], paint: { "fill-pattern": "hatch", "fill-opacity": 0.9 } });
-  map.addLayer({ id: "parcels-hit", type: "fill", source: "parcels", minzoom: PARCEL_ZOOM - 0.5, paint: { "fill-color": SIGNAL, "fill-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 0.14, 0.001] } });
+  map.addLayer({ id: "parcels-hit", type: "fill", source: "parcels", minzoom: PARCEL_ZOOM - 0.5, paint: { "fill-color": ["case", OCCUPIED_EXPR, OCCUPIED, SIGNAL], "fill-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 0.16, 0.001] } });
   map.addLayer({
     id: "parcels-line",
     type: "line",
@@ -85,7 +91,7 @@ function addLayers(map: MapLike) {
       "line-width": ["interpolate", ["linear"], ["zoom"], PARCEL_ZOOM, 0.5, 19, 1.3],
     },
   });
-  map.addLayer({ id: "parcels-hover", type: "line", source: "parcels", minzoom: PARCEL_ZOOM - 0.5, paint: { "line-color": SIGNAL_BRIGHT, "line-width": 1.8, "line-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 1, 0] } });
+  map.addLayer({ id: "parcels-hover", type: "line", source: "parcels", minzoom: PARCEL_ZOOM - 0.5, paint: { "line-color": ["case", OCCUPIED_EXPR, OCCUPIED, SIGNAL_BRIGHT], "line-width": 1.8, "line-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 1, 0] } });
   map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#080a0b", "fill-opacity": 0.58 } });
   map.addLayer({ id: "lot-glow", type: "line", source: "lot", paint: { "line-color": SIGNAL, "line-width": 12, "line-blur": 9, "line-opacity": 0.45 } });
   map.addLayer({ id: "lot-line", type: "line", source: "lot", paint: { "line-color": SIGNAL_BRIGHT, "line-width": 2.2 } });
@@ -291,7 +297,7 @@ export function LotMap() {
           map.getCanvas().style.cursor = "pointer";
           const p = f.properties as ParcelProps;
           const area = (Number(p.Superficie_Tierra_Urbana) || 0) + (Number(p.Superficie_Tierra_Rural) || 0);
-          setHover({ x: e.point.x, y: e.point.y, title: String(p.desig_oficial || "Parcela").trim() || "Parcela", detail: `${area ? m2(area) : ""}${area ? " · " : ""}${estadoText(String(p.Estado ?? ""))}` });
+          setHover({ x: e.point.x, y: e.point.y, title: String(p.desig_oficial || "Parcela").trim() || "Parcela", detail: `${area ? m2(area) : ""}${area ? " · " : ""}${estadoText(String(p.Estado ?? ""))}${isOccupied(String(p.Estado ?? "")) ? " · ocupado, no disponible" : ""}` });
         };
         const onLeave = () => {
           if (hoverId.current !== null) map.setFeatureState({ source: "parcels", id: hoverId.current }, { hover: false });
@@ -359,7 +365,7 @@ export function LotMap() {
     map.getSource("lot")?.setData(o.lot);
     map.getSource("mask")?.setData(o.mask);
     map.getSource("streets")?.setData(o.lines);
-    if (definition && preview && !preview.impossible) {
+    if (definition && preview && !preview.impossible && !isOccupied(sel.location.estado)) {
       const w = warehouseOverlays(definition, sel, preview);
       map.getSource("guides")?.setData(w.guides);
       map.getSource("ghost")?.setData(w.ghost);
@@ -393,7 +399,7 @@ export function LotMap() {
   /* ───────── vista 3D: un solo movimiento, al terminar de cargar el lote ───────── */
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !sel || sel.zoneStatus === "loading" || tilted.current || !preview || preview.impossible) return;
+    if (!map || !sel || sel.zoneStatus === "loading" || tilted.current || !preview || preview.impossible || isOccupied(sel.location.estado)) return;
     tilted.current = true;
     tiltTo(map, sel, true);
   }, [sel, preview]);
@@ -448,7 +454,7 @@ export function LotMap() {
   });
 
   const use = () => {
-    if (!sel) return;
+    if (!sel || isOccupied(sel.location.estado)) return;
     applyLotLocation(sel.location, sel.analysis.corner, sel.zone);
   };
 
@@ -587,6 +593,7 @@ function EmptyCard({ error }: { error: string | null }) {
           <i className="is-vacant" /> Terreno baldío
         </span>
       </div>
+      <p className="gp-map__note">Sólo se pueden usar lotes libres (baldíos). Los ocupados se ven y se pueden consultar, pero no elegir.</p>
       <p className="gp-map__note">Por ahora con normativa de Córdoba capital. El catastro cubre toda la provincia.</p>
     </div>
   );
@@ -620,6 +627,7 @@ function LotCard({
   const sideText = rules?.setbackSide ? `${m1(rules.setbackSide)}${rules.sideCount === 1 ? " (un lado)" : ""}` : rules?.sideCount === 0 ? "no exige" : "a confirmar";
   const d = preview?.config.dimensions;
   const current = config?.dimensions;
+  const occupied = isOccupied(loc.estado);
   return (
     <div className="gp-map__lot">
       <header>
@@ -723,7 +731,12 @@ function LotCard({
         )}
       </section>
 
-      {preview && d && current && (
+      {occupied && (
+        <p className="gp-map__verdict is-fail">
+          <CircleX aria-hidden /> Este lote está ocupado ({estadoText(loc.estado).toLowerCase()} según el catastro): no se puede usar para tu galpón. Elegí un terreno baldío; en el mapa son los rayados.
+        </p>
+      )}
+      {!occupied && preview && d && current && (
         <p className={`gp-map__verdict ${preview.impossible ? "is-fail" : preview.resized ? "is-warn" : "is-ok"}`}>
           {preview.impossible ? (
             <>
@@ -740,7 +753,7 @@ function LotCard({
           )}
         </p>
       )}
-      {betterFront && (
+      {!occupied && betterFront && (
         <button type="button" className="gp-map__suggest" onClick={onBetterFront}>
           <strong>Tomá como frente el lado de {m1(betterFront.length)}</strong>
           <span>
@@ -755,7 +768,7 @@ function LotCard({
       )}
 
       <div className="gp-map__actions">
-        <button type="button" className="gp-button gp-button--primary" onClick={onUse} disabled={sel.zoneStatus === "loading"}>
+        <button type="button" className="gp-button gp-button--primary" onClick={onUse} disabled={occupied || sel.zoneStatus === "loading"} title={occupied ? "Lote ocupado: no disponible" : undefined}>
           Usar este lote
         </button>
         <button type="button" className="gp-button" onClick={onClear}>
