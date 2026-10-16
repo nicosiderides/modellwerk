@@ -5,7 +5,7 @@ import type { MetadataIndex } from "@/core/product-engine/metadata";
 import type { ModelCategory, ModelMetadataDocument } from "@/core/product-engine/types";
 import { staticCatalog } from "@/core/galpones/catalog";
 import { createDefaultConfig, normalizeConfig, selectVariant } from "@/core/galpones/configuration";
-import { clampDimension, dimensionValue, fitToLot, limitSentence, ruleRequirement, variantFits } from "@/core/galpones/lotLimits";
+import { clampDimension, dimensionValue, fitToLot, keepInLot, limitSentence, ruleRequirement, shrinkLotSide, variantFits } from "@/core/galpones/lotLimits";
 import { formatNumber } from "@/core/galpones/metrics";
 import type { DimensionKey, FloorId, FoundationId, LotConfig, LotLocation, Openings, SiteConfig, StructureSystemId, WarehouseConfig, WarehouseDefinition } from "@/core/galpones/types";
 import { lotPatchFromLocation } from "@/core/galpones/geo/lotFromParcel";
@@ -80,6 +80,8 @@ export type GalponesState = {
   setLot: (patch: Partial<LotConfig>) => void;
   /** Achica / corre el galpón hasta que cumpla la normativa del lote. */
   fitToLot: () => void;
+  /** Aplica un cambio y, si el galpón deja de cumplir con el lote y la normativa, lo achica. */
+  changeInLot: (change: (definition: WarehouseDefinition, config: WarehouseConfig) => WarehouseConfig) => void;
   /** Usa un lote real elegido en el mapa (medidas, esquina y normativa de la zona). */
   applyLotLocation: (location: LotLocation, corner: LotConfig["corner"], zone: ZoneResult | null) => void;
   /** Quita la ubicación real y vuelve a las medidas cargadas a mano. */
@@ -107,6 +109,8 @@ export type GalponesState = {
   saveToCompare: (slot: "A" | "B") => void;
   clearCompare: () => void;
 };
+
+const sameSizeAs = (a: WarehouseConfig, b: WarehouseConfig) => JSON.stringify(a.dimensions) === JSON.stringify(b.dimensions) && a.variant === b.variant;
 
 export const definitionOf = (state: Pick<GalponesState, "warehouse">): WarehouseDefinition | null =>
   (state.warehouse.definitionId && staticCatalog.get(state.warehouse.definitionId)) || null;
@@ -206,25 +210,63 @@ export const useGalpones = create<GalponesState>((set, get) => ({
     })),
   setFoundation: (id) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, foundation: id })), viewer: { ...state.viewer, underground: true, explode: false } })),
   setEnvelope: (patch) => set((state) => withConfig(state, (d, c) => normalizeConfig(d, { ...c, envelope: { ...c.envelope, ...patch } }))),
-  setOpenings: (patch) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, openings: { ...c.openings, ...patch } })), selection: null })),
-  toggleOption: (id, on) => set((state) => ({ ...withConfig(state, (d, c) => normalizeConfig(d, { ...c, options: { ...c.options, [id]: on } })), selection: null })),
-  setSite: (patch) => set((state) => withConfig(state, (d, c) => normalizeConfig(d, { ...c, site: { ...c.site, ...patch } }))),
-  setLot: (patch) =>
-    set((state) =>
-      withConfig(state, (d, c) => {
-        const next = { ...c.lot, ...patch };
-        // Al pasar a medidas propias se parte del lote mínimo que ya cumple,
-        // redondeado a múltiplos de 5 m (un poco de margen para crecer).
-        if (patch.mode === "manual" && c.lot.mode === "auto") {
-          const plan = planSite(c, d);
-          const up5 = (v: number) => Math.ceil(v / 5 - 1e-9) * 5;
-          if (plan.lotRect && plan.clear) Object.assign(next, { width: up5(plan.lotRect.x1 - plan.lotRect.x0), depth: up5(plan.lotRect.z1 - plan.lotRect.z0), front: plan.clear.front, left: plan.clear.west });
-        }
-        // Al cambiar de normativa se cargan sus valores.
-        if (patch.preset && patch.preset !== c.lot.preset && !patch.rules) next.rules = { ...presetById(patch.preset).rules };
-        return normalizeConfig(d, { ...c, lot: next });
-      })
-    ),
+  setOpenings: (patch) => {
+    get().changeInLot((d, c) => normalizeConfig(d, { ...c, openings: { ...c.openings, ...patch } }));
+    set({ selection: null });
+  },
+  toggleOption: (id, on) => {
+    get().changeInLot((d, c) => normalizeConfig(d, { ...c, options: { ...c.options, [id]: on } }));
+    set({ selection: null });
+  },
+  setSite: (patch) => get().changeInLot((d, c) => normalizeConfig(d, { ...c, site: { ...c.site, ...patch } })),
+  changeInLot: (change) => {
+    const state = get();
+    const definition = definitionOf(state);
+    const config = state.warehouse.config;
+    if (!definition || !config) return;
+    // El galpón nunca queda más grande de lo que permiten el lote y la normativa.
+    const { config: next, adjusted } = keepInLot(definition, change(definition, config));
+    set((s) => ({ warehouse: { ...s.warehouse, config: next } }));
+    if (adjusted) get().toast("El galpón se achicó para seguir entrando en el lote y cumplir la normativa.", "limit");
+  },
+  setLot: (patch) => {
+    const state = get();
+    const definition = definitionOf(state);
+    const config = state.warehouse.config;
+    if (!definition || !config) return;
+    const p: Partial<LotConfig> = { ...patch };
+    // Lote real (del mapa): sus medidas son las del terreno y no se cambian a mano.
+    if (config.lot.location) {
+      delete p.width;
+      delete p.depth;
+      if (p.mode === "auto") delete p.mode;
+      if (!Object.keys(p).length) return;
+    }
+    const build = (d: WarehouseDefinition, c: WarehouseConfig, q: Partial<LotConfig>) => {
+      const next = { ...c.lot, ...q };
+      // Al pasar a medidas propias se parte del lote mínimo que ya cumple,
+      // redondeado a múltiplos de 5 m (un poco de margen para crecer).
+      if (q.mode === "manual" && c.lot.mode === "auto") {
+        const plan = planSite(c, d);
+        const up5 = (v: number) => Math.ceil(v / 5 - 1e-9) * 5;
+        if (plan.lotRect && plan.clear) Object.assign(next, { width: up5(plan.lotRect.x1 - plan.lotRect.x0), depth: up5(plan.lotRect.z1 - plan.lotRect.z0), front: plan.clear.front, left: plan.clear.west });
+      }
+      // Al cambiar de normativa se cargan sus valores.
+      if (q.preset && q.preset !== c.lot.preset && !q.rules) next.rules = { ...presetById(q.preset).rules };
+      return normalizeConfig(d, { ...c, lot: next });
+    };
+    // Achicar el lote propio: nunca por debajo de lo que necesita el galpón más chico.
+    const side = p.width !== undefined && p.width < config.lot.width ? "width" : p.depth !== undefined && p.depth < config.lot.depth ? "depth" : null;
+    if (side && config.lot.enabled && config.lot.mode === "manual") {
+      const asked = p[side]!;
+      const r = shrinkLotSide(definition, config, side, asked, (c, v) => build(definition, c, { ...p, [side]: v }));
+      set((s) => ({ warehouse: { ...s.warehouse, config: r.config } }));
+      if (r.limited) get().toast(`Tope del lote: ${formatNumber(r.value, 1)} m ${side === "width" ? "de frente" : "de fondo"}. Más chico no entra ni el galpón mínimo de esta tipología con esta normativa.`, "limit");
+      else if (!sameSizeAs(r.config, config)) get().toast("El galpón se achicó para seguir entrando en el lote y cumplir la normativa.", "limit");
+      return;
+    }
+    get().changeInLot((d, c) => build(d, c, p));
+  },
   fitToLot: () => {
     set((state) => withConfig(state, (d, c) => fitToLot(d, c)));
     get().toast("Galpón ajustado al lote y la normativa");
