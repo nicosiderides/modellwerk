@@ -1172,6 +1172,18 @@
   color: var(--gp-blueprint);
 }
 
+/* Aviso de modo exploración (sin normativa). */
+.gp-note--warn {
+  margin-top: 10px;
+  border-left-color: var(--gp-signal);
+  background: rgba(200, 155, 60, 0.1);
+}
+
+.gp-note--warn svg {
+  flex: none;
+  color: var(--gp-signal);
+}
+
 .gp-hint {
   display: flex;
   gap: 8px;

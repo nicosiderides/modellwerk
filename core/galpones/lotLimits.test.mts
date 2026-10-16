@@ -6,6 +6,7 @@ import { createDefaultConfig, normalizeConfig } from "./configuration.ts";
 import { verifySite } from "./siteCheck.ts";
 import { blockingIssues, clampDimension, dimensionLimit, fitToLot, keepInLot, lotCapacity, shrinkLotSide, variantFits } from "./lotLimits.ts";
 import type { LotConfig, WarehouseConfig, WarehouseDefinition } from "./types.ts";
+import { presetById as presetByIdForTest } from "./lotRules.ts";
 
 const load = (id: string): WarehouseDefinition =>
   assembleDefinition(Object.fromEntries(WAREHOUSE_FILE_NAMES.map((name) => [name, JSON.parse(readFileSync(new URL(`../../data/galpones/${id}/${name}.json`, import.meta.url), "utf8"))])) as WarehouseFiles);
@@ -155,4 +156,20 @@ test("achicar el lote propio: nunca por debajo de lo que necesita el galpón má
   assert.equal(blockingIssues(r.config, def).length, 0, "en el tope, el galpón cumple");
   // medio metro menos ya no da
   assert.equal(keepInLot(def, apply(ok, r.value - 0.5)).impossible, true);
+});
+
+test("sin restricciones (exploración): el galpón sólo se frena en el borde del lote", () => {
+  const def = load("industrial-pro");
+  const base = createDefaultConfig(def);
+  const lot = { width: 34, depth: 200, placement: "auto" as const };
+  const withRules = onLot(def, { ...lot, preset: "ecoparque", rules: { ...base.lot.rules } });
+  const free = onLot(def, { ...lot, preset: "libre", rules: { ...presetByIdForTest("libre").rules } });
+  const capRules = clampDimension(def, withRules, "width", 40).config.dimensions.width;
+  const capFree = clampDimension(def, free, "width", 40);
+  assert.ok(capFree.config.dimensions.width > capRules, `libre ${capFree.config.dimensions.width} > con normativa ${capRules}`);
+  assert.ok(capFree.config.dimensions.width <= 34, "nunca más ancho que el lote");
+  assert.equal(capFree.limitedBy?.id, "fits", "lo frena el borde del lote");
+  // Sin altura máxima ni FOS
+  const v = verifySite(capFree.config, def);
+  assert.equal(v.checks.some((c) => c.id === "fos" || c.id.startsWith("sb-")), false);
 });
