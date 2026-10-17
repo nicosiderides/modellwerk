@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
-import { Group } from "three";
+import { Group, Vector3 } from "three";
 import ProductViewer from "@/components/product-viewer/ProductViewer";
 import type { ViewerBackdrop, ViewerContent, ViewerInsets, ViewerSurroundings } from "@/components/product-viewer/types";
 import { createGroundBackdrop, groundAttribution, hasPhoto } from "@/components/galpones/map/groundMap";
@@ -10,8 +10,10 @@ import { staticCatalog } from "@/core/galpones/catalog";
 import { getVariant } from "@/core/galpones/configuration";
 import { createWarehouseModel } from "@/core/galpones/geometry";
 import { buildLotLocation } from "@/core/galpones/geo/lotFromParcel";
+import { buildSiteFromPlan, disposeSite } from "@/core/galpones/site";
+import { galponSitePlan } from "@/core/land/design/galponSite";
 import { LAND_SPECS } from "@/core/land/design/catalog";
-import { createLandBuilding } from "@/core/land/kit/building";
+import { carSpots, createLandBuilding } from "@/core/land/kit/building";
 import { LandMaterialLibrary, LAND_EXPLODE, landMaterialSpecs, landMaterialVersion } from "./materials";
 import { buildSurroundings, disposeSurroundings } from "./scene";
 import { GALPON_DEFS, useLand } from "./store";
@@ -96,31 +98,53 @@ export default function LandViewer({ panelWidth }: { panelWidth: number }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentKey]);
 
-  /* entorno: caja máxima, contorno del lote, planta edificable */
-  const siteKey = study && computed ? JSON.stringify([study.parcel.properties.Nomenclatura, study.analysis.frontEdge, computed.envelope.tiers.map((t) => [t.from, t.to, t.area]), viewer.showEnvelope, typeId, shift]) : null;
+  /* piso: foto aérea real del lote (se calcula antes porque el entorno del galpón depende de si hay mapa) */
+  const location = useMemo(() => (study ? buildLotLocation(study.parcel, study.analysis, null) : null), [study]);
+  const mobile = width < 760;
+  const groundMode = !location || viewer.ground === "off" ? "off" : viewer.ground === "photo" && !hasPhoto(location.center) ? "plan" : viewer.ground;
+  const realGround = groundMode !== "off";
+
+  /* entorno: caja máxima, contorno del lote, planta edificable y, en el galpón, el entorno de Galpones */
+  const cars = useMemo(() => (viewer.scaleRefs && landCfg && plan && computed?.usable && isLandType(typeId) ? carSpots(LAND_SPECS[typeId], landCfg, plan, { usable: computed.usable, party: computed.party }) : []), [viewer.scaleRefs, landCfg, plan, computed, typeId]);
+  const showEnvelope = viewer.showEnvelope && viewer.cut === null;
+  const galponSiteKey = galpon && rect ? JSON.stringify([galpon.config.site, galpon.config.lot.vehicle, galpon.config.options, galpon.config.dimensions, galpon.config.variant, rect, viewer.scaleRefs, realGround]) : null;
+  const siteKey = study && computed ? JSON.stringify([study.parcel.properties.Nomenclatura, study.analysis.frontEdge, computed.envelope.tiers.map((t) => [t.from, t.to, t.area]), showEnvelope, typeId, shift, galponSiteKey, realGround, cars]) : null;
   const surroundings = useMemo<ViewerSurroundings | null>(() => {
     if (!study || !computed || !siteKey) return null;
     const env = computed.envelope;
-    const opts = { showEnvelope: viewer.showEnvelope, typeId };
+    const opts = { showEnvelope, typeId, realGround: realGround || typeId === "galpon", cars };
     const s = shift;
+    const gSite = galpon && galponDef && rect ? galponSitePlan(study, galponDef, galpon.config, rect) : null;
+    const c = center;
+    const siteOpts = { vehicles: viewer.scaleRefs, realGround };
     return {
       key: siteKey,
       build: () => {
         const built = buildSurroundings(study, env, opts);
+        if (gSite) {
+          // Veredas, playón, estacionamiento, parquizado y vehículos: el armado de Galpones, alrededor de la nave.
+          const site = buildSiteFromPlan(gSite, siteOpts);
+          site.root.position.set(c[0], 0, c[1]);
+          built.root.add(site.root);
+          built.box.union(site.box.clone().translate(new Vector3(c[0], 0, c[1])));
+        }
         built.root.position.set(s[0], s[1], s[2]);
         built.root.updateMatrixWorld(true);
         built.box.translate(built.root.position);
         return built;
       },
-      dispose: (root) => disposeSurroundings(root as Group),
+      dispose: (root) => {
+        const site = (root as Group).getObjectByName("MW_SITE");
+        if (site) {
+          site.removeFromParent();
+          disposeSite(site as Group);
+        }
+        disposeSurroundings(root as Group);
+      },
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [siteKey]);
 
-  /* piso: foto aérea real del lote */
-  const location = useMemo(() => (study ? buildLotLocation(study.parcel, study.analysis, null) : null), [study]);
-  const mobile = width < 760;
-  const groundMode = !location || viewer.ground === "off" ? "off" : viewer.ground === "photo" && !hasPhoto(location.center) ? "plan" : viewer.ground;
   const detail = mobile ? "low" : "high";
   const backdropKey = location && groundMode !== "off" ? `${location.nomenclatura}|${location.fit.origin.join(",")}|${groundMode}|${detail}` : null;
   const backdrop = useMemo<ViewerBackdrop | null>(() => {
@@ -135,6 +159,9 @@ export default function LandViewer({ panelWidth }: { panelWidth: number }) {
     snapshot = c;
   }, []);
   const explodeOffsets = galpon ? staticCatalog.shared().explodeOffsets : LAND_EXPLODE;
+  /** Corte por piso: 1,2 m sobre el piso elegido (como una planta de arquitectura). */
+  const cutFloor = viewer.cut !== null && plan?.floors.length ? plan.floors[Math.min(viewer.cut, plan.floors.length - 1)] : null;
+  const sectionHeight = cutFloor ? (galpon ? 1.5 : cutFloor.base + (cutFloor.index === 0 ? 1.2 : 1.45)) : null;
 
   if (!content) return null;
   return (
@@ -155,6 +182,7 @@ export default function LandViewer({ panelWidth }: { panelWidth: number }) {
         onSelect={select}
         cameraRequest={viewer.camera}
         showScaleReferences={viewer.scaleRefs}
+        sectionHeight={sectionHeight}
         quality={viewer.quality}
         insets={insets}
         onSnapshotReady={onSnapshot}

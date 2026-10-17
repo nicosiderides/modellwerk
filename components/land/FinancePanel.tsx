@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, CircleAlert, Pencil, RotateCcw, Save } from "lucide-react";
 import { Toggle } from "@/components/galpones/controls";
 import { formatNumber } from "@/core/galpones/metrics";
-import { LABELS, sensitivity, type FinanceInputs, type FinanceResult, type Input, type ValueStatus } from "@/core/land/finance/finance";
+import { LABELS, sensitivity, type FinanceInputs, type FinanceKey, type FinanceResult, type Input, type ValueStatus } from "@/core/land/finance/finance";
 import { PlanSummary, TypeTabs } from "./DesignPanel";
 import { useLand } from "./store";
 import { useComputed, useConvenio, useFinance } from "./useDesign";
@@ -19,7 +19,7 @@ import { useSaveScenario } from "./scenarios";
 const STATUS: Record<ValueStatus, string> = { real: "Dato real", demo: "Estimado (demo)", pending: "Pendiente", cargado: "Cargado por vos" };
 const STATUS_CLASS: Record<ValueStatus, string> = { real: "dato", demo: "falta", pending: "falta", cargado: "cargado" };
 
-type Key = keyof Omit<FinanceInputs, "mode">;
+type Key = FinanceKey;
 const UNITS: Partial<Record<Key, { unit: string; kind: "usd" | "pct" | "n" }>> = {
   land: { unit: "USD", kind: "usd" },
   costPerM2: { unit: "USD/m²", kind: "usd" },
@@ -31,6 +31,8 @@ const UNITS: Partial<Record<Key, { unit: string; kind: "usd" | "pct" | "n" }>> =
   commissionPct: { unit: "%", kind: "pct" },
   salePerM2: { unit: "USD/m²", kind: "usd" },
   rentPerM2Month: { unit: "USD/m²/mes", kind: "usd" },
+  salePerUnit: { unit: "USD/unidad", kind: "usd" },
+  rentPerUnitMonth: { unit: "USD/unidad/mes", kind: "usd" },
   vacancyPct: { unit: "%", kind: "pct" },
   opexPct: { unit: "%", kind: "pct" },
   buildMonths: { unit: "meses", kind: "n" },
@@ -98,7 +100,7 @@ function InputRow({ k, input, onChange }: { k: Key; input: Input; onChange: (i: 
   );
 }
 
-export function Results({ r, mode, fmt }: { r: FinanceResult; mode: FinanceInputs["mode"]; fmt: (v: number) => string }) {
+export function Results({ r, mode, fmt, perUnit = false }: { r: FinanceResult; mode: FinanceInputs["mode"]; fmt: (v: number) => string; perUnit?: boolean }) {
   const pct = (v: number | null) => (v === null ? "—" : `${formatNumber(v * 100, 1)} %`);
   return (
     <section className="ld-capacity ld-results" aria-label="Resultados">
@@ -125,8 +127,8 @@ export function Results({ r, mode, fmt }: { r: FinanceResult; mode: FinanceInput
         </div>
         <div>
           <span>{mode === "venta" ? "Precio mínimo para no perder" : "Recupero"}</span>
-          <strong>{mode === "venta" ? `${fmt(r.breakEvenPerM2)}/m²` : r.payback ? `${formatNumber(r.payback, 1)} años` : "—"}</strong>
-          <em>{mode === "venta" ? "por m² vendible" : "inversión / renta neta"}</em>
+          <strong>{mode === "venta" ? (perUnit && r.breakEvenPerUnit ? `${fmt(r.breakEvenPerUnit)}` : `${fmt(r.breakEvenPerM2)}/m²`) : r.payback ? `${formatNumber(r.payback, 1)} años` : "—"}</strong>
+          <em>{mode === "venta" ? (perUnit && r.breakEvenPerUnit ? `por unidad (${fmt(r.breakEvenPerM2)}/m²)` : "por m² vendible") : "inversión / renta neta"}</em>
         </div>
       </div>
       {(r.pending.length > 0 || r.demo.length > 0) && (
@@ -167,7 +169,7 @@ function Breakdown({ r, fmt }: { r: FinanceResult; fmt: (v: number) => string })
   );
 }
 
-function Sensitivity({ inputs, area, fmt }: { inputs: FinanceInputs; area: { built: number; sellable: number; lotArea: number }; fmt: (v: number) => string }) {
+function Sensitivity({ inputs, area, fmt }: { inputs: FinanceInputs; area: { built: number; sellable: number; lotArea: number; units?: number }; fmt: (v: number) => string }) {
   const rows = sensitivity(inputs, area);
   return (
     <section className="ld-block">
@@ -300,7 +302,11 @@ export function FinancePanel() {
   const save = useSaveScenario();
   if (!inputs || !result || !area) return null;
   const set = (k: Key, i: Input) => setFinance(typeId, { ...inputs, [k]: i });
-  const keys: Key[] = ["land", "costPerM2", "extras", "other", "feesPct", "taxesPct", "contingencyPct", ...(inputs.mode === "venta" ? (["salePerM2", "commissionPct", "saleMonths"] as Key[]) : (["rentPerM2Month", "vacancyPct", "opexPct"] as Key[])), "buildMonths", "fx"];
+  const units = area.units ?? 0;
+  const perUnit = inputs.basis === "unidad" && units > 1;
+  const sale: Key = perUnit ? "salePerUnit" : "salePerM2";
+  const rent: Key = perUnit ? "rentPerUnitMonth" : "rentPerM2Month";
+  const keys: Key[] = ["land", "costPerM2", "extras", "other", "feesPct", "taxesPct", "contingencyPct", ...(inputs.mode === "venta" ? ([sale, "commissionPct", "saleMonths"] as Key[]) : ([rent, "vacancyPct", "opexPct"] as Key[])), "buildMonths", "fx"];
   return (
     <aside className="gp-panel gp-panel--config ld-panel ld-panel--wide" aria-label="Inversión">
       <header className="gp-panel__head">
@@ -327,7 +333,16 @@ export function FinancePanel() {
             </button>
           ))}
         </div>
-        <Results r={result} mode={inputs.mode} fmt={money.fmt} />
+        {units > 1 && (
+          <div className="gp-segmented" role="radiogroup" aria-label="Precio por m² o por unidad">
+            {(["m2", "unidad"] as const).map((b) => (
+              <button key={b} type="button" role="radio" aria-checked={(inputs.basis ?? "m2") === b} className={(inputs.basis ?? "m2") === b ? "is-selected" : ""} onClick={() => setFinance(typeId, { ...inputs, basis: b })}>
+                {b === "m2" ? "Precio por m²" : `Precio por unidad (${units})`}
+              </button>
+            ))}
+          </div>
+        )}
+        <Results r={result} mode={inputs.mode} fmt={money.fmt} perUnit={perUnit} />
         {mode === "pro" && <Breakdown r={result} fmt={money.fmt} />}
         <section className="ld-rules">
           <div className="ld-rules__head">
@@ -339,7 +354,7 @@ export function FinancePanel() {
             )}
           </div>
           <ul>
-            {keys.filter((k) => mode === "pro" || ["land", "costPerM2", "salePerM2", "rentPerM2Month", "buildMonths", "extras", "fx"].includes(k)).map((k) => (
+            {keys.filter((k) => mode === "pro" || ["land", "costPerM2", "salePerM2", "rentPerM2Month", "salePerUnit", "rentPerUnitMonth", "buildMonths", "extras", "fx"].includes(k)).map((k) => (
               <InputRow key={`${k}-${inputs[k].value}`} k={k} input={inputs[k]} onChange={(i) => set(k, i)} />
             ))}
           </ul>

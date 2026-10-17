@@ -103,3 +103,78 @@ test("inversión: TIR, punto de equilibrio y escenarios", () => {
   assert.equal(rent.paybackUnit, "años");
   assert.ok(rent.noi! > 0 && rent.yield! > 0);
 });
+
+/* ── Fase 7 ── */
+
+test("galpón: usa el entorno de Galpones y avisa (sin frenar) si el camión no entra", async () => {
+  const { galponSitePlan } = await import("./design/galponSite.ts");
+  const st = study("altacba");
+  const d = initialDesign(st, {}, specs, galpones);
+  const c = computeDesign(st, "galpon", {}, d, specs, galpones)!;
+  const def = galpones.find((g) => g.id === d.galpon!.warehouseId)!;
+  const plan = galponSitePlan(st, def, d.galpon!.config, c.plan.rect!);
+  assert.ok(plan.lotRect, "arma el lote");
+  assert.ok(plan.sidewalks.length > 0 || plan.site.sidewalk === 0);
+  const truck = c.plan.checks.filter((x) => x.id.startsWith("log-"));
+  assert.ok(truck.length > 0, "trae la verificación logística");
+  assert.ok(truck.every((x) => x.status !== "fail"), "lo logístico sólo avisa");
+  // Corriendo la nave hacia el fondo, el camión entra en el predio.
+  const moved = computeDesign(st, "galpon", {}, { ...d, galpon: { ...d.galpon!, front: 45 } }, specs, galpones)!;
+  assert.ok(moved.plan.checks.filter((x) => x.id.startsWith("log-") && x.status === "warn").length < truck.filter((x) => x.status === "warn").length);
+});
+
+test("galpón: la medida exterior (muros) y la marquesina entran en la caja", async () => {
+  const { galponOuter } = await import("./design/plan.ts");
+  const st = study("colon");
+  const d = initialDesign(st, {}, specs, galpones);
+  const c = computeDesign(st, "galpon", {}, d, specs, galpones)!;
+  const def = galpones.find((g) => g.id === d.galpon!.warehouseId)!;
+  const o = galponOuter(def, d.galpon!.config);
+  assert.ok(o.w > d.galpon!.config.dimensions.width, "por fuera es más ancho que entre ejes");
+  assert.ok(c.plan.ok, c.plan.checks.filter((x) => x.status === "fail").map((x) => x.detail).join(" | "));
+});
+
+test("tamaño de unidades y planta libre cambian la cantidad de unidades", () => {
+  const st = study("z_A");
+  const d = initialDesign(st, {}, specs, galpones);
+  const base = d.land.departamentos!;
+  const c = computeDesign(st, "departamentos", {}, d, specs, galpones)!;
+  const mono = planLand(specs.departamentos, { ...base, unitSize: "mono" }, c.ctx);
+  const big = planLand(specs.departamentos, { ...base, unitSize: "3d" }, c.ctx);
+  assert.ok(mono.units > big.units);
+  const o = computeDesign(st, "oficinas", {}, d, specs, galpones)!;
+  const libre = planLand(specs.oficinas, { ...d.land.oficinas!, unitSize: "libre" }, o.ctx);
+  assert.equal(libre.units, libre.floors.filter((f) => f.index > 0).length);
+  assert.equal(libre.unitsLabel, "plantas libres");
+});
+
+test("kit: dos ventanas por módulo, tabiques, parquizado y subsuelo suman piezas", () => {
+  const st = study("cerro");
+  const d = initialDesign(st, {}, specs, galpones);
+  const c = computeDesign(st, "departamentos", {}, d, specs, galpones)!;
+  const cfg = { ...d.land.departamentos!, windowsPerBay: 2 as const, unitSize: "mono", options: { ...d.land.departamentos!.options, parquizado: true, subsuelo: true } };
+  const plan = planLand(specs.departamentos, cfg, c.ctx);
+  const g = createLandBuilding(specs.departamentos, cfg, plan, { usable: c.usable!, party: c.party });
+  const keys = g.metadata.elements.map((e) => e.elementId ?? "").join(" ");
+  assert.match(keys, /TABIQUES/);
+  assert.match(keys, /SUBSUELO/);
+  assert.match(keys, /PARQUIZADO/);
+});
+
+test("inversión por unidad: mismo resultado que por m² si el precio es equivalente", () => {
+  const area = { built: 1000, sellable: 800, lotArea: 300, units: 10 };
+  const inputs = defaultInputs({ costPerM2: 1000, salePerM2: 2000, rentPerM2Month: 10, buildMonths: 24, land: 200000, extras: 0, note: "demo", sellable: 800, units: 10 });
+  const m2 = simulate(inputs, area);
+  const unit = simulate({ ...inputs, basis: "unidad", salePerUnit: { ...inputs.salePerUnit, value: 160000 } }, area);
+  assert.ok(Math.abs(m2.revenue - unit.revenue) < 1e-6);
+  assert.ok(unit.breakEvenPerUnit! > 0);
+  assert.ok(unit.demo.includes("Venta por unidad"));
+});
+
+test("normativa: las reglas por perfil salen del archivo de datos con fuente y fecha", async () => {
+  const { CORDOBA_NORMS } = await import("./zoning/cordoba.ts");
+  assert.match(CORDOBA_NORMS.actualizado, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(CORDOBA_NORMS.perfiles.J1.lateral);
+  assert.equal(CORDOBA_NORMS.fraccionamiento.estado, "a verificar");
+  assert.equal(CORDOBA_NORMS.fraccionamiento.frenteMinimo, null, "no se inventan medidas de fraccionamiento");
+});

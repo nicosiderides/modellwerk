@@ -1,5 +1,6 @@
 import { Box3, BufferAttribute, BufferGeometry, DoubleSide, EdgesGeometry, Group, LineBasicMaterial, LineSegments, Mesh, MeshStandardMaterial, ShapeUtils, Vector2, type Material } from "three";
 import { toLot, type XY } from "@/core/galpones/geo/parcel";
+import { buildCar, CAR_COLORS, createVehicleMaterials, instanceVehicles, type Placement } from "@/core/galpones/vehicles";
 import type { Envelope } from "@/core/land/envelope/envelope";
 import type { LotStudy } from "@/core/land/geo/study";
 import type { BuildingTypeId } from "@/core/land/types";
@@ -62,7 +63,24 @@ function outline(poly: XY[], y: number, width: number) {
 
 const lotPoly = (study: LotStudy, ring: XY[]) => ring.map((p) => toLot(study.analysis.fit.axes, p));
 
-export type SceneOptions = { showEnvelope: boolean; typeId: BuildingTypeId };
+export type SceneOptions = {
+  showEnvelope: boolean;
+  typeId: BuildingTypeId;
+  /** Hay foto aérea o plano debajo: entonces la calle real ya se ve y no se dibuja. */
+  realGround?: boolean;
+  /** Autos de referencia (con "Escala"). */
+  cars?: Placement[];
+};
+
+/** Cuadrilátero sobre el piso entre dos segmentos paralelos. */
+function band(a: XY, b: XY, n: XY, d0: number, d1: number, y: number) {
+  const g = new BufferGeometry();
+  const p = (q: XY, d: number) => [q[0] + n[0] * d, y, q[1] + n[1] * d];
+  const v = [...p(a, d0), ...p(b, d0), ...p(b, d1), ...p(a, d0), ...p(b, d1), ...p(a, d1)];
+  g.setAttribute("position", new BufferAttribute(new Float32Array(v), 3));
+  g.computeVertexNormals();
+  return g;
+}
 
 export function buildSurroundings(study: LotStudy, env: Envelope, opts: SceneOptions): { root: Group; box: Box3 } {
   const root = new Group();
@@ -84,6 +102,40 @@ export function buildSurroundings(study: LotStudy, env: Envelope, opts: SceneOpt
     root.add(m);
   }
 
+  // Calle y vereda pública frente a cada lado del lote sobre la calle (sólo sin mapa debajo, como en Galpones).
+  if (!opts.realGround) {
+    const cx = lot.reduce((s2, p) => s2 + p[0], 0) / lot.length;
+    const cz = lot.reduce((s2, p) => s2 + p[1], 0) / lot.length;
+    const walk = mat(new MeshStandardMaterial({ color: "#bdb8ad", roughness: 0.92, side: DoubleSide }));
+    const curb = mat(new MeshStandardMaterial({ color: "#8f8a82", roughness: 0.9, side: DoubleSide }));
+    const asphalt = mat(new MeshStandardMaterial({ color: "#4a4c4e", roughness: 0.95, side: DoubleSide }));
+    const ring = study.analysis.ring;
+    for (const i of study.analysis.streetEdges) {
+      const a0 = toLot(study.analysis.fit.axes, ring[i]);
+      const b0 = toLot(study.analysis.fit.axes, ring[(i + 1) % ring.length]);
+      const len = Math.hypot(b0[0] - a0[0], b0[1] - a0[1]);
+      if (len < 1) continue;
+      const u: XY = [(b0[0] - a0[0]) / len, (b0[1] - a0[1]) / len];
+      let n: XY = [-u[1], u[0]];
+      const mx = (a0[0] + b0[0]) / 2;
+      const mz = (a0[1] + b0[1]) / 2;
+      if (n[0] * (cx - mx) + n[1] * (cz - mz) > 0) n = [-n[0], -n[1]];
+      const ext = 18;
+      const a: XY = [a0[0] - u[0] * ext, a0[1] - u[1] * ext];
+      const b: XY = [b0[0] + u[0] * ext, b0[1] + u[1] * ext];
+      root.add(new Mesh(band(a, b, n, 0, 2.85, 0.12), walk));
+      root.add(new Mesh(band(a, b, n, 2.85, 3.0, 0.14), curb));
+      const road = new Mesh(band(a, b, n, 3.0, 12, -0.02), asphalt);
+      road.receiveShadow = true;
+      root.add(road);
+    }
+  }
+
+  if (opts.cars?.length) {
+    const cars = instanceVehicles(buildCar("hatch"), createVehicleMaterials(), opts.cars.map((c, i) => ({ ...c, color: c.color ?? CAR_COLORS[(i * 5 + 3) % CAR_COLORS.length] })), "autos");
+    root.add(cars);
+  }
+
   if (opts.showEnvelope) {
     const glass = mat(new MeshStandardMaterial({ color: "#a9cbd6", transparent: true, opacity: 0.13, roughness: 0.2, metalness: 0, depthWrite: false, side: DoubleSide }));
     const edge = mat(new LineBasicMaterial({ color: "#a9cbd6", transparent: true, opacity: 0.75 }));
@@ -98,8 +150,14 @@ export function buildSurroundings(study: LotStudy, env: Envelope, opts: SceneOpt
   }
   const box = new Box3().setFromObject(root);
   root.userData.dispose = () => {
-    root.traverse((o) => (o as Mesh).geometry?.dispose());
-    materials.forEach((m) => m.dispose());
+    const all = new Set<Material>(materials);
+    root.traverse((o) => {
+      if (o.name === "MW_SITE") return;
+      (o as Mesh).geometry?.dispose();
+      const m = (o as Mesh).material;
+      if (m) (Array.isArray(m) ? m : [m]).forEach((x) => all.add(x));
+    });
+    all.forEach((m) => m.dispose());
   };
   return { root, box };
 }

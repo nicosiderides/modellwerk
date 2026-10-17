@@ -1,8 +1,10 @@
 import { ridgeHeight, setDimension, isDiscrete, selectVariant } from "../../galpones/configuration.ts";
+import { warehouseLayout } from "../../galpones/layout.ts";
 import type { WarehouseConfig, WarehouseDefinition } from "../../galpones/types.ts";
 import type { Envelope } from "../envelope/envelope.ts";
 import type { LandRules } from "../types.ts";
 import type { Align, GalponDesign, LandConfig, LandSpec } from "./types.ts";
+import { unitAreaOf, unitsOnFloor } from "./units.ts";
 import { intersect, rectArea, rectD, rectW, type Rect, type UsableTier } from "./usable.ts";
 
 /**
@@ -79,16 +81,17 @@ export function planLand(spec: LandSpec, cfg: LandConfig, ctx: PlanContext): Bui
   const sellable = built * b.efficiency;
   let units = 1;
   let unitsLabel = "vivienda";
-  if (b.unitArea) {
-    const parking = cfg.type === "departamentos" && cfg.options.cocheras;
-    const upper = floors.filter((f) => f.index > 0 || !parking);
-    units = Math.max(1, upper.reduce((s, f) => s + Math.max(1, Math.floor((f.area * b.efficiency) / b.unitArea!)), 0));
-    unitsLabel = cfg.type === "departamentos" ? "departamentos" : "oficinas";
+  const unitArea = unitAreaOf(spec, cfg);
+  if (unitArea !== undefined) {
+    units = Math.max(1, floors.reduce((s, f) => s + unitsOnFloor(spec, cfg, f), 0));
+    unitsLabel = cfg.type === "departamentos" ? "departamentos" : unitArea === null ? "plantas libres" : "oficinas";
   }
   const top = floors.length ? floors[floors.length - 1].base + floors[floors.length - 1].height : 0;
   const checks = normativeChecks(ctx, footprint, built, top, floors.length, cfg.type === "oficinas" ? null : units);
   if (floors.length < cfg.floors) checks.push({ id: "caja", label: "Pisos que entran", status: "warn", detail: `Entran ${floors.length} de los ${cfg.floors} pisos pedidos.` });
   if (rect.x1 - rect.x0 < cfg.width - 0.05 || rect.z1 - rect.z0 < cfg.depth - 0.05) checks.push({ id: "medidas", label: "Medidas", status: "warn", detail: "El edificio se ajustó al lugar disponible." });
+  if (cfg.type === "vivienda" && cfg.options.cochera && floors[0] && Math.max(floors[0].rect.x0 - U.x0, U.x1 - floors[0].rect.x1) < 2.8)
+    checks.push({ id: "cochera", label: "Cochera", status: "warn", detail: "Para la cochera al costado hace falta un lateral libre de 2,8 m: achicá el ancho de la casa o ubicala a un lado." });
   return { rect, floors, droppedFloors: cfg.floors - floors.length, footprint, built, sellable, units, unitsLabel, height: top, checks, ok: !checks.some((c) => c.status === "fail") };
 }
 
@@ -133,8 +136,27 @@ const clampStep = (v: number, min: number, max: number, step: number) => round(M
 
 /* ─────────────────────────── galpón ─────────────────────────── */
 
+/**
+ * Medidas exteriores de la nave según Galpones (caras de muros y premoldeados)
+ * y lo que sobresale la marquesina del frente, si la tiene.
+ */
+export function galponOuter(def: WarehouseDefinition, config: WarehouseConfig) {
+  const d = config.dimensions;
+  try {
+    const lay = warehouseLayout(config, def);
+    const e = lay.precast ? 0.06 : 0;
+    const canopyArea = lay.canopy ? lay.canopy.width * lay.canopy.depth : 0;
+    return { w: 2 * (lay.wallX + e), d: 2 * (lay.gableZ + lay.wallT + e), canopy: lay.canopy ? lay.canopy.depth + 0.25 : 0, canopyArea };
+  } catch {
+    return { w: d.width, d: d.length, canopy: 0, canopyArea: 0 };
+  }
+}
+
+/** Huella de la nave (sin la marquesina) ubicada en el lugar disponible. */
 export function galponRect(def: WarehouseDefinition, gd: GalponDesign, U: Rect): Rect {
-  return place(U, gd.config.dimensions.width, gd.config.dimensions.length, gd.align, gd.front);
+  const o = galponOuter(def, gd.config);
+  const r = place(U, o.w, o.d + o.canopy, gd.align, gd.front);
+  return { ...r, z0: r.z0 + o.canopy };
 }
 
 export function planGalpon(def: WarehouseDefinition, gd: GalponDesign, ctx: PlanContext): BuildingPlan {
@@ -142,12 +164,16 @@ export function planGalpon(def: WarehouseDefinition, gd: GalponDesign, ctx: Plan
   if (!U) return { rect: null, floors: [], droppedFloors: 1, footprint: 0, built: 0, sellable: 0, units: 1, unitsLabel: "nave", height: 0, checks: [{ id: "lugar", label: "Lugar para construir", status: "fail", detail: "Con estos retiros no queda superficie útil en el lote." }], ok: false };
   const W = gd.config.dimensions.width;
   const L = gd.config.dimensions.length;
+  const o = galponOuter(def, gd.config);
   const rect = galponRect(def, gd, U);
   const h = ridgeHeight(gd.config.dimensions);
-  const fits = W <= rectW(U) + 0.01 && L <= rectD(U) + 0.01;
-  const footprint = W * L;
+  const needD = o.d + o.canopy;
+  const fits = o.w <= rectW(U) + 0.01 && needD <= rectD(U) + 0.01;
+  const footprint = o.w * o.d + o.canopyArea;
+  const f1 = (v: number) => v.toFixed(1).replace(".", ",");
+  const outer = `${f1(o.w)} × ${f1(needD)} m por fuera${o.canopy ? ", con la marquesina" : ""}`;
   const checks = normativeChecks(ctx, footprint, footprint, h, 1, null);
-  checks.unshift({ id: "entra", label: "Entra en la caja", status: fits ? "ok" : "fail", detail: fits ? `Nave de ${W} × ${L} m dentro del lugar disponible (${rectW(U).toFixed(1)} × ${rectD(U).toFixed(1)} m).` : `La nave de ${W} × ${L} m no entra en ${rectW(U).toFixed(1)} × ${rectD(U).toFixed(1)} m.` });
+  checks.unshift({ id: "entra", label: "Entra en la caja", status: fits ? "ok" : "fail", detail: fits ? `Nave de ${W} × ${L} m (${outer}) dentro del lugar disponible (${f1(rectW(U))} × ${f1(rectD(U))} m).` : `La nave de ${W} × ${L} m (${outer}) no entra en ${f1(rectW(U))} × ${f1(rectD(U))} m.` });
   const tier = ctx.tiers[ctx.tiers.length - 1];
   if (ctx.tiers.length > 1 && tier.rect && h > tier.from && (rect.z0 < tier.rect.z0 - 0.01 || rect.x0 < tier.rect.x0 - 0.01 || rect.x1 > tier.rect.x1 + 0.01)) checks.push({ id: "retiro-altura", label: "Retiro en altura", status: "fail", detail: `Arriba de ${tier.from} m la zona pide retirarse: bajá la altura o corré la nave hacia el fondo.` });
   return { rect, floors: [{ index: 0, base: 0, height: h, rect, area: footprint }], droppedFloors: 0, footprint, built: footprint, sellable: footprint, units: 1, unitsLabel: "nave", height: h, checks, ok: !checks.some((c) => c.status === "fail") };
@@ -163,6 +189,17 @@ export function fitGalpon(def: WarehouseDefinition, gd: GalponDesign, ctx: PlanC
     if (ok.length) config = selectVariant(def, config, ok.sort((a, b) => b.dimensions.width * b.dimensions.length - a.dimensions.width * a.dimensions.length)[0].id);
     return next();
   }
+  /** Achica una medida; si Galpones la redondea de vuelta (módulos), baja un módulo entero. */
+  const shrink = (key: "width" | "length", target: number) => {
+    const d = config.dimensions;
+    const r = def.dimensions[key];
+    const step = key === "length" ? Math.max(r.step, d.baySpacing) : r.step;
+    let c = setDimension(def, config, key, Math.max(r.min, target));
+    if (c.dimensions[key] >= d[key] - 1e-6) c = setDimension(def, config, key, Math.max(r.min, d[key] - step));
+    if (c.dimensions[key] >= d[key] - 1e-6) return false;
+    config = c;
+    return true;
+  };
   for (let i = 0; i < 400; i += 1) {
     const plan = planGalpon(def, next(), ctx);
     const fail = new Set(plan.checks.filter((c) => c.status === "fail").map((c) => c.id));
@@ -170,11 +207,12 @@ export function fitGalpon(def: WarehouseDefinition, gd: GalponDesign, ctx: PlanC
     const d = config.dimensions;
     const r = def.dimensions;
     const U = ctx.tiers[0]?.rect;
+    const o = galponOuter(def, config);
     if ((fail.has("altura") || fail.has("retiro-altura")) && d.eaveHeight - r.eaveHeight.step >= r.eaveHeight.min) config = setDimension(def, config, "eaveHeight", d.eaveHeight - r.eaveHeight.step);
-    else if (U && d.width > rectW(U) && d.width - r.width.step >= r.width.min) config = setDimension(def, config, "width", Math.max(r.width.min, Math.floor(rectW(U) / r.width.step) * r.width.step));
-    else if (U && d.length > rectD(U) && d.length - r.length.step >= r.length.min) config = setDimension(def, config, "length", Math.max(r.length.min, Math.floor(rectD(U) / r.length.step) * r.length.step));
-    else if (d.length - r.length.step >= r.length.min) config = setDimension(def, config, "length", d.length - Math.max(r.length.step, d.baySpacing));
-    else if (d.width - r.width.step >= r.width.min) config = setDimension(def, config, "width", d.width - r.width.step);
+    else if (U && o.w > rectW(U) + 0.01 && shrink("width", Math.min(d.width - r.width.step, Math.floor((rectW(U) - (o.w - d.width)) / r.width.step) * r.width.step))) continue;
+    else if (U && o.d + o.canopy > rectD(U) + 0.01 && shrink("length", Math.min(d.length - r.length.step, Math.floor((rectD(U) - (o.d + o.canopy - d.length)) / r.length.step) * r.length.step))) continue;
+    else if (shrink("length", d.length - Math.max(r.length.step, d.baySpacing))) continue;
+    else if (shrink("width", d.width - r.width.step)) continue;
     else break;
   }
   return next();

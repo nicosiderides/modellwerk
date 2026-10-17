@@ -34,6 +34,33 @@
     "depth": 24,
     "floors": 12,
     "align": "center",
-    "front": 0
-  }
+    "front": 0,
+    "unitSize": "1d"
+  },
+  "unitSizes": [
+    {
+      "id": "mono",
+      "name": "Monoambientes (~38 m²)",
+      "area": 38,
+      "memoryText": "Unidades de un ambiente con cocina integrada y baño, de unos 38 m² cubiertos."
+    },
+    {
+      "id": "1d",
+      "name": "1 dormitorio (~55 m²)",
+      "area": 55,
+      "memoryText": "Departamentos de un dormitorio, living-comedor, cocina y baño, de unos 55 m² cubiertos."
+    },
+    {
+      "id": "2d",
+      "name": "2 dormitorios (~75 m²)",
+      "area": 75,
+      "memoryText": "Departamentos de dos dormitorios, living-comedor, cocina, baño y toilette, de unos 75 m² cubiertos."
+    },
+    {
+      "id": "3d",
+      "name": "3 dormitorios (~100 m²)",
+      "area": 100,
+      "memoryText": "Departamentos de tres dormitorios, dos baños y lavadero, de unos 100 m² cubiertos."
+    }
+  ]
 }

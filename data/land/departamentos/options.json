@@ -47,6 +47,24 @@
         "kind": "fixed",
         "value": 12000
       }
+    },
+    {
+      "id": "parquizado",
+      "name": "Parquizado y árboles",
+      "memoryText": "Césped en los retiros y patios libres, árboles de mediano porte y vereda de acceso de hormigón peinado.",
+      "cost": {
+        "kind": "fixed",
+        "value": 7000
+      }
+    },
+    {
+      "id": "subsuelo",
+      "name": "Cocheras en subsuelo",
+      "memoryText": "Subsuelo de cocheras bajo toda la planta baja, con rampa de acceso desde el frente y portón automático.",
+      "cost": {
+        "kind": "footprint",
+        "value": 650
+      }
     }
   ]
 }

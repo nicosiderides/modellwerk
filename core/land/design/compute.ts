@@ -1,3 +1,4 @@
+import { galponLogistics } from "./galponSite.ts";
 import { createDefaultConfig } from "../../galpones/configuration.ts";
 import type { WarehouseDefinition } from "../../galpones/types.ts";
 import type { Envelope } from "../envelope/envelope.ts";
@@ -36,6 +37,8 @@ export function defaultLandConfig(spec: LandSpec): LandConfig {
     accentColor: e.accentColor,
     frameColor: e.frameColor,
     glazing: e.glazing,
+    windowsPerBay: 1,
+    ...(b.defaults.unitSize ? { unitSize: b.defaults.unitSize } : {}),
     options: Object.fromEntries(spec.options.options.map((o) => [o.id, Boolean(o.defaultOn)])),
   };
 }
@@ -79,6 +82,8 @@ export function computeDesign(study: LotStudy, typeId: BuildingTypeId, overrides
     const def = gd ? galponDefs.find((d) => d.id === gd.warehouseId) : null;
     if (!gd || !def) return null;
     plan = planGalpon(def, gd, base.ctx);
+    // Camiones, playón y cocheras: la verificación logística de Galpones (sólo avisa).
+    if (plan.rect) plan = { ...plan, checks: [...plan.checks, ...galponLogistics(study, def, gd.config, plan.rect)] };
   } else {
     const cfg = design.land[typeId];
     if (!cfg) return null;

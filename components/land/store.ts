@@ -32,6 +32,8 @@ export type Scenario = {
   id: string;
   name: string;
   savedAt: string;
+  /** Vista 3D chica (JPEG) para comparar escenarios lado a lado. */
+  image?: string;
   nomenclatura: string;
   designacion: string;
   lotArea: number;
@@ -52,6 +54,8 @@ type ViewerState = {
   showEnvelope: boolean;
   ground: GroundMode;
   scaleRefs: boolean;
+  /** Corte horizontal por piso (índice de planta) o null sin corte. */
+  cut: number | null;
   quality: ViewerQuality;
 };
 
@@ -144,7 +148,7 @@ export const useLand = create<LandState>((set, get) => ({
   stage: "lote",
   mode: "simple",
   design: null,
-  viewer: { camera: { preset: "perspective", nonce: 0 }, explode: false, hidden: [], isolated: null, showEnvelope: true, ground: "photo", scaleRefs: false, quality: "balanced" },
+  viewer: { camera: { preset: "perspective", nonce: 0 }, explode: false, hidden: [], isolated: null, showEnvelope: true, ground: "photo", scaleRefs: false, cut: null, quality: "balanced" },
   selection: null,
   finance: {},
   convenio: {
@@ -178,7 +182,7 @@ export const useLand = create<LandState>((set, get) => ({
   },
 
   setError: (error) => set({ error }),
-  setType: (typeId) => set({ typeId, typeChosen: true, selection: null, viewer: { ...get().viewer, hidden: [], isolated: null, explode: false } }),
+  setType: (typeId) => set({ typeId, typeChosen: true, selection: null, viewer: { ...get().viewer, hidden: [], isolated: null, explode: false, cut: null } }),
 
   setOverride: (key, value) => {
     set((s) => {

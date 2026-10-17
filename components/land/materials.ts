@@ -59,6 +59,11 @@ export function landMaterialSpecs(spec: LandSpec, cfg: LandConfig): Record<LandM
     solar: { color: "#1d2a3a", metalness: 0.5, roughness: 0.2 },
     water: { color: "#4fa3c7", metalness: 0.1, roughness: 0.05, transparent: true, opacity: 0.85 },
     pergola: { color: "#3a3f43", metalness: 0.5, roughness: 0.45 },
+    partition: { color: "#e4e0d8", metalness: 0, roughness: 0.95 },
+    paving: { color: "#bdb8ae", metalness: 0, roughness: 0.92, pattern: "slab", normalScale: 0.3 },
+    grass: { color: "#6f8a55", metalness: 0, roughness: 1 },
+    trunk: { color: "#5b4636", metalness: 0, roughness: 0.95 },
+    foliage: { color: "#56713f", metalness: 0, roughness: 0.9 },
   };
 }
 

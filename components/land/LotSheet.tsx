@@ -1,5 +1,6 @@
 "use client";
 
+import { CORDOBA_NORMS } from "@/core/land/zoning/cordoba";
 import { useMemo, useState } from "react";
 import { ArrowRight, CircleAlert, CircleCheck, CircleHelp, CircleX, Landmark, LoaderCircle, Pencil, RotateCcw, X } from "lucide-react";
 import { formatNumber } from "@/core/galpones/metrics";
@@ -39,6 +40,8 @@ function Badge({ source }: { source: Source }) {
 
 type Row = { key: RuleKey | null; label: string; value: string; source: Source; editable?: { unit: string; factor?: number; current: number | null } };
 
+const FRAC = CORDOBA_NORMS.fraccionamiento;
+
 function rulesRows(r: LandRules): Row[] {
   const pct = (v: number | null) => (v === null ? "—" : `${Math.round(v * 100)} %`);
   const meters = (v: number | null, none = "—") => (v === null ? none : m1(v));
@@ -57,6 +60,7 @@ function rulesRows(r: LandRules): Row[] {
     { key: "setbackSide", label: `Retiro lateral${r.sideCount === 1 ? " (un lado)" : r.sideCount === 2 ? " (ambos)" : ""}`, value: r.setbackSide.value === null || r.sideCount === 0 ? "no exige" : m1(r.setbackSide.value), source: r.setbackSide.source, editable: { unit: "m", current: r.setbackSide.value } },
     { key: "setbackBack", label: `Retiro de fondo${r.backExceptCorner ? " (no en esquina)" : ""}`, value: r.setbackBack.value === null ? "no exige" : m1(r.setbackBack.value), source: r.setbackBack.source, editable: { unit: "m", current: r.setbackBack.value } },
     { key: "areaPerUnit", label: "Densidad", value: r.areaPerUnit.value === null ? "sin tope" : `1 unidad cada ${formatNumber(r.areaPerUnit.value)} m² de lote`, source: r.areaPerUnit.source, editable: { unit: "m²", current: r.areaPerUnit.value } },
+    { key: null, label: `Fraccionamiento (${FRAC.ordenanza})`, value: FRAC.frenteMinimo !== null && FRAC.superficieMinima !== null ? `frente ${m1(FRAC.frenteMinimo)} · ${formatNumber(FRAC.superficieMinima)} m²` : "a verificar", source: { kind: FRAC.frenteMinimo !== null ? "dato" : "falta", text: FRAC.nota } },
   );
   return rows;
 }

@@ -24,8 +24,12 @@ export type BuildingData = {
   unitArea: number | null;
   /** Superficie vendible / cubierta. */
   efficiency: number;
-  defaults: { width: number; depth: number; floors: number; align: Align; front: number };
+  /** Tamaños de unidad para elegir (departamentos, oficinas). area null = planta libre (una unidad por piso). */
+  unitSizes?: UnitSize[];
+  defaults: { width: number; depth: number; floors: number; align: Align; front: number; unitSize?: string };
 };
+
+export type UnitSize = { id: string; name: string; area: number | null; memoryText: string };
 
 export type Choice = { id: string; name: string; memoryText: string; costFactor?: number };
 export type StructureData = { default: string; systems: (Choice & { column: number })[] };
@@ -39,7 +43,8 @@ export type EnvelopeData = {
   glazing: (Choice & { ratio: number })[];
   defaults: { facade: string; roof: string; facadeColor: string; accentColor: string; frameColor: string; glazing: string };
 };
-export type OptionCost = { kind: "fixed" | "fixed-per-floor" | "m2"; value: number };
+/** fixed: total · fixed-per-floor: por piso alto · m2: por m² cubierto · footprint: por m² de planta baja (subsuelo). */
+export type OptionCost = { kind: "fixed" | "fixed-per-floor" | "m2" | "footprint"; value: number };
 export type OptionData = { id: string; name: string; memoryText: string; cost: OptionCost; defaultOn?: boolean; requires?: { roof?: string } };
 export type OptionsData = { options: OptionData[] };
 export type PriceValue = { value: number; status: "demo" | "real"; note: string };
@@ -65,6 +70,10 @@ export type LandConfig = {
   accentColor: string;
   frameColor: string;
   glazing: string;
+  /** Ventanas por módulo de fachada (1 o 2). */
+  windowsPerBay?: 1 | 2;
+  /** Tamaño de unidad elegido (id de building.unitSizes). */
+  unitSize?: string;
   options: Record<string, boolean>;
 };
 

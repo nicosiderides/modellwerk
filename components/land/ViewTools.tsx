@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, Camera, Expand, Eye, EyeOff, Layers, Map as MapIcon, PersonStanding, Scan, X } from "lucide-react";
+import { Box, Camera, ChevronDown, ChevronUp, Expand, Eye, EyeOff, Layers, Map as MapIcon, PersonStanding, Scan, Scissors, X } from "lucide-react";
 import { staticCatalog } from "@/core/galpones/catalog";
 import type { ModelCategory } from "@/core/product-engine/types";
 import { LAND_CATEGORY_LABELS, LAND_GROUPS } from "@/core/land/kit/builder";
 import type { CameraPresetId } from "@/components/product-viewer/types";
 import { useLand, type GroundMode } from "./store";
+import { useComputed } from "./useDesign";
 
 /** Barra de herramientas del visor (igual que en Galpones): cámaras, explotar, grupos, caja, piso, escala. */
 
@@ -30,6 +31,16 @@ export function ViewTools() {
   const toggleHidden = useLand((s) => s.toggleHidden);
   const isolate = useLand((s) => s.isolate);
   const groups = typeId === "galpon" ? staticCatalog.shared().groups : LAND_GROUPS;
+  const computed = useComputed();
+  const floors = computed?.plan.floors.length ?? 0;
+  const cut = viewer.cut === null ? null : Math.min(viewer.cut, Math.max(0, floors - 1));
+  const levelLabel = (i: number) => (i === 0 ? "PB" : `P${i}`);
+  const toggleCut = () => {
+    if (cut === null) {
+      setViewer({ cut: 0, explode: false });
+      setCamera("top");
+    } else setViewer({ cut: null });
+  };
   return (
     <div className="ld-tools" role="toolbar" aria-label="Vista 3D">
       <div className="ld-tools__group">
@@ -49,6 +60,21 @@ export function ViewTools() {
         <button type="button" className={viewer.scaleRefs ? "is-on" : ""} onClick={() => setViewer({ scaleRefs: !viewer.scaleRefs })} aria-pressed={viewer.scaleRefs} title="Personas y autos de referencia">
           <PersonStanding aria-hidden /> Escala
         </button>
+      </div>
+      <div className="ld-tools__group ld-tools__cut">
+        <button type="button" className={cut !== null ? "is-on" : ""} onClick={toggleCut} aria-pressed={cut !== null} title="Cortar el edificio por un piso para ver la planta">
+          <Scissors aria-hidden /> Corte{cut !== null ? ` ${levelLabel(cut)}` : ""}
+        </button>
+        {cut !== null && floors > 1 && (
+          <>
+            <button type="button" onClick={() => setViewer({ cut: Math.max(0, cut - 1) })} disabled={cut <= 0} aria-label="Piso de abajo" title="Piso de abajo">
+              <ChevronDown aria-hidden />
+            </button>
+            <button type="button" onClick={() => setViewer({ cut: Math.min(floors - 1, cut + 1) })} disabled={cut >= floors - 1} aria-label="Piso de arriba" title="Piso de arriba">
+              <ChevronUp aria-hidden />
+            </button>
+          </>
+        )}
       </div>
       <div className="ld-tools__group">
         {GROUND.map((g) => (

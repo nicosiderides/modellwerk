@@ -1,4 +1,5 @@
 import { classifyUse } from "../../galpones/geo/cordobaZoning.ts";
+import NORMS from "../../../data/land/normativa/cordoba.json" with { type: "json" };
 import type { BuildingTypeId, LandRules, LandZone, Source, Sourced, UpperSetback, UseGroup, UseVerdict } from "../types.ts";
 
 /**
@@ -12,8 +13,23 @@ import type { BuildingTypeId, LandRules, LandZone, Source, Sourced, UpperSetback
  * puede leer queda como "falta" (a verificar).
  */
 
-export const MAPAS_CORDOBA_URL = "https://www.mapascordoba.gob.ar/#/geoservicios";
-export const GRAFICOS_URL = "https://www.cordoba.gob.ar/desarrollo-urbano/";
+/** Reglas por perfil, fuentes y fechas: en un archivo de datos aparte (data/land/normativa/cordoba.json). */
+type Amount = { valor?: number; valorIndustrial?: number; minimo?: number; divisorAltura?: number };
+type PerfilRules = { fuente: string; lateral?: Amount & { lados: { frenteDesde: number; lados: 1 | 2 }[] }; fondo?: Amount & { frenteDesde?: number }; nota?: string };
+export type CityNorms = {
+  ciudad: string;
+  actualizado: string;
+  fuentes: Record<"mapas" | "graficos", { nombre: string; url: string; fecha: string }>;
+  ordenanzas: { id: string; nombre: string; uso: string }[];
+  alturaReferenciaSinDato: number;
+  perfiles: Record<string, PerfilRules>;
+  fraccionamiento: { ordenanza: string; frenteMinimo: number | null; superficieMinima: number | null; estado: string; nota: string };
+  planoLimite45: { estado: string; nota: string };
+};
+export const CORDOBA_NORMS = NORMS as CityNorms;
+
+export const MAPAS_CORDOBA_URL = CORDOBA_NORMS.fuentes.mapas.url;
+export const GRAFICOS_URL = CORDOBA_NORMS.fuentes.graficos.url;
 
 /** Todos los campos de la capa CBA_Ordenanza_8256. */
 export type Ord8256Full = {
@@ -155,7 +171,7 @@ function rulesFor(z: Ord8256Full, group: UseGroup, lot: LotFacts, notes: Set<str
   const upperSetback: Sourced<UpperSetback> = upper ? val(upper, read(clean(z.retiro_frente) || clean(z.otros_retiros))) : val<UpperSetback>(null, src("interpretado", `Ord. 8256 · zona ${perfil}: la capa no indica retiro en altura`));
 
   const others = clean(z.otros_retiros);
-  const hRef = maxHeight.value ?? 10.5;
+  const hRef = maxHeight.value ?? CORDOBA_NORMS.alturaReferenciaSinDato;
   let setbackSide: Sourced<number> = val<number>(null, src("interpretado", `Ord. 8256 · zona ${perfil}: la capa no indica retiros laterales`));
   let sideCount: 0 | 1 | 2 = 0;
   let setbackBack: Sourced<number> = val<number>(null, src("interpretado", `Ord. 8256 · zona ${perfil}: la capa no indica retiro de fondo`));
@@ -163,51 +179,22 @@ function rulesFor(z: Ord8256Full, group: UseGroup, lot: LotFacts, notes: Set<str
   if (backText !== null) setbackBack = val(backText, read(others));
   const backExceptCorner = /excepto.*esquina/i.test(others);
 
-  switch (perfil) {
-    case "J1":
-    case "J2":
-      if (lot.frontWidth >= 18) {
-        setbackSide = val(Math.max(4, hRef / 3), read(others));
-        sideCount = lot.frontWidth >= 22 ? 2 : 1;
-        if (lot.frontWidth >= 22) setbackBack = val(Math.max(4, hRef / 3), read(others));
-        notes.add("Retiros laterales: 1/3 de la altura, nunca menos de 4 m.");
-      }
-      break;
-    case "F1":
-      if (lot.frontWidth >= 18) {
-        setbackSide = val(Math.max(3, hRef / 3), read(others));
-        sideCount = 1;
-        notes.add("Retiro lateral (frentes de 18 m o más): 1/3 de la altura, mínimo 3 m, en un lindero.");
-      }
-      break;
-    case "N1":
-      setbackSide = val(3, read(others));
-      sideCount = 2;
-      break;
-    case "M":
-      setbackSide = val(15, read(others));
-      sideCount = 2;
-      setbackBack = val(15, read(others));
-      break;
-    case "N":
-      setbackSide = val(group === "industrial" ? 20 : 4, read(others));
-      sideCount = 2;
-      setbackBack = val(group === "industrial" ? 20 : 4, read(others));
-      break;
-    case "L":
-      if (lot.frontWidth >= 25) {
-        setbackSide = val(Math.max(6, hRef / 3), read(others));
-        sideCount = lot.frontWidth <= 60 ? 1 : 2;
-        notes.add("Retiro lateral: 1/3 de la altura, nunca menos de 6 m.");
-      }
-      break;
-    default: {
-      const both = others.match(/(\d+(?:[.,]\d+)?)\s*m\s*ambos laterales/i);
-      if (both) {
-        setbackSide = val(num(both[1]), read(others));
-        sideCount = 2;
-      } else if (/laterales/i.test(others)) notes.add(`Retiros laterales: «${short(others, 160)}». Confirmalos.`);
+  const profile = CORDOBA_NORMS.perfiles[perfil];
+  const amount = (a: Amount) => (a.valor !== undefined ? (group === "industrial" && a.valorIndustrial !== undefined ? a.valorIndustrial : a.valor) : Math.max(a.minimo ?? 0, a.divisorAltura ? hRef / a.divisorAltura : 0));
+  if (profile) {
+    const sides = profile.lateral ? [...profile.lateral.lados].sort((a, b) => b.frenteDesde - a.frenteDesde).find((x) => lot.frontWidth >= x.frenteDesde) : undefined;
+    if (profile.lateral && sides) {
+      setbackSide = val(amount(profile.lateral), read(others));
+      sideCount = sides.lados;
+      if (profile.nota) notes.add(profile.nota);
     }
+    if (profile.fondo && lot.frontWidth >= (profile.fondo.frenteDesde ?? 0)) setbackBack = val(amount(profile.fondo), read(others));
+  } else {
+    const both = others.match(/(\d+(?:[.,]\d+)?)\s*m\s*ambos laterales/i);
+    if (both) {
+      setbackSide = val(num(both[1]), read(others));
+      sideCount = 2;
+    } else if (/laterales/i.test(others)) notes.add(`Retiros laterales: «${short(others, 160)}». Confirmalos.`);
   }
 
   /* Densidad */
@@ -283,7 +270,7 @@ export function landZoneFromCordoba(z: Ord8256Full | null, z8133: Ord8133Full | 
   const industrial = rulesFor(z ?? {}, "industrial", lot, notes);
   const special = !z || /^Ord\.|^Dto\./i.test(perfil) || (z.fos == null && z.altura_maxima == null && z.fot == null);
   if (special) notes.add("Zona con normativa particular: la capa no trae sus parámetros. Consultá la ordenanza específica en la Municipalidad.");
-  if (residencial.plane45) notes.add("La zona exige plano límite a 45° (ver gráfico del perfil): no está dibujado en la caja.");
+  if (residencial.plane45) notes.add(CORDOBA_NORMS.planoLimite45.nota);
   for (const t of [z?.otras_disposiciones, z?.informacion_adicional]) {
     const c = clean(t);
     if (c && !/^FOS:/i.test(c)) notes.add(short(cap(c), 240));

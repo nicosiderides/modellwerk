@@ -1,0 +1,66 @@
+{
+  "ciudad": "Córdoba (capital)",
+  "actualizado": "2026-10-17",
+  "nota": "Reglas que MW Land usa además de lo que trae cada capa oficial. Los valores de cada zona (FOS, FOT, alturas, retiros escritos, densidad) se leen en vivo de Mapas Córdoba / IDECOR; acá sólo está lo que la capa da como texto por perfil y hay que interpretar. Para otra ciudad se suma otro archivo como este.",
+  "fuentes": {
+    "mapas": { "nombre": "Mapas Córdoba / IDECOR · geoservicios", "url": "https://www.mapascordoba.gob.ar/#/geoservicios", "fecha": "2026-10-17" },
+    "graficos": { "nombre": "Gráficos de perfiles de la Ord. 8256 · Municipalidad de Córdoba", "url": "https://www.cordoba.gob.ar/desarrollo-urbano/", "fecha": "2026-10-17" }
+  },
+  "ordenanzas": [
+    { "id": "8256", "nombre": "Ord. 8256/86 · Ocupación del suelo (FOS, FOT, alturas, retiros)", "uso": "ocupacion" },
+    { "id": "8133", "nombre": "Ord. 8133/85 · Uso del suelo (patrones de actividades)", "uso": "uso" },
+    { "id": "8057", "nombre": "Ord. 8057/85 · Ocupación del suelo en área central", "uso": "ocupacion" },
+    { "id": "8060", "nombre": "Ord. 8060/85 · Fraccionamiento del suelo", "uso": "fraccionamiento" },
+    { "id": "13557", "nombre": "Ord. 13.557 · Convenios urbanísticos y polígonos de actuación concertada", "uso": "convenio" }
+  ],
+  "alturaReferenciaSinDato": 10.5,
+  "perfiles": {
+    "J1": {
+      "fuente": "Ord. 8256 · perfil J1: texto de «otros retiros» de la capa",
+      "lateral": { "minimo": 4, "divisorAltura": 3, "lados": [{ "frenteDesde": 18, "lados": 1 }, { "frenteDesde": 22, "lados": 2 }] },
+      "fondo": { "frenteDesde": 22, "minimo": 4, "divisorAltura": 3 },
+      "nota": "Retiros laterales: 1/3 de la altura, nunca menos de 4 m."
+    },
+    "J2": {
+      "fuente": "Ord. 8256 · perfil J2: texto de «otros retiros» de la capa",
+      "lateral": { "minimo": 4, "divisorAltura": 3, "lados": [{ "frenteDesde": 18, "lados": 1 }, { "frenteDesde": 22, "lados": 2 }] },
+      "fondo": { "frenteDesde": 22, "minimo": 4, "divisorAltura": 3 },
+      "nota": "Retiros laterales: 1/3 de la altura, nunca menos de 4 m."
+    },
+    "F1": {
+      "fuente": "Ord. 8256 · perfil F1: texto de «otros retiros» de la capa",
+      "lateral": { "minimo": 3, "divisorAltura": 3, "lados": [{ "frenteDesde": 18, "lados": 1 }] },
+      "nota": "Retiro lateral (frentes de 18 m o más): 1/3 de la altura, mínimo 3 m, en un lindero."
+    },
+    "N1": {
+      "fuente": "Ord. 8256 · perfil N1: texto de «otros retiros» de la capa",
+      "lateral": { "valor": 3, "lados": [{ "frenteDesde": 0, "lados": 2 }] }
+    },
+    "M": {
+      "fuente": "Ord. 8256 · perfil M: texto de «otros retiros» de la capa",
+      "lateral": { "valor": 15, "lados": [{ "frenteDesde": 0, "lados": 2 }] },
+      "fondo": { "valor": 15 }
+    },
+    "N": {
+      "fuente": "Ord. 8256 · perfil N: texto de «otros retiros» de la capa",
+      "lateral": { "valor": 4, "valorIndustrial": 20, "lados": [{ "frenteDesde": 0, "lados": 2 }] },
+      "fondo": { "valor": 4, "valorIndustrial": 20 }
+    },
+    "L": {
+      "fuente": "Ord. 8256 · perfil L: texto de «otros retiros» de la capa",
+      "lateral": { "minimo": 6, "divisorAltura": 3, "lados": [{ "frenteDesde": 25, "lados": 1 }, { "frenteDesde": 60.01, "lados": 2 }] },
+      "nota": "Retiro lateral: 1/3 de la altura, nunca menos de 6 m."
+    }
+  },
+  "fraccionamiento": {
+    "ordenanza": "Ord. 8060/85",
+    "frenteMinimo": null,
+    "superficieMinima": null,
+    "estado": "a verificar",
+    "nota": "Las medidas mínimas de lote para subdividir dependen de la zona y no vienen en las capas usadas. Si vas a dividir o unificar lotes, confirmalas en la Municipalidad (Catastro / Desarrollo Urbano)."
+  },
+  "planoLimite45": {
+    "estado": "a verificar",
+    "nota": "La zona exige plano límite a 45° (ver gráfico del perfil): no está dibujado en la caja."
+  }
+}

@@ -1,11 +1,14 @@
 "use client";
 
 import { ArrowLeft, ArrowRight, FileText } from "lucide-react";
-import { ChoiceCard, Stepper, Swatches, Toggle } from "@/components/galpones/controls";
+import { ChoiceCard, NumberField, Stepper, Swatches, Toggle } from "@/components/galpones/controls";
 import { formatNumber } from "@/core/galpones/metrics";
 import { isDiscrete, openingLimits } from "@/core/galpones/configuration";
+import { DESIGN_VEHICLES } from "@/core/galpones/lotRules";
+import { normalizeSite, SITE_LIMITS } from "@/core/galpones/siteConfig";
 import { LAND_SPECS } from "@/core/land/design/catalog";
 import { costPerM2, optionCost } from "@/core/land/design/costs";
+import { unitSizeOf } from "@/core/land/design/units";
 import type { LandTypeId } from "@/core/land/design/types";
 import { Checks, PlanSummary, TypeTabs } from "./DesignPanel";
 import { GALPON_DEFS, useLand } from "./store";
@@ -16,6 +19,9 @@ import { isLandType, useComputed } from "./useDesign";
  * envolvente, aberturas, opciones), para los cuatro tipos. Cada elección
  * mueve los costos (demo) y la normativa sigue vigilando.
  */
+
+/** Opciones que van en la sección "Entorno". */
+const ENTORNO = new Set(["parquizado", "cochera", "cocheras", "subsuelo", "pileta", "galeria"]);
 
 const usd = (v: number) => `USD ${formatNumber(Math.round(v))}`;
 const pctBadge = (k?: number) => (k && Math.abs(k - 1) > 0.001 ? `${k > 1 ? "+" : "−"}${Math.round(Math.abs(k - 1) * 100)} %` : undefined);
@@ -60,13 +66,34 @@ function LandCustomize({ id }: { id: LandTypeId }) {
         <Swatches label="Color de acento (parapetos, tabiques)" colors={env.colors} value={cfg.accentColor} onChange={(v) => update(id, { accentColor: v })} />
         <Swatches label="Carpinterías" colors={env.frames} value={cfg.frameColor} onChange={(v) => update(id, { frameColor: v })} />
       </Section>
-      <Section title="Aberturas">
+      <Section title="Aberturas" note="El tamaño sale del tipo de ventana; la cantidad, de cuántas van por módulo de la grilla.">
         <div className="ld-choices">
           {env.glazing.map((g) => (
             <ChoiceCard key={g.id} selected={cfg.glazing === g.id} title={g.name} summary={g.memoryText} onSelect={() => update(id, { glazing: g.id })} />
           ))}
         </div>
+        {facade?.id !== "muro-cortina" && (
+          <div className="gp-field">
+            <span className="gp-label">Ventanas por módulo</span>
+            <div className="gp-segmented" role="radiogroup" aria-label="Ventanas por módulo">
+              {([1, 2] as const).map((n) => (
+                <button key={n} type="button" role="radio" aria-checked={(cfg.windowsPerBay ?? 1) === n} className={(cfg.windowsPerBay ?? 1) === n ? "is-selected" : ""} onClick={() => update(id, { windowsPerBay: n })}>
+                  {n === 1 ? "Una ventana" : "Dos ventanas"}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </Section>
+      {spec.building.unitSizes && (
+        <Section title={id === "oficinas" ? "Planta de oficinas" : "Tamaño de los departamentos"} note="Cambia la cantidad de unidades (y la densidad que se verifica). Es una estimación por superficie.">
+          <div className="ld-choices">
+            {spec.building.unitSizes.map((u) => (
+              <ChoiceCard key={u.id} selected={unitSizeOf(spec, cfg)?.id === u.id} title={u.name} summary={u.memoryText} onSelect={() => update(id, { unitSize: u.id })} />
+            ))}
+          </div>
+        </Section>
+      )}
       {env.roofs.length > 1 && (
         <Section title="Cubierta">
           <div className="ld-choices">
@@ -76,14 +103,20 @@ function LandCustomize({ id }: { id: LandTypeId }) {
           </div>
         </Section>
       )}
-      <Section title="Opciones" note="Los costos son de referencia (demo) y se suman a la simulación de inversión.">
-        <div className="ld-toggles">
-          {spec.options.options.map((o) => {
-            const blocked = o.requires?.roof && cfg.roof !== o.requires.roof;
-            return <Toggle key={o.id} label={o.name} summary={o.memoryText} checked={Boolean(cfg.options[o.id]) && !blocked} disabled={Boolean(blocked)} note={blocked ? "Necesita azotea plana" : `${usd(optionCost(o, computed.plan))} (demo)`} onChange={(on) => update(id, { options: { [o.id]: on } })} />;
-          })}
-        </div>
-      </Section>
+      {(["opciones", "entorno"] as const).map((group) => {
+        const list = spec.options.options.filter((o) => (ENTORNO.has(o.id) ? "entorno" : "opciones") === group);
+        if (!list.length) return null;
+        return (
+          <Section key={group} title={group === "entorno" ? "Entorno" : "Opciones"} note={group === "entorno" ? "Accesos, cocheras y parquizado. Con «Sin piso» se ve también la calle y la vereda." : "Los costos son de referencia (demo) y se suman a la simulación de inversión."}>
+            <div className="ld-toggles">
+              {list.map((o) => {
+                const blocked = o.requires?.roof && cfg.roof !== o.requires.roof;
+                return <Toggle key={o.id} label={o.name} summary={o.memoryText} checked={Boolean(cfg.options[o.id]) && !blocked} disabled={Boolean(blocked)} note={blocked ? "Necesita azotea plana" : `${usd(optionCost(o, computed.plan))} (demo)`} onChange={(on) => update(id, { options: { [o.id]: on } })} />;
+              })}
+            </div>
+          </Section>
+        );
+      })}
     </>
   );
 }
@@ -151,7 +184,49 @@ function GalponCustomize() {
           ))}
         </div>
       </Section>
+      <GalponSite />
     </>
+  );
+}
+
+/** Entorno del galpón: el mismo de Galpones (veredas, playón, estacionamiento, parquizado y camión de diseño). */
+function GalponSite() {
+  const gd = useLand((s) => s.design?.galpon);
+  const setConfig = useLand((s) => s.setGalponConfig);
+  if (!gd) return null;
+  const site = normalizeSite(gd.config.site);
+  const setSite = (patch: Partial<typeof site>) => setConfig((x) => ({ ...x, site: { ...normalizeSite(x.site), ...patch } }));
+  return (
+    <Section title="Entorno" note="Lo logístico (camiones, playón, cocheras) no frena: sólo avisa, igual que en Galpones.">
+      <div className="ld-toggles">
+        <Toggle label="Playón de maniobras" summary="Hormigón frente a los portones para carga y descarga." checked={site.truckYard} onChange={(on) => setSite({ truckYard: on })} />
+        <Toggle label="Parquizado" summary="Césped, árboles y luminarias." checked={site.landscape} onChange={(on) => setSite({ landscape: on })} />
+      </div>
+      <div className="gp-grid-2">
+        <NumberField label="Vereda perimetral" unit="m" value={site.sidewalk} min={SITE_LIMITS.sidewalk.min} max={SITE_LIMITS.sidewalk.max} step={SITE_LIMITS.sidewalk.step} hint="Junto a una medianera se angosta sola." onChange={(v) => setSite({ sidewalk: v })} />
+        <NumberField label="Cocheras" value={site.parking} min={SITE_LIMITS.parking.min} max={SITE_LIMITS.parking.max} step={SITE_LIMITS.parking.step} decimals={0} onChange={(v) => setSite({ parking: Math.round(v) })} />
+      </div>
+      {site.parking > 0 && (
+        <div className="gp-field">
+          <span className="gp-label">Estacionamiento</span>
+          <div className="gp-segmented" role="radiogroup" aria-label="Lado del estacionamiento">
+            {(["west", "back"] as const).map((side) => (
+              <button key={side} type="button" role="radio" aria-checked={site.parkingSide === side} className={site.parkingSide === side ? "is-selected" : ""} onClick={() => setSite({ parkingSide: side })}>
+                {side === "west" ? "Al costado" : "Al fondo"}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="gp-field">
+        <span className="gp-label">Camión de diseño</span>
+        <div className="ld-choices">
+          {DESIGN_VEHICLES.map((v) => (
+            <ChoiceCard key={v.id} selected={gd.config.lot.vehicle === v.id} title={v.name} summary="Define el playón y la maniobra que se verifican." onSelect={() => setConfig((x) => ({ ...x, lot: { ...x.lot, vehicle: v.id } }))} />
+          ))}
+        </div>
+      </div>
+    </Section>
   );
 }
 

@@ -159,7 +159,7 @@ export function PlanSummary() {
         <strong>{p.floors.length}</strong>
       </div>
       <div>
-        <span>{typeId === "departamentos" ? "Deptos." : typeId === "oficinas" ? "Oficinas" : "Altura"}</span>
+        <span>{typeId === "departamentos" ? "Deptos." : typeId === "oficinas" ? (p.unitsLabel === "plantas libres" ? "Plantas libres" : "Oficinas") : "Altura"}</span>
         <strong>{typeId === "departamentos" || typeId === "oficinas" ? p.units : `${formatNumber(p.height, 1)} m`}</strong>
       </div>
     </section>

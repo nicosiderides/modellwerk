@@ -1,5 +1,6 @@
 import type { BuildingPlan } from "./plan.ts";
 import type { LandConfig, LandSpec, OptionData } from "./types.ts";
+import { unitSizeOf } from "./units.ts";
 
 /**
  * Costos de demostración que salen de la customización: costo por m² según
@@ -16,6 +17,7 @@ export function costPerM2(spec: LandSpec, cfg: LandConfig) {
 export function optionCost(o: OptionData, plan: BuildingPlan) {
   if (o.cost.kind === "fixed") return o.cost.value;
   if (o.cost.kind === "fixed-per-floor") return o.cost.value * Math.max(0, plan.floors.length - 1);
+  if (o.cost.kind === "footprint") return o.cost.value * plan.footprint;
   return o.cost.value * plan.built;
 }
 
@@ -33,7 +35,8 @@ export function memory(spec: LandSpec, cfg: LandConfig): { title: string; text: 
     s && { title: `Estructura: ${s.name}`, text: s.memoryText },
     f && { title: `Fachada: ${f.name}`, text: f.memoryText },
     r && { title: `Cubierta: ${r.name}`, text: r.memoryText },
-    g && { title: `Aberturas: ${g.name}`, text: g.memoryText },
+    g && { title: `Aberturas: ${g.name}${cfg.windowsPerBay === 2 ? " · dos por módulo" : ""}`, text: g.memoryText },
+    unitSizeOf(spec, cfg) && { title: `Unidades: ${unitSizeOf(spec, cfg)!.name}`, text: unitSizeOf(spec, cfg)!.memoryText },
     ...spec.options.options.filter((o) => cfg.options[o.id]).map((o) => ({ title: o.name, text: o.memoryText })),
   ];
   return out.filter((x): x is { title: string; text: string } => Boolean(x));

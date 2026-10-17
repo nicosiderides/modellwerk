@@ -29,7 +29,12 @@ export type LandMaterialKey =
   | "fin"
   | "solar"
   | "water"
-  | "pergola";
+  | "pergola"
+  | "partition"
+  | "paving"
+  | "grass"
+  | "trunk"
+  | "foliage";
 
 /**
  * Las piezas de los edificios usan las categorías que ya conoce el visor
@@ -50,7 +55,7 @@ export const LAND_CATEGORY_LABELS: Partial<Record<ModelCategory, string>> = {
   equipment: "Núcleo: escalera y ascensor",
   girts: "Parasoles",
   skylights: "Paneles solares",
-  bracing: "Pérgolas y exteriores",
+  bracing: "Exteriores y entorno",
 };
 
 export const LAND_GROUPS: { id: string; label: string; categories: ModelCategory[] }[] = [
@@ -121,6 +126,11 @@ const PLACEHOLDER: Record<LandMaterialKey, string> = {
   solar: "#1d2a3a",
   water: "#4fa3c7",
   pergola: "#3a3f43",
+  partition: "#e4e0d8",
+  paving: "#bdb8ae",
+  grass: "#6f8a55",
+  trunk: "#5b4636",
+  foliage: "#56713f",
 };
 
 export class LandBuilder {

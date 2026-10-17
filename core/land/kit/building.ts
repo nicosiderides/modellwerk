@@ -1,8 +1,9 @@
-import { BufferGeometry, Matrix4 } from "three";
 import type { ModelMetadataDocument } from "../../product-engine/types.ts";
 import type { BuildingPlan, FloorPlan } from "../design/plan.ts";
 import type { LandConfig, LandSpec } from "../design/types.ts";
 import type { Rect } from "../design/usable.ts";
+import { BoxGeometry, BufferGeometry, IcosahedronGeometry, Matrix4 } from "three";
+import { unitsOnFloor } from "../design/units.ts";
 import { box, LandBuilder, type LandMaterialKey } from "./builder.ts";
 
 /**
@@ -51,6 +52,41 @@ function rectMinus(a: Rect, b: Rect): Rect[] {
   return out.filter((r) => r.x1 - r.x0 > 0.2 && r.z1 - r.z0 > 0.2);
 }
 
+/**
+ * Accesos vehiculares (en coordenadas del lote): la cochera de la vivienda
+ * y la entrada al portón de cocheras o rampa al subsuelo de departamentos y oficinas.
+ */
+export function driveRects(spec: LandSpec, cfg: LandConfig, plan: BuildingPlan, site: SiteInfo): Rect[] {
+  const r0 = plan.floors[0]?.rect;
+  if (!r0) return [];
+  const U = site.usable;
+  const lineZ = Math.min(0, U.z0);
+  const out: Rect[] = [];
+  if (cfg.type === "vivienda" && cfg.options.cochera) {
+    const gapL = r0.x0 - U.x0;
+    const gapR = U.x1 - r0.x1;
+    if (Math.max(gapL, gapR) >= 2.8) {
+      const x0 = gapL >= gapR ? U.x0 + 0.1 : r0.x1 + 0.1;
+      const x1 = gapL >= gapR ? r0.x0 - 0.1 : U.x1 - 0.1;
+      out.push({ x0, x1, z0: lineZ, z1: Math.min(r0.z1, r0.z0 + 5.5) });
+    }
+  }
+  const garage = (cfg.type === "departamentos" || cfg.type === "oficinas") && (cfg.options.cocheras || cfg.options.subsuelo);
+  if (garage && r0.z0 - lineZ > 0.5) {
+    const col = (spec.structure.systems.find((x) => x.id === cfg.structure) ?? spec.structure.systems[0]).column;
+    const xs0 = gridLines(r0.x0, r0.x1, spec.building.grid.module);
+    out.push({ x0: xs0[0] + col / 2, x1: Math.min(xs0[1] - col / 2, xs0[0] + col / 2 + 3.2), z0: lineZ, z1: r0.z0 });
+  }
+  return out;
+}
+
+/** Dónde estacionar un auto de referencia (se muestra con "Escala"). */
+export function carSpots(spec: LandSpec, cfg: LandConfig, plan: BuildingPlan, site: SiteInfo): { x: number; z: number; rotation: number }[] {
+  return driveRects(spec, cfg, plan, site)
+    .filter((d) => d.x1 - d.x0 >= 2 && d.z1 - d.z0 >= 4.6)
+    .map((d) => ({ x: (d.x0 + d.x1) / 2, z: d.z1 - 2.6, rotation: 0 }));
+}
+
 export function createLandBuilding(spec: LandSpec, cfg: LandConfig, plan: BuildingPlan, site: SiteInfo): GeneratedLand {
   const b = spec.building;
   const B = new LandBuilder(b.code);
@@ -72,6 +108,8 @@ export function createLandBuilding(spec: LandSpec, cfg: LandConfig, plan: Buildi
   const frontRecess = (f: FloorPlan) => (f.index > 0 && balconies ? 1.2 : f.index > 0 && fins ? 0.6 : 0);
   const top = floors[floors.length - 1].base + floors[floors.length - 1].height;
   const mat = facade.name;
+  /** Portón de cocheras en el primer módulo del frente (cocheras en planta baja o rampa al subsuelo). */
+  const garageBay = (isDeptos || isOffice) && (Boolean(cfg.options.cocheras) || Boolean(cfg.options.subsuelo));
 
   /* ── platea ── */
   const r0 = floors[0].rect;
@@ -136,8 +174,8 @@ export function createLandBuilding(spec: LandSpec, cfg: LandConfig, plan: Buildi
         const bay = a1 - a0;
         let open: Opening;
         if (party) open = { kind: "none", width: 0, height: 0, sill: 0 };
-        else if (f.index === 0 && side === "front" && isOffice) open = { kind: "store", width: bay - col - 0.1, height: clear - 0.05, sill: 0 };
-        else if (f.index === 0 && side === "front" && isDeptos && cfg.options.cocheras && i === 0 && bay >= 3) open = { kind: "garage", width: Math.min(3, bay - col - 0.2), height: 2.4, sill: 0 };
+        else if (f.index === 0 && side === "front" && (isDeptos || isOffice) && garageBay && i === 0 && bay >= 3) open = { kind: "garage", width: Math.min(3, bay - col - 0.2), height: 2.4, sill: 0 };
+        else if (f.index === 0 && side === "front" && isOffice && cfg.options.locales && i !== center) open = { kind: "store", width: bay - col - 0.1, height: clear - 0.05, sill: 0 };
         else if (f.index === 0 && side === "front" && isDeptos && cfg.options.local && i === along.length - 2 && i !== center) open = { kind: "store", width: bay - col - 0.1, height: clear - 0.05, sill: 0 };
         else if (f.index === 0 && side === "front" && i === center) open = { kind: "door", width: isHouse ? 1.0 : 1.6, height: 2.2, sill: 0 };
         else if (curtain && !party) open = { kind: "store", width: bay - col - 0.05, height: clear - 0.05, sill: 0 };
@@ -150,29 +188,45 @@ export function createLandBuilding(spec: LandSpec, cfg: LandConfig, plan: Buildi
           side === "front" || side === "back"
             ? box(u0, v0, fixed + dir * depth0, u1, v1, fixed + dir * depth1)
             : box(fixed + dir * depth0, v0, u0, fixed + dir * depth1, v1, u1);
+        const wallTop = y1 - (curtain ? 0 : beamH);
         if (open.kind === "none" || open.width <= 0.1) {
-          walls.push(span(a0, a1, y0, y1 - (curtain ? 0 : beamH), 0, WALL));
+          walls.push(span(a0, a1, y0, wallTop, 0, WALL));
           continue;
         }
-        const m0 = a0 + (bay - open.width) / 2;
-        const m1 = m0 + open.width;
+        // Huecos del módulo: uno centrado o, si se eligió, dos ventanas por módulo (cada una centrada en su mitad).
+        const holes: [number, number][] = [];
+        if (open.kind === "window" && cfg.windowsPerBay === 2 && bay >= 3.2) {
+          const half = bay / 2;
+          const w = Math.max(0.6, (half - col / 2 - 0.25) * Math.min(0.92, glazing.ratio + 0.2));
+          for (const c of [a0 + half / 2 + col / 4, a0 + half * 1.5 - col / 4]) holes.push([c - w / 2, c + w / 2]);
+        } else {
+          const m0 = a0 + (bay - open.width) / 2;
+          holes.push([m0, m0 + open.width]);
+        }
         const v0 = y0 + open.sill;
-        const v1 = Math.min(y1 - (curtain ? 0 : beamH) - 0.02, v0 + open.height);
-        // muro alrededor del hueco
-        if (m0 - a0 > 0.02) walls.push(span(a0, m0, y0, y1 - (curtain ? 0 : beamH), 0, WALL));
-        if (a1 - m1 > 0.02) walls.push(span(m1, a1, y0, y1 - (curtain ? 0 : beamH), 0, WALL));
-        if (v0 - y0 > 0.02) walls.push(span(m0, m1, y0, v0, 0, WALL));
-        if (y1 - (curtain ? 0 : beamH) - v1 > 0.02) walls.push(span(m0, m1, v1, y1 - (curtain ? 0 : beamH), 0, WALL));
+        const v1 = Math.min(wallTop - 0.02, v0 + open.height);
+        // muro alrededor de los huecos
+        let cursor = a0;
+        for (const [m0, m1] of holes) {
+          if (m0 - cursor > 0.02) walls.push(span(cursor, m0, y0, wallTop, 0, WALL));
+          if (v0 - y0 > 0.02) walls.push(span(m0, m1, y0, v0, 0, WALL));
+          if (wallTop - v1 > 0.02) walls.push(span(m0, m1, v1, wallTop, 0, WALL));
+          cursor = m1;
+        }
+        if (a1 - cursor > 0.02) walls.push(span(cursor, a1, y0, wallTop, 0, WALL));
         // carpintería
         const fw = 0.06;
-        frames.push(span(m0, m0 + fw, v0, v1, 0.05, 0.13), span(m1 - fw, m1, v0, v1, 0.05, 0.13), span(m0, m1, v0, v0 + fw, 0.05, 0.13), span(m0, m1, v1 - fw, v1, 0.05, 0.13));
-        if (open.kind === "store" || open.width > 2.4) {
-          const n = Math.max(1, Math.round(open.width / 1.5));
-          for (let k = 1; k < n; k += 1) frames.push(span(m0 + (open.width * k) / n - fw / 2, m0 + (open.width * k) / n + fw / 2, v0, v1, 0.05, 0.13));
+        for (const [m0, m1] of holes) {
+          const ow = m1 - m0;
+          frames.push(span(m0, m0 + fw, v0, v1, 0.05, 0.13), span(m1 - fw, m1, v0, v1, 0.05, 0.13), span(m0, m1, v0, v0 + fw, 0.05, 0.13), span(m0, m1, v1 - fw, v1, 0.05, 0.13));
+          if (open.kind === "store" || ow > 2.4) {
+            const n = Math.max(1, Math.round(ow / 1.5));
+            for (let k = 1; k < n; k += 1) frames.push(span(m0 + (ow * k) / n - fw / 2, m0 + (ow * k) / n + fw / 2, v0, v1, 0.05, 0.13));
+          }
+          if (open.kind === "garage") doors.push(span(m0 + fw, m1 - fw, v0, v1 - fw, 0.07, 0.11));
+          else if (open.kind === "door" && isHouse) doors.push(span(m0 + fw, m1 - fw, v0, v1 - fw, 0.07, 0.11));
+          else glass.push(span(m0 + fw, m1 - fw, v0 + fw, v1 - fw, 0.085, 0.095));
         }
-        if (open.kind === "garage") doors.push(span(m0 + fw, m1 - fw, v0, v1 - fw, 0.07, 0.11));
-        else if (open.kind === "door" && isHouse) doors.push(span(m0 + fw, m1 - fw, v0, v1 - fw, 0.07, 0.11));
-        else glass.push(span(m0 + fw, m1 - fw, v0 + fw, v1 - fw, 0.085, 0.095));
       }
       const label = { front: "frente", back: "contrafrente", left: "lateral izquierdo", right: "lateral derecho" }[side];
       const wallKey: LandMaterialKey = party ? "wallSide" : "wallMain";
@@ -180,6 +234,29 @@ export function createLandBuilding(spec: LandSpec, cfg: LandConfig, plan: Buildi
       B.add({ category: "windows", key: `VIDRIO-${side.toUpperCase()}-${f.index}`, label: `Vidrios ${label}, ${level.toLowerCase()}`, family: curtain ? "Muro cortina DVH" : "Ventana de aluminio con DVH", material: "Vidrio DVH 4/9/4", level }, [{ geometry: glass, materialKey: "glass" }]);
       B.add({ category: "purlins", key: `MARCO-${side.toUpperCase()}-${f.index}`, label: `Carpinterías ${label}, ${level.toLowerCase()}`, family: "Perfilería de aluminio", material: "Aluminio anodizado", level }, [{ geometry: frames, materialKey: "frame" }]);
       B.add({ category: "doors", key: `PUERTA-${side.toUpperCase()}-${f.index}`, label: `Puertas y portones ${label}`, family: isHouse ? "Puerta de entrada" : "Portón de cochera", material: isHouse ? "Madera maciza" : "Chapa prepintada", level }, [{ geometry: doors, materialKey: "door" }]);
+    }
+
+    /* tabiques entre unidades (se ven por las ventanas y en el corte por piso) */
+    const nUnits = unitsOnFloor(spec, cfg, f);
+    if (nUnits > 1) {
+      const t = 0.12;
+      const inner = { x0: r.x0 + WALL, x1: r.x1 - WALL, z0: r.z0 + frontRecess(f) + WALL, z1: r.z1 - WALL };
+      const depth = inner.z1 - inner.z0;
+      const rows = nUnits >= 4 && depth >= 14 ? 2 : 1;
+      const cols = Math.ceil(nUnits / rows);
+      const hTop = y1 - 0.3;
+      const geo: BufferGeometry[] = [];
+      const zm = (inner.z0 + inner.z1) / 2;
+      const bands: [number, number][] = rows === 2 ? [[inner.z0, zm - 0.7], [zm + 0.7, inner.z1]] : [[inner.z0, inner.z1]];
+      if (rows === 2) geo.push(box(inner.x0, y0, zm - 0.7 - t / 2, inner.x1, hTop, zm - 0.7 + t / 2), box(inner.x0, y0, zm + 0.7 - t / 2, inner.x1, hTop, zm + 0.7 + t / 2));
+      for (const [z0, z1] of bands) {
+        const n = rows === 2 && z0 > zm ? nUnits - cols : cols;
+        for (let k = 1; k < Math.max(1, n); k += 1) {
+          const x = inner.x0 + ((inner.x1 - inner.x0) * k) / n;
+          geo.push(box(x - t / 2, y0, z0, x + t / 2, hTop, z1));
+        }
+      }
+      if (geo.length) B.add({ category: "walls", key: `TABIQUES-${f.index}`, label: `Tabiques entre unidades, ${level.toLowerCase()}`, family: "Tabique divisorio", type: `${nUnits} unidades`, material: "Placa de yeso con aislación acústica", level, parameters: { unidades: nUnits } }, [{ geometry: geo, materialKey: "partition" }]);
     }
 
     /* balcones: baranda sobre la línea de fachada, la fachada va retirada 1,20 m */
@@ -284,6 +361,67 @@ export function createLandBuilding(spec: LandSpec, cfg: LandConfig, plan: Buildi
     const parts: { geometry: BufferGeometry[]; materialKey: LandMaterialKey }[] = [{ geometry: [box(rl.x0 + 0.4, top + slabT, z0, rl.x0 + 0.4 + w, top + slabT + 0.05, z0 + Math.min(6, rl.z1 - z0 - 1))], materialKey: "deck" }];
     if (isDeptos) parts.push({ geometry: [box(rl.x0 + 0.8, top + slabT + 0.05, z0 + 0.6, rl.x0 + 0.8 + Math.min(5, w - 0.8), top + slabT + 0.1, z0 + 3)], materialKey: "water" });
     B.add({ category: "canopy", key: "AZOTEA-USO", label: isDeptos ? "Amenities en la azotea" : "Terraza", family: "Deck y equipamiento", material: "Deck de madera", level: "Cubierta" }, parts);
+  }
+
+  /* ── entorno: accesos, parquizado y subsuelo ── */
+  const lineZ = Math.min(0, U.z0);
+  const doorX = (() => {
+    const xs0 = gridLines(r0.x0, r0.x1, gridModule);
+    const c = Math.floor((xs0.length - 1) / 2);
+    return (xs0[c] + xs0[c + 1]) / 2;
+  })();
+  if (r0.z0 - lineZ > 0.8) {
+    // Vereda de acceso desde la línea municipal hasta la puerta.
+    B.add({ category: "bracing", key: "VEREDA-ACCESO", label: "Vereda de acceso", family: "Solado de hormigón peinado", material: "Hormigón peinado", level: "Exterior" }, [{ geometry: [box(doorX - 0.7, 0.0, lineZ, doorX + 0.7, 0.05, r0.z0)], materialKey: "paving" }]);
+  }
+  const drive: BufferGeometry[] = driveRects(spec, cfg, plan, site).map((d) => box(d.x0, 0.0, d.z0, d.x1, 0.04, d.z1));
+  if (drive.length) B.add({ category: "bracing", key: "ACCESO-VEHICULAR", label: "Acceso vehicular", family: "Solado de hormigón", material: "Hormigón H-21", level: "Exterior" }, [{ geometry: drive, materialKey: "paving" }]);
+  if (cfg.options.parquizado) {
+    // Césped en lo libre del lugar edificable y árboles cada ~5 m donde hay lugar.
+    const free = rectMinus(U, r0).filter((p) => p.x1 - p.x0 > 1 && p.z1 - p.z0 > 1);
+    const lawn = free.map((p) => box(p.x0, 0.0, p.z0, p.x1, 0.03, p.z1));
+    if (r0.z0 - lineZ > 1.5) lawn.push(box(U.x0, 0.0, lineZ, U.x1, 0.03, Math.max(lineZ + 0.1, U.z0)));
+    const trunks: BufferGeometry[] = [];
+    const crowns: BufferGeometry[] = [];
+    // Lugares ocupados por galería, pileta, cochera y accesos: ahí no van árboles.
+    const busy: Rect[] = drive.map((g) => {
+      g.computeBoundingBox();
+      const bb = g.boundingBox!;
+      return { x0: bb.min.x, x1: bb.max.x, z0: bb.min.z, z1: bb.max.z };
+    });
+    if (isHouse && cfg.options.galeria) busy.push({ x0: r0.x0, x1: r0.x1, z0: r0.z1, z1: r0.z1 + 3 });
+    if (isHouse && cfg.options.pileta) {
+      const z0 = r0.z1 + (cfg.options.galeria ? 3.6 : 1.5);
+      const w = Math.min(7, r0.x1 - r0.x0 - 1);
+      busy.push({ x0: (r0.x0 + r0.x1) / 2 - w / 2 - 0.6, x1: (r0.x0 + r0.x1) / 2 + w / 2 + 0.6, z0: z0 - 0.6, z1: z0 + 4.1 });
+    }
+    busy.push({ x0: doorX - 0.7, x1: doorX + 0.7, z0: lineZ, z1: r0.z0 });
+    const isBusy = (x: number, z: number) => busy.some((b) => x > b.x0 - 1.3 && x < b.x1 + 1.3 && z > b.z0 - 1.3 && z < b.z1 + 1.3);
+    for (const p of free) {
+      if (p.x1 - p.x0 < 3 || p.z1 - p.z0 < 3) continue;
+      const nx = Math.max(1, Math.floor((p.x1 - p.x0) / 5));
+      const nz = Math.max(1, Math.floor((p.z1 - p.z0) / 5));
+      for (let i = 0; i < nx; i += 1)
+        for (let k = 0; k < nz; k += 1) {
+          if (trunks.length >= 14) break;
+          const x = p.x0 + ((p.x1 - p.x0) * (i + 0.5)) / nx;
+          const z = p.z0 + ((p.z1 - p.z0) * (k + 0.5)) / nz;
+          if (isBusy(x, z)) continue;
+          const hgt = 3.4 + ((i * 7 + k * 3) % 4) * 0.35;
+          trunks.push(new BoxGeometry(0.18, hgt * 0.55, 0.18).translate(x, (hgt * 0.55) / 2, z));
+          crowns.push(new IcosahedronGeometry(1.1 + ((i + k) % 3) * 0.2, 1).scale(1, 1.15, 1).translate(x, hgt * 0.72, z));
+        }
+    }
+    B.add({ category: "bracing", key: "PARQUIZADO", label: "Parquizado y árboles", family: "Césped y arbolado", material: "Césped y especies de mediano porte", level: "Exterior", parameters: { arboles: trunks.length } }, [
+      { geometry: lawn, materialKey: "grass" },
+      ...(trunks.length ? [{ geometry: trunks, materialKey: "trunk" as LandMaterialKey }, { geometry: crowns, materialKey: "foliage" as LandMaterialKey }] : []),
+    ]);
+  }
+  if ((isDeptos || isOffice) && cfg.options.subsuelo) {
+    const depthB = 3.0;
+    B.add({ category: "foundations", key: "SUBSUELO", label: "Subsuelo de cocheras", family: "Subsuelo de hormigón armado", material: "Hormigón armado", level: "Subsuelo", parameters: { superficie_m2: r2((r0.x1 - r0.x0) * (r0.z1 - r0.z0)), cocheras: Math.floor(((r0.x1 - r0.x0) * (r0.z1 - r0.z0)) / 28) } }, [
+      { geometry: [box(r0.x0, -depthB - 0.35, r0.z0, r0.x1, -depthB, r0.z1), box(r0.x0, -depthB, r0.z0, r0.x0 + WALL, -0.35, r0.z1), box(r0.x1 - WALL, -depthB, r0.z0, r0.x1, -0.35, r0.z1), box(r0.x0, -depthB, r0.z1 - WALL, r0.x1, -0.35, r0.z1)], materialKey: "concrete" },
+    ]);
   }
 
   return { root: B.root, metadata: B.document(`${b.code}-${Math.round(plan.built)}m2`, `${b.name} · ${floors.length} plantas`), stats: B.stats() };

@@ -1203,7 +1203,7 @@
 
 .ld-scenario {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
@@ -1400,4 +1400,51 @@
   border-left: 3px solid var(--ld-bad);
   border-radius: var(--gp-radius);
   background: rgba(224, 106, 94, 0.08);
+}
+
+/* ── Fase 7: comparar con imagen, presupuesto, corte ── */
+.ld-compare__img img {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border: 1px solid var(--gp-line);
+  border-radius: var(--gp-radius);
+}
+
+.ld-compare td.is-best {
+  color: var(--gp-signal);
+  font-weight: 600;
+}
+
+.ld-compare td.is-best::after {
+  content: " ★";
+  font-size: 0.85em;
+}
+
+.ld-quote {
+  z-index: 95;
+}
+
+.ld-quote .gp-form input {
+  flex: none;
+}
+
+.ld-quote .gp-form textarea {
+  flex: none;
+  height: auto;
+  min-height: 84px;
+  padding: 10px 12px;
+}
+
+.ld-tools__cut button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media print {
+  .ld-quote {
+    display: none !important;
+  }
 }
