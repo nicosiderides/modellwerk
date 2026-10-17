@@ -63,3 +63,23 @@ La app Galpones (`/galpones`) **no se tocó** (mismas huellas de archivo). Se us
   - vivienda con cochera, pileta, galería, parquizado, calle y auto;
   - oficinas divididas en 60 m² y en planta libre, con corte;
   - recorrido completo y enlace compartido como antes.
+
+## Publicación en GitHub Pages
+
+URL: **https://nicosiderides.github.io/modellwerk/land/**
+
+La carpeta `land/` (en la raíz del repo) es la exportación estática de la ruta `/land`, con `basePath` `/modellwerk/land` (igual que `galpones/`). Para regenerarla:
+
+1. Cambiar **temporalmente** `next.config.ts` (no se publica este cambio):
+   ```ts
+   const base = "/modellwerk/land";
+   const nextConfig = { output: "export", basePath: base, assetPrefix: base, trailingSlash: true, images: { unoptimized: true } };
+   ```
+2. Construir: `$env:NEXT_PUBLIC_ASSET_BASE_PATH = "/modellwerk/land"; npm run build`
+3. Armar la carpeta `land/`:
+   - los archivos sueltos de `out/land/` (`index.html`, `index.txt`, `__next.*.txt`);
+   - `out/_next` → `land/_next`;
+   - `out/brand`, `out/draco`, `out/basis`, `out/people`, `out/vendor` → `land/`;
+   - `out/hdr/kloofendal_43d_clear_puresky_2k.hdr` → `land/hdr/`;
+   - las carpetas de tipologías de `out/galpones/` (`industrial-light`, `industrial-pro`, `logistics`, `large-span`) → `land/galpones/`.
+4. Restaurar `next.config.ts`.
