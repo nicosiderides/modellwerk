@@ -1,0 +1,26 @@
+{
+  "default": "hormigon",
+  "systems": [
+    {
+      "id": "hormigon",
+      "name": "Hormigón armado",
+      "memoryText": "Columnas y losas de hormigón armado con luces de 7,2 m.",
+      "costFactor": 1.0,
+      "column": 0.45
+    },
+    {
+      "id": "metalica",
+      "name": "Estructura metálica",
+      "memoryText": "Columnas y vigas de acero con losa colaborante; montaje rápido y luces amplias.",
+      "costFactor": 1.08,
+      "column": 0.35
+    },
+    {
+      "id": "postesado",
+      "name": "Losas postesadas",
+      "memoryText": "Losas postesadas de grandes luces, sin vigas.",
+      "costFactor": 1.06,
+      "column": 0.5
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+:HL["/modellwerk/land/_next/static/chunks/14yft5v8we2s-.css","style"]
+:HL["/modellwerk/land/_next/static/chunks/1ltxsel--jyh8.css","style"]
+:HL["/modellwerk/land/_next/static/chunks/06gaqmqj7osfz.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"land","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"7MaVTT62KLlkykbzaTs8_"}

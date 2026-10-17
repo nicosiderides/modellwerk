@@ -1,0 +1,70 @@
+{
+  "options": [
+    {
+      "id": "balcones",
+      "name": "Balcones al frente",
+      "memoryText": "Balcones de 1,20 m en cada piso con baranda de vidrio laminado.",
+      "cost": {
+        "kind": "fixed-per-floor",
+        "value": 4500
+      },
+      "defaultOn": true
+    },
+    {
+      "id": "ascensor",
+      "name": "Ascensor",
+      "memoryText": "Ascensor de 6 personas con sala de máquinas en la azotea.",
+      "cost": {
+        "kind": "fixed",
+        "value": 42000
+      },
+      "defaultOn": true
+    },
+    {
+      "id": "cocheras",
+      "name": "Cocheras en planta baja",
+      "memoryText": "Planta baja con cocheras cubiertas y acceso vehicular por portón.",
+      "cost": {
+        "kind": "fixed",
+        "value": 15000
+      },
+      "defaultOn": true
+    },
+    {
+      "id": "amenities",
+      "name": "Amenities en la azotea",
+      "memoryText": "Terraza común con parrilla, solárium y pileta.",
+      "cost": {
+        "kind": "fixed",
+        "value": 35000
+      }
+    },
+    {
+      "id": "local",
+      "name": "Local comercial en planta baja",
+      "memoryText": "Local al frente con vidriera, independiente del edificio.",
+      "cost": {
+        "kind": "fixed",
+        "value": 12000
+      }
+    },
+    {
+      "id": "parquizado",
+      "name": "Parquizado y árboles",
+      "memoryText": "Césped en los retiros y patios libres, árboles de mediano porte y vereda de acceso de hormigón peinado.",
+      "cost": {
+        "kind": "fixed",
+        "value": 7000
+      }
+    },
+    {
+      "id": "subsuelo",
+      "name": "Cocheras en subsuelo",
+      "memoryText": "Subsuelo de cocheras bajo toda la planta baja, con rampa de acceso desde el frente y portón automático.",
+      "cost": {
+        "kind": "footprint",
+        "value": 650
+      }
+    }
+  ]
+}

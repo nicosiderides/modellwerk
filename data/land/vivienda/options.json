@@ -1,0 +1,61 @@
+{
+  "options": [
+    {
+      "id": "galeria",
+      "name": "Galería al fondo",
+      "memoryText": "Galería cubierta de 3 m sobre el patio, con estructura metálica y cubierta liviana.",
+      "cost": {
+        "kind": "fixed",
+        "value": 9000
+      }
+    },
+    {
+      "id": "cochera",
+      "name": "Cochera cubierta",
+      "memoryText": "Cochera para un auto con pérgola metálica y techo de policarbonato.",
+      "cost": {
+        "kind": "fixed",
+        "value": 7500
+      }
+    },
+    {
+      "id": "pileta",
+      "name": "Pileta",
+      "memoryText": "Pileta de hormigón de 7 × 3,5 m con solárium.",
+      "cost": {
+        "kind": "fixed",
+        "value": 18000
+      }
+    },
+    {
+      "id": "terraza",
+      "name": "Terraza accesible",
+      "memoryText": "Azotea transitable con baranda y acceso por escalera.",
+      "cost": {
+        "kind": "fixed",
+        "value": 6000
+      },
+      "requires": {
+        "roof": "plana"
+      }
+    },
+    {
+      "id": "solar",
+      "name": "Paneles solares",
+      "memoryText": "Termotanque solar y 6 paneles fotovoltaicos sobre la cubierta.",
+      "cost": {
+        "kind": "fixed",
+        "value": 8000
+      }
+    },
+    {
+      "id": "parquizado",
+      "name": "Parquizado y árboles",
+      "memoryText": "Césped en los retiros y patios libres, árboles de mediano porte y vereda de acceso de hormigón peinado.",
+      "cost": {
+        "kind": "fixed",
+        "value": 4500
+      }
+    }
+  ]
+}

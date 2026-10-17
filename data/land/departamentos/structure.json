@@ -1,0 +1,26 @@
+{
+  "default": "hormigon",
+  "systems": [
+    {
+      "id": "hormigon",
+      "name": "Hormigón armado",
+      "memoryText": "Estructura de hormigón armado H-30: columnas, vigas y losas macizas.",
+      "costFactor": 1.0,
+      "column": 0.32
+    },
+    {
+      "id": "postesado",
+      "name": "Losas sin vigas (postesado)",
+      "memoryText": "Losas postesadas sin vigas; plantas más libres y menos altura de entrepiso.",
+      "costFactor": 1.05,
+      "column": 0.38
+    },
+    {
+      "id": "industrializado",
+      "name": "Sistema industrializado",
+      "memoryText": "Elementos premoldeados y montaje en seco; obra más rápida.",
+      "costFactor": 0.97,
+      "column": 0.3
+    }
+  ]
+}

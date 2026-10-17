@@ -1,0 +1,60 @@
+{
+  "id": "oficinas",
+  "code": "LO01",
+  "name": "Oficinas / locales",
+  "tagline": "Locales abajo, oficinas arriba.",
+  "description": "Planta baja comercial con vidrieras y pisos de oficinas de planta libre con núcleo de servicios.",
+  "dimensions": {
+    "width": {
+      "min": 7,
+      "max": 40,
+      "step": 0.3
+    },
+    "depth": {
+      "min": 8,
+      "max": 40,
+      "step": 0.3
+    },
+    "floors": {
+      "min": 1,
+      "max": 12
+    }
+  },
+  "grid": {
+    "module": 7.2
+  },
+  "floorHeight": 3.6,
+  "groundHeight": 4.5,
+  "slab": 0.25,
+  "column": 0.45,
+  "unitArea": 120,
+  "efficiency": 0.85,
+  "defaults": {
+    "width": 40,
+    "depth": 24,
+    "floors": 12,
+    "align": "center",
+    "front": 0,
+    "unitSize": "120"
+  },
+  "unitSizes": [
+    {
+      "id": "libre",
+      "name": "Planta libre (una por piso)",
+      "area": null,
+      "memoryText": "Cada piso es una sola oficina de planta libre, sin divisiones fijas."
+    },
+    {
+      "id": "120",
+      "name": "Subdividida en oficinas de ~120 m²",
+      "area": 120,
+      "memoryText": "Pisos divididos en oficinas de unos 120 m² con baño propio."
+    },
+    {
+      "id": "60",
+      "name": "Subdividida en oficinas de ~60 m²",
+      "area": 60,
+      "memoryText": "Pisos divididos en oficinas chicas de unos 60 m², con servicios comunes."
+    }
+  ]
+}
