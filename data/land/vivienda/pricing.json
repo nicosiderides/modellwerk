@@ -1,0 +1,18 @@
+{
+  "costPerM2": {
+    "value": 950,
+    "status": "demo",
+    "note": "Valor de demostración: reemplazalo por un dato real (presupuesto, Cámara de la Construcción o tasación)."
+  },
+  "salePerM2": {
+    "value": 1350,
+    "status": "demo",
+    "note": "Valor de demostración: reemplazalo por un dato real (presupuesto, Cámara de la Construcción o tasación)."
+  },
+  "rentPerM2Month": {
+    "value": 6,
+    "status": "demo",
+    "note": "Valor de demostración: reemplazalo por un dato real (presupuesto, Cámara de la Construcción o tasación)."
+  },
+  "buildMonths": 12
+}

@@ -1,0 +1,26 @@
+{
+  "default": "hormigon",
+  "systems": [
+    {
+      "id": "hormigon",
+      "name": "Hormigón armado tradicional",
+      "memoryText": "Estructura independiente de hormigón armado: fundaciones, columnas, vigas y losas.",
+      "costFactor": 1.0,
+      "column": 0.22
+    },
+    {
+      "id": "steel",
+      "name": "Steel framing",
+      "memoryText": "Perfiles de acero galvanizado liviano con placas OSB y aislación; montaje en seco.",
+      "costFactor": 0.94,
+      "column": 0.12
+    },
+    {
+      "id": "madera",
+      "name": "Entramado de madera",
+      "memoryText": "Entramado de madera estructural tratada, placas y aislación; montaje en seco.",
+      "costFactor": 0.97,
+      "column": 0.15
+    }
+  ]
+}

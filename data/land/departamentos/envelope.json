@@ -1,0 +1,136 @@
+{
+  "facades": [
+    {
+      "id": "revoque",
+      "name": "Revoque fino pintado",
+      "memoryText": "Mampostería con revoque grueso y fino, terminación pintura acrílica para exteriores.",
+      "costFactor": 1.0,
+      "look": {
+        "pattern": "smooth",
+        "roughness": 0.85
+      }
+    },
+    {
+      "id": "ladrillo",
+      "name": "Ladrillo visto",
+      "memoryText": "Mampostería de ladrillo visto con junta tomada, tratamiento hidrófugo.",
+      "costFactor": 1.06,
+      "look": {
+        "pattern": "precast",
+        "roughness": 0.9,
+        "color": "#a85c3f"
+      }
+    },
+    {
+      "id": "hormigon",
+      "name": "Hormigón visto",
+      "memoryText": "Tabiques de hormigón visto con encofrado fenólico, sellador transparente.",
+      "costFactor": 1.1,
+      "look": {
+        "pattern": "precast",
+        "roughness": 0.8,
+        "color": "#a9a59d"
+      }
+    },
+    {
+      "id": "placas",
+      "name": "Placas fenólicas / composite",
+      "memoryText": "Fachada ventilada con placas sobre subestructura de aluminio.",
+      "costFactor": 1.14,
+      "look": {
+        "pattern": "smooth",
+        "roughness": 0.5
+      }
+    }
+  ],
+  "roofs": [
+    {
+      "id": "plana",
+      "name": "Azotea plana",
+      "memoryText": "Losa con aislación térmica, membrana y carpeta de protección; pendiente mínima a desagües.",
+      "costFactor": 1.0
+    }
+  ],
+  "colors": [
+    {
+      "id": "blanco",
+      "name": "Blanco tiza",
+      "hex": "#ece8df"
+    },
+    {
+      "id": "arena",
+      "name": "Arena",
+      "hex": "#d8cdb6"
+    },
+    {
+      "id": "gris",
+      "name": "Gris cemento",
+      "hex": "#a7a49d"
+    },
+    {
+      "id": "grafito",
+      "name": "Grafito",
+      "hex": "#4a4d50"
+    },
+    {
+      "id": "terracota",
+      "name": "Terracota",
+      "hex": "#b4694a"
+    },
+    {
+      "id": "verde",
+      "name": "Verde salvia",
+      "hex": "#8f9e86"
+    }
+  ],
+  "frames": [
+    {
+      "id": "negro",
+      "name": "Aluminio negro",
+      "hex": "#2a2c2e"
+    },
+    {
+      "id": "natural",
+      "name": "Aluminio natural",
+      "hex": "#b9bdbf"
+    },
+    {
+      "id": "blanco",
+      "name": "Aluminio blanco",
+      "hex": "#e9e9e6"
+    },
+    {
+      "id": "bronce",
+      "name": "Bronce",
+      "hex": "#6b5440"
+    }
+  ],
+  "glazing": [
+    {
+      "id": "medio",
+      "name": "Ventanas medianas",
+      "ratio": 0.45,
+      "memoryText": "Ventanas de 1,50 m de alto en cada módulo."
+    },
+    {
+      "id": "amplio",
+      "name": "Ventanales",
+      "ratio": 0.65,
+      "memoryText": "Ventanales de piso a dintel en cada módulo."
+    },
+    {
+      "id": "total",
+      "name": "Vidriado completo",
+      "ratio": 0.85,
+      "memoryText": "Frentes vidriados de piso a techo."
+    }
+  ],
+  "defaults": {
+    "facade": "revoque",
+    "roof": "plana",
+    "facadeColor": "blanco",
+    "accentColor": "grafito",
+    "frameColor": "negro",
+    "glazing": "amplio"
+  }
+}

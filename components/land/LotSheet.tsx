@@ -167,6 +167,7 @@ export function LotSheet() {
   const overrides = useLand((s) => s.overrides);
   const resetOverrides = useLand((s) => s.resetOverrides);
   const clear = useLand((s) => s.clear);
+  const goTo = useLand((s) => s.goTo);
   const env = useMemo(() => (study ? studyEnvelope(study, typeId, overrides) : null), [study, typeId, overrides]);
 
   if (!study) return <EmptySheet error={error} />;
@@ -331,10 +332,10 @@ export function LotSheet() {
           </section>
 
           <div className="gp-map__actions ld-next">
-            <button type="button" className="gp-button gp-button--primary" disabled title="Llega en la Fase 2">
-              Elegir el edificio <ArrowRight aria-hidden />
+            <button type="button" className="gp-button gp-button--primary" onClick={() => goTo("edificio")}>
+              Diseñar el edificio <ArrowRight aria-hidden />
             </button>
-            <span className="ld-muted">Próximo paso: elegir y dimensionar el edificio dentro de la caja.</span>
+            <span className="ld-muted">Siguiente: elegí el tipo, su tamaño dentro de la caja y customizalo.</span>
           </div>
         </>
       )}

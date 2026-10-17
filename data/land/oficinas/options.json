@@ -1,0 +1,52 @@
+{
+  "options": [
+    {
+      "id": "parasoles",
+      "name": "Parasoles verticales",
+      "memoryText": "Lamas verticales de aluminio en el frente para controlar el sol.",
+      "cost": {
+        "kind": "fixed-per-floor",
+        "value": 3800
+      },
+      "defaultOn": true
+    },
+    {
+      "id": "locales",
+      "name": "Locales en planta baja",
+      "memoryText": "Planta baja con locales independientes y vidrieras a la calle.",
+      "cost": {
+        "kind": "fixed",
+        "value": 10000
+      },
+      "defaultOn": true
+    },
+    {
+      "id": "ascensor",
+      "name": "Ascensores",
+      "memoryText": "Dos ascensores de 8 personas.",
+      "cost": {
+        "kind": "fixed",
+        "value": 80000
+      },
+      "defaultOn": true
+    },
+    {
+      "id": "terraza",
+      "name": "Terraza verde",
+      "memoryText": "Azotea con cubierta verde y espacio común.",
+      "cost": {
+        "kind": "fixed",
+        "value": 25000
+      }
+    },
+    {
+      "id": "cocheras",
+      "name": "Cocheras",
+      "memoryText": "Cocheras en planta baja o subsuelo según el lote.",
+      "cost": {
+        "kind": "fixed",
+        "value": 15000
+      }
+    }
+  ]
+}

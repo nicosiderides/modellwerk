@@ -1,0 +1,39 @@
+{
+  "id": "vivienda",
+  "code": "LV01",
+  "name": "Vivienda unifamiliar",
+  "tagline": "Tu casa, a la medida del lote.",
+  "description": "Casa de una o dos plantas con estructura independiente, frente al jardín y patio al fondo.",
+  "dimensions": {
+    "width": {
+      "min": 6,
+      "max": 20,
+      "step": 0.3
+    },
+    "depth": {
+      "min": 6,
+      "max": 24,
+      "step": 0.3
+    },
+    "floors": {
+      "min": 1,
+      "max": 2
+    }
+  },
+  "grid": {
+    "module": 3.6
+  },
+  "floorHeight": 2.9,
+  "groundHeight": 2.9,
+  "slab": 0.2,
+  "column": 0.22,
+  "unitArea": null,
+  "efficiency": 1.0,
+  "defaults": {
+    "width": 9,
+    "depth": 12,
+    "floors": 2,
+    "align": "center",
+    "front": 3
+  }
+}

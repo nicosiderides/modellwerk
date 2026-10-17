@@ -1,0 +1,100 @@
+"use client";
+
+import { useCallback } from "react";
+import { decodeFromUrl, encodeForUrl } from "@/core/product-engine/serialization";
+import { parcelByNomenclature } from "@/core/galpones/geo/idecor";
+import type { DesignState } from "@/core/land/design/compute";
+import type { FinanceInputs } from "@/core/land/finance/finance";
+import type { RuleOverrides } from "@/core/land/geo/study";
+import type { BuildingTypeId } from "@/core/land/types";
+import { useLand, type Scenario } from "./store";
+import { useComputed, useFinance } from "./useDesign";
+
+/** Guardar escenarios, compartirlos por enlace y abrir un enlace compartido. */
+
+const TYPE_NAMES: Record<BuildingTypeId, string> = { vivienda: "Vivienda", departamentos: "Departamentos", oficinas: "Oficinas", galpon: "Galpón" };
+
+/** Arma el escenario actual (id y fecha se ponen al guardar). */
+export function useCurrentScenario(): Scenario | null {
+  const study = useLand((s) => s.study);
+  const typeId = useLand((s) => s.typeId);
+  const overrides = useLand((s) => s.overrides);
+  const front = useLand((s) => s.front);
+  const design = useLand((s) => s.design);
+  const computed = useComputed();
+  const { inputs, result } = useFinance(computed);
+  if (!study || !design || !computed) return null;
+  const p = study.parcel.properties;
+  const plan = computed.plan;
+  return {
+    id: `${p.Nomenclatura}-${typeId}`,
+    name: `${TYPE_NAMES[typeId]} · ${String(p.desig_oficial ?? p.Nomenclatura ?? "lote").trim()} · ${plan.floors.length} pl.`,
+    savedAt: "",
+    nomenclatura: String(p.Nomenclatura ?? ""),
+    designacion: String(p.desig_oficial ?? "").trim(),
+    lotArea: computed.envelope.lotArea,
+    zone: study.zone?.label ?? "",
+    typeId,
+    overrides,
+    front,
+    design,
+    finance: inputs,
+    summary: { built: plan.built, sellable: plan.sellable, floors: plan.floors.length, units: plan.units, investment: result?.investment ?? 0, revenue: result?.revenue ?? 0, profit: result?.profit ?? 0, irr: result?.irr ?? null, ok: plan.ok },
+  };
+}
+
+export function useSaveScenario() {
+  const current = useCurrentScenario();
+  const save = useLand((s) => s.saveScenario);
+  return useCallback(() => {
+    if (current) {
+      const now = new Date();
+      save({ ...current, id: `${current.id}-${now.getTime()}`, savedAt: now.toISOString() });
+    }
+  }, [current, save]);
+}
+
+type ShareCode = { v: 1; n: string; t: BuildingTypeId; o: RuleOverrides; f: number | null; d: DesignState; fi: FinanceInputs | null };
+
+export function shareLink(s: Scenario) {
+  const code: ShareCode = { v: 1, n: s.nomenclatura, t: s.typeId, o: s.overrides, f: s.front, d: { land: s.typeId === "galpon" ? {} : { [s.typeId]: s.design.land[s.typeId as Exclude<BuildingTypeId, "galpon">] }, galpon: s.typeId === "galpon" ? s.design.galpon : null }, fi: s.finance };
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("e", encodeForUrl(code));
+  return url.toString();
+}
+
+/** Abre un escenario compartido (?e=…): busca el lote en el catastro y aplica el diseño. */
+export async function openShared(code: string) {
+  const data = decodeFromUrl<ShareCode>(code);
+  if (!data || data.v !== 1 || !data.n) return false;
+  const parcel = await parcelByNomenclature(data.n).catch(() => null);
+  if (!parcel) return false;
+  const st = useLand.getState();
+  const scenario: Scenario = {
+    id: `link-${Date.now()}`,
+    name: "Escenario compartido",
+    savedAt: new Date().toISOString(),
+    nomenclatura: data.n,
+    designacion: "",
+    lotArea: 0,
+    zone: "",
+    typeId: data.t,
+    overrides: data.o ?? {},
+    front: data.f ?? null,
+    design: data.d,
+    finance: data.fi,
+    summary: { built: 0, sellable: 0, floors: 0, units: 0, investment: 0, revenue: 0, profit: 0, irr: null, ok: true },
+  };
+  await st.restoreScenario(scenario, parcel);
+  // El diseño compartido trae sólo el tipo elegido: los demás se arman solos al cambiar de tipo.
+  const { study, design, overrides } = useLand.getState();
+  if (study && design) {
+    const { initialDesign } = await import("@/core/land/design/compute");
+    const { LAND_SPECS } = await import("@/core/land/design/catalog");
+    const { GALPON_DEFS } = await import("./store");
+    useLand.setState({ design: initialDesign(study, overrides, LAND_SPECS, GALPON_DEFS, design) });
+  }
+  return true;
+}

@@ -1,0 +1,39 @@
+{
+  "id": "departamentos",
+  "code": "LD01",
+  "name": "Edificio de departamentos",
+  "tagline": "Planta baja más pisos tipo.",
+  "description": "Edificio entre medianeras con núcleo de escalera y ascensor, departamentos al frente y al contrafrente.",
+  "dimensions": {
+    "width": {
+      "min": 7,
+      "max": 40,
+      "step": 0.3
+    },
+    "depth": {
+      "min": 8,
+      "max": 40,
+      "step": 0.3
+    },
+    "floors": {
+      "min": 2,
+      "max": 12
+    }
+  },
+  "grid": {
+    "module": 4.8
+  },
+  "floorHeight": 2.9,
+  "groundHeight": 2.9,
+  "slab": 0.22,
+  "column": 0.32,
+  "unitArea": 55,
+  "efficiency": 0.82,
+  "defaults": {
+    "width": 40,
+    "depth": 24,
+    "floors": 12,
+    "align": "center",
+    "front": 0
+  }
+}
